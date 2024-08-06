@@ -34,12 +34,15 @@ public class Ingredient {
     @Column(name = "protein")
     private int protein;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+
     @OneToMany(mappedBy = "ingredient")
     private List<RecipeIngredient> recipeIngredients;
 
     @OneToMany(mappedBy = "ingredient")
     private List<UserIngredient> userIngredients;
 
-    @OneToMany(mappedBy = "category")
-    private List<CategoryIngredient> categories;
+
 }

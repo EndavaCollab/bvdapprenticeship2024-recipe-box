@@ -37,9 +37,9 @@ public class Recipe {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    //TO DO  difficulty entity
-    @Column(name = "difficulty", nullable = false)
-    private String difficulty;
+   @ManyToOne
+   @JoinColumn(name = "difficulty_id", nullable = false)
+    private Difficulty difficulty;
 
     @Column(name = "preparation_time", nullable = false)
     private Duration preparationTime;
@@ -48,8 +48,9 @@ public class Recipe {
     private String imageUrl;
 
     @OneToMany(mappedBy = "recipe")
+    private List<MealTypeRecipe> mealType;
+
+    @OneToMany(mappedBy = "recipe")
     private List<RecipeIngredient> recipeIngredients;
 
-    @OneToMany(mappedBy = "category")
-    private List<CategoryRecipe> category;
 }

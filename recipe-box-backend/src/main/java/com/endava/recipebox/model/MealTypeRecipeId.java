@@ -5,17 +5,16 @@ import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.naming.Name;
 import java.io.Serializable;
 
 @Setter
 @Getter
 @Embeddable
-public class CategoryRecipeId implements Serializable {
+public class MealTypeRecipeId implements Serializable {
 
-    @Column(name = "recipe_id")
+    @Column(name = "mealtype_id")
+    private Long mealTypeId;
+
+    @Column(name = "recipeId")
     private Long recipeId;
-
-    @Column(name = "ingredient_id")
-    private Long ingredientId;
 }

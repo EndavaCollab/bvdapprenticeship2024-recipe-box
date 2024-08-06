@@ -13,17 +13,16 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "Category")
-public class Category {
+@Table(name = "DIFFICULTY")
+public class Difficulty {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "category")
-    private List<Ingredient> ingredients;
-
+    @OneToMany(mappedBy = "difficulty")
+    private List<Recipe> recipes;
 }

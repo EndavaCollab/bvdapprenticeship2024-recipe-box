@@ -11,20 +11,21 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "CATEGORY_RECIPE")
-public class CategoryRecipe {
+@Table(name = "MEALTYPE_RECIPE")
+public class MealTypeRecipe {
 
     @EmbeddedId
-    private CategoryRecipeId id;
-
-    @ManyToOne
-    @MapsId("categoryId")
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
+    private MealTypeRecipeId id;
 
     @ManyToOne
     @MapsId("recipeId")
     @JoinColumn(name = "recipe_id", nullable = false)
     private Recipe recipe;
+
+    @ManyToOne
+    @MapsId("mealTypeId")
+    @JoinColumn(name = "mealtype_id", nullable = false)
+    private MealType mealType;
+
 
 }
