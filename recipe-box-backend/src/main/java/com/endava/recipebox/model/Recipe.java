@@ -37,8 +37,8 @@ public class Recipe {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-   @ManyToOne
-   @JoinColumn(name = "difficulty_id", nullable = false)
+    @Column(name = "difficulty")
+    @Enumerated(EnumType.STRING)
     private Difficulty difficulty;
 
     @Column(name = "preparation_time", nullable = false)

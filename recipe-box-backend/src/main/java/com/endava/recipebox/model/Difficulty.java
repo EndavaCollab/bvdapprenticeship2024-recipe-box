@@ -1,28 +1,7 @@
 package com.endava.recipebox.model;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.util.List;
-
-@Entity
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Table(name = "DIFFICULTY")
-public class Difficulty {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "name", nullable = false, unique = true)
-    private String name;
-
-    @OneToMany(mappedBy = "difficulty")
-    private List<Recipe> recipes;
+public enum Difficulty {
+    Easy,
+    Medium,
+    Hard
 }

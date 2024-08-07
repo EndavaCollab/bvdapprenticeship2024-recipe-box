@@ -5,10 +5,12 @@ import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Setter
 @Getter
 @Embeddable
-public class RecipeIngredientId {
+public class RecipeIngredientId implements Serializable {
     @Column(name = "recipe_id")
     private Long recipeId;
 
