@@ -34,8 +34,8 @@ public class Ingredient {
     @Column(name = "protein")
     private int protein;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
+    @Column(name = "category")
+    @Enumerated(EnumType.STRING)
     private Category category;
 
     @OneToMany(mappedBy = "ingredient")
