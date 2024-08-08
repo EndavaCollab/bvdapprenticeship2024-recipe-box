@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="266" height="62" viewBox="0 0 266 62">
+  <g id="Group_3" data-name="Group 3" transform="translate(-626 -451)">
+    <text id="Recipe_B_X" data-name="Recipe B    X" transform="translate(626 501)" fill="#fff" font-size="46" font-family="SegoeUI-Bold, Segoe UI" font-weight="700"><tspan x="0" y="0" xml:space="preserve">Recipe B    X</tspan></text>
+    <g id="Group_2" data-name="Group 2" transform="translate(817.953 459.835)">
+      <path id="Path_1" data-name="Path 1" d="M0,8.26,36.712,0V32.586H0Z" transform="translate(1.815 9.934)" fill="#00af3a"/>
+      <path id="Path_2" data-name="Path 2" d="M18.3,2.71c9.131-3.1,24.333-4,19.6-1.408S7.046,12.592,1.376,13.717,9.168,5.814,18.3,2.71Z" transform="matrix(0.995, 0.105, -0.105, 0.995, 1.445, 0)" fill="#00af3a"/>
+      <circle id="Ellipse_1" data-name="Ellipse 1" cx="2.5" cy="2.5" r="2.5" transform="translate(16.047 1.165)" fill="#fff"/>
+    </g>
+  </g>
+</svg>
