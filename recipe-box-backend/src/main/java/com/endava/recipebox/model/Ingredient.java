@@ -22,9 +22,6 @@ public class Ingredient {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @Column(name = "quantity", nullable = false)
-    private int quantity;
-
     @Column(name = "carbs")
     private int carbs;
 

@@ -47,8 +47,9 @@ public class Recipe {
     @Column(name = "imageUrl", nullable = false)
     private String imageUrl;
 
-    @OneToMany(mappedBy = "recipe")
-    private List<MealTypeRecipe> mealType;
+    @Column(name = "mealType")
+    @Enumerated(EnumType.STRING)
+    private MealType mealType;
 
     @OneToMany(mappedBy = "recipe")
     private List<RecipeIngredient> recipeIngredients;
