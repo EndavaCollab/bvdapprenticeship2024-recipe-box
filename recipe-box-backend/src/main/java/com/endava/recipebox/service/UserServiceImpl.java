@@ -4,7 +4,9 @@ import com.endava.recipebox.model.Role;
 import com.endava.recipebox.model.User;
 import com.endava.recipebox.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UserServiceImpl implements UserService{
 
     @Autowired
