@@ -1,5 +1,7 @@
 package com.endava.recipebox.service;
 
+import com.endava.recipebox.model.User;
+
 public interface UserService {
-    Object findOrSaveUser(String username);
+    User findOrSaveUser(String username);
 }
