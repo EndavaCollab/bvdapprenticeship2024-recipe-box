@@ -1,38 +1,31 @@
 
 .home-page {
   text-align: center;
-  background-image: url('../assets/images/HomeBG.jpeg');
+  background-image: url('../assets/images/start_screen_bg.png');
   background-size: cover;
   background-position: center;
   height: 100vh; 
   display: flex; 
   justify-content: center;
-  align-items: left;
   color: white;
   flex-direction: column; 
-  padding: 20px;
 }
 
-.home-page h1 {
-  font-size: 3em;
-  align-self: flex-start;
+.logo {
   margin-left: 200px;
-  margin-bottom: 30px;
-  text-align: left;
+  margin-bottom: 40px;
 }
 
-.home-page h3 {
-  font-size: 1.5em;
-  max-width: 800px;
+.home-page h2 {
+  width: 700px;
   margin-left: 200px; 
   margin-bottom: 60px;
   text-align: left;
 }
 
-.cta-button {
+.start-button {
   margin-top: 60px; 
   margin-left: 200px;
-  font-size: 1.2em;
   color: white; 
   background-color: #01AE3A;
   border-radius: 5px; 
@@ -43,6 +36,6 @@
   
 }
 
-.cta-button:hover {
+.start-button:hover {
   background-color: #218838;
 }
