@@ -1,0 +1,31 @@
+.home-page {
+    background-image: url("../assets/images/start_screen_bg.png");
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    color: white;
+    flex-direction: column;
+    padding-left: 200px;
+}
+
+.home-page h2 {
+    margin-top: 60px;
+    width: 700px;
+    margin-bottom: 120px;
+}
+
+.start-button {
+    color: white;
+    background-color: #01ae3a;
+    border-radius: 5px;
+    border: none;
+    text-align: center;
+    width: 350px;
+    height: 60px;
+}
+
+.start-button:hover {
+    background-color: #218838;
+}
