@@ -1,0 +1,9 @@
+/* src/components/RecipesList.css */
+.recipes-list {
+    padding: 20px;
+    padding-bottom: 60px; /*footer*/
+}
+
+main {
+    min-height: calc(100vh - 120px);
+}

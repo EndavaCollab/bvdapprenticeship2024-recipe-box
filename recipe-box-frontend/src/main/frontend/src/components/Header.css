@@ -1,0 +1,127 @@
+/* Header.css */
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #000;
+    color: #fff;
+    padding: 20px;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+.header ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.left-items {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.left-items li {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.left-items .logo {
+    margin-right: 10px;
+}
+
+.logo-image {
+    height: 25px;
+}
+
+.left-items li a {
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.left-items li a:hover {
+    text-decoration: underline;
+}
+
+/* Săgeata pentru dropdown */
+.arrow {
+    margin-left: 8px;
+    transition: transform 0.3s ease;
+}
+
+.arrow.open {
+    transform: rotate(180deg);
+}
+
+/* Stiluri pentru dropdown */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    display: block;
+    position: absolute;
+    background-color: #000;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    margin-top: 10px;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.dropdown-content li {
+    list-style-type: none;
+}
+
+.dropdown-content li a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    padding: 10px 20px;
+}
+
+.dropdown-content li a:hover {
+    background-color: #333;
+}
+
+.right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 5px;
+}
+
+.right-container {
+    position: absolute;
+    right: 20px;
+}
+
+.right .button {
+    padding: 8px 16px;
+    background-color: #000;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    border: 2px solid #fff;
+}
+
+.right .button:hover {
+    background-color: #333;
+    border-color: #fff;
+}
+
+.additional-image {
+    height: 40px;
+    margin-left: 10px;
+}

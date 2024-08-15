@@ -1,0 +1,31 @@
+/* src/components/Footer.css */
+.footer {
+    background-color: #f8f9fa;
+    padding: 10px 0;
+    text-align: center;
+    border-top: 1px solid #dee2e6;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+.footer p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.copy-symbol {
+    display: inline-block;
+    color: white;
+    background-color: black;
+    border-radius: 90%;
+    padding: 0.2em 0.4em;
+    font-size: 1.1em;
+    line-height: 1;
+    text-align: center;
+}
+
+.bold-small {
+    font-weight: bold;
+    font-size: 0.8em;
+}
