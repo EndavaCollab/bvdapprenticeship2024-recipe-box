@@ -54,4 +54,8 @@ public class Recipe {
     @OneToMany(mappedBy = "recipe")
     private List<RecipeIngredient> recipeIngredients;
 
+    @Column(name = "recipeStatus")
+    @Enumerated(EnumType.STRING)
+    private RecipeStatus recipeStatus;
+
 }
