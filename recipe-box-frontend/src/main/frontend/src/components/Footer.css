@@ -18,11 +18,9 @@
     display: inline-block;
     color: white;
     background-color: black;
-    border-radius: 90%;
-    padding: 0.2em 0.4em;
-    font-size: 1.1em;
-    line-height: 1;
-    text-align: center;
+    border-radius: 50%;
+    font-size: 1em;
+    line-height: 0.85;
 }
 
 .bold-small {

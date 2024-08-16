@@ -22,7 +22,7 @@ function Header() {
                         </li>
                         <li className="dropdown">
                             <a href="#" onClick={toggleDropdown}>
-                                Recipes <span className={`arrow ${dropdownOpen ? 'open' : ''}`}>▼</span>
+                                Recipes <span className={`arrow ${dropdownOpen ? 'open' : ''} arrow`}>⌵</span>
                             </a>
                         </li>
                         <li><a href="/ingredients">Ingredients</a></li>
@@ -31,7 +31,7 @@ function Header() {
                     {/* Elemente din dreapta */}
                     <div className="right-container">
                         <li className="right">
-                            <Link to="/addnewrecipe" className="button">Add New Recipe</Link>
+                            <Link to="/addnewrecipe" className="button">ADD NEW RECIPE</Link>
                             <Group1672 className="additional-image" />
                         </li>
                     </div>
