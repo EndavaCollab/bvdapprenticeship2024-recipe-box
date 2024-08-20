@@ -33,7 +33,7 @@ jobs:
               run: npm run build
               working-directory: ./recipe-box-frontend/src/main/frontend
 
-            - name: Upload generated bundle artifact
+            - name: Upload generated bundle as an artifact
               uses: actions/upload-artifact@v4
               with:
                 name: production-rcb-fe
