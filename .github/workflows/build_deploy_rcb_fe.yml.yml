@@ -1,0 +1,13 @@
+name: Build & Deploy RecipeBox Frontend
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
+
+jobs:
+    blank:
+        runs-on: ubuntu-latest
