@@ -9,5 +9,32 @@ on:
             - main
 
 jobs:
-    blank:
+    build:
         runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Download and setup node.js
+              uses: actions/setup-node@v4
+              with:
+                node-version: 'lts'
+
+            - name: Install bun
+              uses: oven-sh/setup-bun@v2
+              with:
+                bun-version: 'latest'
+
+            - name: Install dependencies using bun (faster)
+              run: bun i
+              working-directory: ./recipe-box-frontend/src/main/frontend
+
+            - name: Build web app
+              run: npm run build
+              working-directory: ./recipe-box-frontend/src/main/frontend
+
+            - name: Upload generated bundle artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: production-rcb-fe
+                path: ./recipe-box-frontend/target
