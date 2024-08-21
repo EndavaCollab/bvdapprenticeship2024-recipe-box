@@ -68,16 +68,17 @@ jobs:
 
         - name: Fetch server public IP address
           run: |
-            export IP_ADDRESS=$(az network public-ip show \
+            cmd_output=$(az network public-ip show \
               --resource-group apprenticeship-2024-r \
               --name rcb-public-ip \
               --query "ipAddress" \
-              --output tsv 2> nul)
-            if [ $IP_ADDRESS = '' ]; then
+              --output tsv)
+
+            if [ $? -eq 0 ]; then
+              echo "IP_ADDRESS=$cmd_output" > $GITHUB_ENV
+            else
               echo "IP Address not found! Check the infrastructure workflow and apply the changes and try again."
               exit 1
-            else
-              echo IP_ADDRESS=$IP_ADDRESS > $GITHUB_ENV
             fi
         
         - name: Print IP address
