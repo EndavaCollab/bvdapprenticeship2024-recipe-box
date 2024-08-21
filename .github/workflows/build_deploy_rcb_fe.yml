@@ -115,7 +115,7 @@ jobs:
             sudo chown -R ${{secrets.SSH_ADMIN_USERNAME}}:${{secrets.SSH_ADMIN_USERNAME}} /var/www/${{secrets.DEPLOY_DOMAIN}}/html
             sudo chmod -R 755 /var/www/${{secrets.DEPLOY_DOMAIN}}
             
-            cat > /etc/nginx/sites-available/${{secrets.DEPLOY_DOMAIN}} <<NGINX
+            sudo cat > /etc/nginx/sites-available/${{secrets.DEPLOY_DOMAIN}} <<NGINX
             server {
               listen 80;
               listen [::]:80;
