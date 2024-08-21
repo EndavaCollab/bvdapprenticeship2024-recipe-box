@@ -115,7 +115,7 @@ jobs:
             sudo chown -R ${{secrets.SSH_ADMIN_USERNAME}}:${{secrets.SSH_ADMIN_USERNAME}} /var/www/${{secrets.DEPLOY_DOMAIN}}/html
             sudo chmod -R 755 /var/www/${{secrets.DEPLOY_DOMAIN}}
             
-            cat <<NGINX
+            nginx_config = $(cat <<NGINX
             server {
               listen 80;
               listen [::]:80;
@@ -130,7 +130,8 @@ jobs:
               }
             }
             NGINX
-            | sudo tee /etc/nginx/sites-available/${{secrets.DEPLOY_DOMAIN}}
+            )
+            echo "$nginx_config" | sudo tee /etc/nginx/sites-available/${{secrets.DEPLOY_DOMAIN}}
             CONTENT
         - name: Download built site
           uses: actions/download-artifact@v4
