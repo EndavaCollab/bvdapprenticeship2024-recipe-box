@@ -8,7 +8,7 @@ const RecipesList: React.FC = () => {
         <div className="recipes-list">
             <Header />
             <main>
-                {/* Aici poți adăuga conținutul specific paginii */}
+                {}
             </main>
             <Footer />
         </div>

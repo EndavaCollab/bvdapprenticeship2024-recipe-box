@@ -8,9 +8,15 @@ const Footer: React.FC = () => {
     return (
         <footer className="footer">
             <p>
-                <span className="copy-symbol">&copy;
-                </span> {currentYear} <span className="bold-small">
-                ENDAVA</span>
+            <span className="copy-symbol">
+                &copy;
+            </span>
+                &nbsp;
+                {currentYear}
+                &nbsp;
+                <span className="bold-small">
+                ENDAVA
+            </span>
             </p>
         </footer>
     );
