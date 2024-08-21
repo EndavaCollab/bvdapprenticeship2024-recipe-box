@@ -78,9 +78,14 @@ jobs:
                 cat ./ip_fetch_error.log; \
                 exit 1; \
               } \
-
-            echo "IP_ADDRESS=$cmd_output" > $GITHUB_ENV
-            echo "Successfully fetched IP address into IP_ADDRESS"
+            
+            if [cmd_output -eq '']; then
+              echo "Fetching IP Address failed! Please check that the infrastructure was deployed."
+              exit 1
+            else
+              echo "IP_ADDRESS=$cmd_output" > $GITHUB_ENV
+              echo "Successfully fetched IP address into IP_ADDRESS"
+            fi
         - name: Print IP address
           run: echo $IP_ADDRESS
 
