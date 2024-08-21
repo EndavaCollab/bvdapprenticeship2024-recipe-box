@@ -120,7 +120,7 @@ jobs:
             sudo chown -R ${{secrets.SSH_ADMIN_USERNAME}}:${{secrets.SSH_ADMIN_USERNAME}} /var/www/${{secrets.DEPLOY_DOMAIN}}/html
             sudo chmod -R 755 /var/www/${{secrets.DEPLOY_DOMAIN}}
             
-            sudo tee /etc/nginx/sites-available/${{secrets.DEPLOY_DOMAIN}} <<NGINX
+            sudo tee /etc/nginx/sites-available/${{secrets.DEPLOY_DOMAIN}} <<'NGINX'
             server {
               listen 80 default_server;
               listen [::]:80 default_server;
@@ -131,7 +131,7 @@ jobs:
               server_name ${{secrets.DEPLOY_DOMAIN}} www.${{secrets.DEPLOY_DOMAIN}};
 
               location / {
-                try_files \$uri \$uri/ =404;
+                try_files $uri $uri/ =404;
               }
             }
             NGINX
