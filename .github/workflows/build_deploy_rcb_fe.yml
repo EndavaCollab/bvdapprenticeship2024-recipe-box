@@ -105,7 +105,7 @@ jobs:
 
         - name: Install nginx (if not installed)
           run: |
-            ssh rcb 'sudo apt-get update'
+            ssh rcb 'sudo apt update'
 
 
         
