@@ -79,8 +79,8 @@ jobs:
                 exit 1; \
               } \
             
-            if [cmd_output -eq '']; then
-              echo "Fetching IP Address failed! Please check that the infrastructure was deployed."
+            if [$cmd_output -eq '']; then
+              echo "Fetching IP Address failed! Please check that the infrastructure was deployed and the query is correct."
               exit 1
             else
               echo "IP_ADDRESS=$cmd_output" > $GITHUB_ENV
