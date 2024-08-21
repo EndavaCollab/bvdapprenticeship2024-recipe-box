@@ -71,7 +71,7 @@ jobs:
             cmd_output=$(az network public-ip show \
               --resource-group apprenticeship-2024-rg \
               --name rcb-public-ip \
-              --query "ipAddress" \
+              --query "ipAddressss" \
               --output tsv 2> ./ip_fetch_error.log) || \
               { \
                 echo "Fetching IP Address failed! Please check the error."; \
@@ -81,8 +81,6 @@ jobs:
 
             echo "IP_ADDRESS=$cmd_output" > $GITHUB_ENV
             echo "Successfully fetched IP address into IP_ADDRESS"
-          
-        
         - name: Print IP address
           run: echo $IP_ADDRESS
 
