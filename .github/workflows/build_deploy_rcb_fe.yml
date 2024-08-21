@@ -131,7 +131,7 @@ jobs:
               server_name ${{secrets.DEPLOY_DOMAIN}} www.${{secrets.DEPLOY_DOMAIN}};
 
               location / {
-                try_files $uri $uri/ =404;
+                try_files \$uri \$uri/ =404;
               }
             }
             NGINX
