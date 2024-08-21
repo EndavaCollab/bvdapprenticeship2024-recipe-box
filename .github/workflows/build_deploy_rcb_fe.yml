@@ -114,7 +114,7 @@ jobs:
         - name: Create config for nginx if it doesn't already exist
           continue-on-error: true
           run: |
-            ssh rcb <<CONTENT
+            ssh rcb <<'CONTENT'
 
             sudo mkdir -p /var/www/${{secrets.DEPLOY_DOMAIN}}/html
             sudo chown -R ${{secrets.SSH_ADMIN_USERNAME}}:${{secrets.SSH_ADMIN_USERNAME}} /var/www/${{secrets.DEPLOY_DOMAIN}}/html
