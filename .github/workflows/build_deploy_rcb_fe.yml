@@ -61,6 +61,7 @@ jobs:
             mkdir ~/.ssh
             echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
             chmod 600 ~/.ssh/id_rsa
+            chmod 700 ~/.ssh
 
         - name: Login with Azure
           uses: azure/login@v2
