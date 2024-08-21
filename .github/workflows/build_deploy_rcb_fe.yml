@@ -72,7 +72,7 @@ jobs:
               --resource-group apprenticeship-2024-r \
               --name rcb-public-ip \
               --query "ipAddress" \
-              --output tsv)
+              --output tsv 2> /dev/null)
 
             if [ $? -eq 0 ]; then
               echo "IP_ADDRESS=$cmd_output" > $GITHUB_ENV
