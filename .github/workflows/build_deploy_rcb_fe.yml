@@ -68,7 +68,7 @@ jobs:
 
         - name: Fetch server public IP address
           run: |
-            export $IP_ADDRESS=$(az network public-ip show \
+            export IP_ADDRESS=$(az network public-ip show \
               --resource-group apprenticeship-2024-rg \
               --name rcb-public-ip \
               --query "ipAddress" \
