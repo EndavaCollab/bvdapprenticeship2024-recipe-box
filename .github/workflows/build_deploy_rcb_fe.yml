@@ -129,8 +129,8 @@ jobs:
                 try_files $uri $uri/ =404;
               }
             }
-            NGINX | sudo tee /etc/nginx/sites-available/${{secrets.DEPLOY_DOMAIN}}
-
+            NGINX
+            | sudo tee /etc/nginx/sites-available/${{secrets.DEPLOY_DOMAIN}}
             CONTENT
         - name: Download built site
           uses: actions/download-artifact@v4
