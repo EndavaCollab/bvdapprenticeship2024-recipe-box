@@ -76,7 +76,7 @@ jobs:
               { \
                 echo "Fetching IP Address failed! Please check the error."; \
                 cat ./ip_fetch_error.log; \
-                exit 0; \
+                exit 1; \
               } \
 
             echo "IP_ADDRESS=$cmd_output" > $GITHUB_ENV
