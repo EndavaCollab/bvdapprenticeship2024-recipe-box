@@ -1,9 +1,9 @@
 name: Build & Deploy RecipeBox Frontend
 
 on:
-    push:
-        # branches:
-        #     - main
+    # push:
+    #     # branches:
+    #     #     - main
     pull_request:
         # branches:
         #     - main
@@ -50,26 +50,13 @@ jobs:
       needs: build
 
       steps:
-        - name: Download build artifact
-          uses: actions/download-artifact@v4
-          with:
-            name: production-rcb-fe
-            path: ./rcb-webapp
-          
-        - name: Generate temp SSH private key file
-          run: | 
-            mkdir ~/.ssh
-            echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-            chmod 600 ~/.ssh/id_rsa
-            chmod 700 ~/.ssh
-
         - name: Login with Azure
           uses: azure/login@v2
           with:
             client-id: ${{ secrets.AZURE_CLIENT_ID }}
             tenant-id: ${{ secrets.AZURE_TENANT_ID }}
             subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
+            
         - name: Fetch server public IP address
           run: |
             cmd_output=$(az network public-ip show \
@@ -90,6 +77,14 @@ jobs:
               echo "IP_ADDRESS=$cmd_output" > $GITHUB_ENV
               echo "Successfully fetched IP address into IP_ADDRESS"
             fi
+
+        - name: Generate temp SSH private key file
+          run: | 
+            mkdir ~/.ssh
+            echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+            chmod 600 ~/.ssh/id_rsa
+            chmod 700 ~/.ssh
+
         - name: Trust server and fetch public key
           run: |
             ssh-keyscan -p 22 $IP_ADDRESS >> ~/.ssh/known_hosts
@@ -105,8 +100,52 @@ jobs:
 
         - name: Install nginx (if not installed)
           run: |
-            ssh rcb 'sudo apt update'
+            ssh rcb <<CONTENT
 
+            sudo apt update
+            sudo apt install nginx -y
+
+            CONTENT
+        
+        - name: Create config for nginx if it doesn't already exist
+          run: |
+            ssh rcb <<CONTENT
+
+            sudo mkdir -p /var/www/${{secrets.DEPLOY_DOMAIN}}/html
+            sudo chown -R $USER:$USER /var/www/${{secrets.DEPLOY_DOMAIN}}/html
+            sudo chmod -R 755 /var/www/${{secrets.DEPLOY_DOMAIN}}
+            
+            cat > /etc/nginx/sites-available/${{secrets.DEPLOY_DOMAIN}} <<NGINX
+            server {
+              listen 80;
+              listen [::]:80;
+
+              root /var/www/${{secrets.DEPLOY_DOMAIN}}/html;
+              index index.html;
+
+              server_name ${{secrets.DEPLOY_DOMAIN}} www.${{secrets.DEPLOY_DOMAIN}};
+
+              location / {
+                try_files $uri $uri/ =404;
+              }
+            }
+            NGINX
+
+            CONTENT
+        - name: Download built site
+          uses: actions/download-artifact@v4
+          with:
+            name: production-rcb-fe
+            path: ./rcb-webapp
+
+        - name: Delete old site data (if there is a previous deploy on this instance)
+          run: ssh rcb 'sudo rm -rf /var/www/${{secrets.DEPLOY_DOMAIN}}/html/*'
+
+        - name: Move built site to server
+          run: scp -r ./rcb-webapp rcb:/var/www/${{secrets.DEPLOY_DOMAIN}}/html
+
+        - name: Restart Nginx
+          run : ssh rcb 'sudo systemctl restart nginx'
 
         
 # az network public-ip show --resource-group apprenticeship-2024-rg --name rcb-public-ip --query "ipAddress" --output tsv
