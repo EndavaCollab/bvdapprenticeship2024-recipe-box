@@ -1,11 +1,18 @@
-import React from "react";
+import React from 'react';
+import Header from './Header/Header';
+import Footer from './Footer/Footer';
+import './RecipesList.css';
 
-function RecipesList() {
+const RecipesList: React.FC = () => {
     return (
-        <div>
-          <h1>Dummy Page</h1>
+        <div className="recipes-list">
+            <Header />
+            <main>
+                {}
+            </main>
+            <Footer />
         </div>
-      );
+    );
 }
 
 export default RecipesList;

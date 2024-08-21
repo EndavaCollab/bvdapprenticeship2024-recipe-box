@@ -1,0 +1,32 @@
+.footer {
+    background-color: #f0f0f0;
+    padding: 35px 0;
+    text-align: center;
+    border-top: 1px solid #dee2e6;
+    position: fixed;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    box-sizing: border-box;
+}
+
+.footer p {
+    margin: 0;
+    font-size: 14px;
+    padding: 0 15px;
+}
+
+
+.copy-symbol {
+    display: inline-block;
+    color: white;
+    background-color: black;
+    border-radius: 50%;
+    font-size: 1em;
+    line-height: 0.85;
+}
+
+.bold-small {
+    font-weight: bold;
+    font-size: 0.8em;
+}
