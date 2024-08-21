@@ -141,7 +141,7 @@ jobs:
           run: ssh rcb 'sudo rm -rf /var/www/${{secrets.DEPLOY_DOMAIN}}/html/*'
 
         - name: Move built site to server
-          run: scp -r ./rcb-webapp rcb:/var/www/${{secrets.DEPLOY_DOMAIN}}/html
+          run: scp -r ./rcb-webapp/* rcb:/var/www/${{secrets.DEPLOY_DOMAIN}}/html
 
         - name: Restart Nginx
           run : ssh rcb 'sudo systemctl restart nginx'\
