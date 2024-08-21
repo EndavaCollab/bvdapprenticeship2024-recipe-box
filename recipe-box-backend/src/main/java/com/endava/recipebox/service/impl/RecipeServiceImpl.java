@@ -1,12 +1,13 @@
-package com.endava.recipebox.service;
+package com.endava.recipebox.service.impl;
 
 
 import com.endava.recipebox.model.MealType;
 import com.endava.recipebox.model.Recipe;
 import com.endava.recipebox.model.RecipeStatus;
 import com.endava.recipebox.repository.RecipeRepository;
-import com.endava.recipebox.response.RecipeDTO;
-import com.endava.recipebox.response.RecipeMapper;
+import com.endava.recipebox.dto.RecipeDTO;
+import com.endava.recipebox.mapper.RecipeMapper;
+import com.endava.recipebox.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class RecipeServiceImpl implements RecipeService{
+public class RecipeServiceImpl implements RecipeService {
 
     private final RecipeRepository recipeRepository;
     private final RecipeMapper recipeMapper;

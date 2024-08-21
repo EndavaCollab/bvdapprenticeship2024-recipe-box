@@ -1,7 +1,7 @@
 package com.endava.recipebox.service;
 
 import com.endava.recipebox.model.MealType;
-import com.endava.recipebox.response.RecipeDTO;
+import com.endava.recipebox.dto.RecipeDTO;
 
 import java.util.List;
 

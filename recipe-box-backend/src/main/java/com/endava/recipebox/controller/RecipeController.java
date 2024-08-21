@@ -2,7 +2,7 @@ package com.endava.recipebox.controller;
 
 
 import com.endava.recipebox.model.MealType;
-import com.endava.recipebox.response.RecipeDTO;
+import com.endava.recipebox.dto.RecipeDTO;
 import com.endava.recipebox.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

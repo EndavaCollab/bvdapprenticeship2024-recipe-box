@@ -1,4 +1,4 @@
-package com.endava.recipebox.response;
+package com.endava.recipebox.dto;
 
 import com.endava.recipebox.model.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
