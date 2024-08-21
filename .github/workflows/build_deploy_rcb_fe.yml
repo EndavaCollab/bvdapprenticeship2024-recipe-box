@@ -112,6 +112,7 @@ jobs:
           run: ssh rcb 'sudo rm /etc/nginx/sites-enabled/default'
         
         - name: Create config for nginx if it doesn't already exist
+          continue-on-error: true
           run: |
             ssh rcb <<CONTENT
 
