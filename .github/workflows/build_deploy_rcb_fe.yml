@@ -72,7 +72,7 @@ jobs:
               --resource-group apprenticeship-2024-rg \
               --name rcb-public-ip \
               --query "ipAddress" \
-              --output tsv 2> nul} > $GITHUB_ENV
+              --output tsv 2> nul}" > $GITHUB_ENV
         
         - name: Print IP address
           run: echo $IP_ADDRESS
