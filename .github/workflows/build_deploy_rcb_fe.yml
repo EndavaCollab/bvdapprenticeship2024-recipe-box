@@ -120,8 +120,8 @@ jobs:
             
             sudo tee /etc/nginx/sites-available/${{secrets.DEPLOY_DOMAIN}} <<NGINX
             server {
-              listen 80;
-              listen [::]:80;
+              listen 80 default_server;
+              listen [::]:80 default_server;
 
               root /var/www/${{secrets.DEPLOY_DOMAIN}}/html;
               index index.html;
