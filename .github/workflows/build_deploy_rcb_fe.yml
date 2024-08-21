@@ -57,7 +57,10 @@ jobs:
             path: ./rcb-webapp
           
         - name: Generate temp SSH private key file
-          run: echo ${{ secrets.SSH_PRIVATE_KEY }} > serverkey
+          run: | 
+            mkdir ~/.ssh
+            echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+            chmod 600 ~/.ssh/id_rsa
 
         - name: Login with Azure
           uses: azure/login@v2
@@ -86,8 +89,22 @@ jobs:
               echo "IP_ADDRESS=$cmd_output" > $GITHUB_ENV
               echo "Successfully fetched IP address into IP_ADDRESS"
             fi
-        - name: Print IP address
-          run: echo $IP_ADDRESS
+        - name: Trust server and fetch public key
+          run: |
+            ssh-keyscan -p 22 $IP_ADDRESS >> ~/.ssh/known_hosts
+
+        - name: Create ssh host
+          run: |
+            cat >> ~/.ssh/config <<CONTENT
+            Host rcb
+              HostName $IP_ADDRESS
+              User ${{ secrets.SSH_ADMIN_USERNAME }}
+              IdentityFile ~/.ssh/id_rsa
+            CONTENT
+
+        - name: Install nginx (if not installed)
+          run: |
+            ssh rcb 'sudo apt update'
 
 
         
