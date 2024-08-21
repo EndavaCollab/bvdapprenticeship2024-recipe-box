@@ -106,6 +106,9 @@ jobs:
             sudo apt install nginx -y
 
             CONTENT
+
+        - name: Remove Nginx default site (if it exists)
+          run: ssh rcb 'sudo rm /etc/nginx/sites-enabled/default'
         
         - name: Create config for nginx if it doesn't already exist
           run: |
@@ -130,6 +133,9 @@ jobs:
               }
             }
             NGINX
+
+            sudo ln -s /etc/nginx/sites-available/${{secrets.DEPLOY_DOMAIN}} /etc/nginx/sites-enabled/
+
             CONTENT
         - name: Download built site
           uses: actions/download-artifact@v4
@@ -144,7 +150,7 @@ jobs:
           run: scp -r ./rcb-webapp/* rcb:/var/www/${{secrets.DEPLOY_DOMAIN}}/html
 
         - name: Restart Nginx
-          run : ssh rcb 'sudo systemctl restart nginx'\
+          run : ssh rcb 'sudo systemctl restart nginx'
 
         - name: Create / Update DNS Records on domain to point to server (domain)
           uses: everpcpc/cloudflare-dns-action@v1
