@@ -1,12 +1,12 @@
 name: Build & Deploy RecipeBox Frontend
 
 on:
-    # push:
-    #     # branches:
-    #     #     - main
+    push:
+      branches:
+          - main
     pull_request:
-        # branches:
-        #     - main
+      branches:
+          - main
 
 # for logging in w/ azure
 permissions:
@@ -20,11 +20,6 @@ jobs:
         - name: Checkout repository
           uses: actions/checkout@v4
 
-        # - name: Download and setup node.js
-        #   uses: actions/setup-node@v4
-        #   with:
-        #     node-version: 'lts/*'
-
         - name: Download and setup Java
           uses: actions/setup-java@v4
           with:
@@ -34,21 +29,8 @@ jobs:
         - name: Download and install maven
           run: sudo apt update & sudo apt install maven -y
 
-        # - name: Install bun
-        #   uses: oven-sh/setup-bun@v2
-        #   with:
-        #     bun-version: 'latest'
-
-        # - name: Install dependencies using bun (faster)
-        #   run: bun i
-        #   working-directory: ./recipe-box-frontend/src/main/frontend
-
-        # - name: Build web app
-        #   run: npm run build
-        #   working-directory: ./recipe-box-frontend/src/main/frontend
-
         - name: Build web app using maven
-          run: mvn compile
+          run: mvn install
           working-directory: recipe-box-frontend
 
         - name: Upload generated bundle as an artifact
@@ -59,6 +41,7 @@ jobs:
 
     deploy:
       runs-on: ubuntu-latest
+      if: ${{ github.event_name == 'push'}}
       environment: deploy # for logging in w/ azure
       needs: build
 
@@ -188,6 +171,3 @@ jobs:
             proxied: false
             token: ${{ secrets.CLOUDFLARE_TOKEN }}
             zone: ${{ secrets.CLOUDFLARE_ZONE }}
-
-        
-# az network public-ip show --resource-group apprenticeship-2024-rg --name rcb-public-ip --query "ipAddress" --output tsv
