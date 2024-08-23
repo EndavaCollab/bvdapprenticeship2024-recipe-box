@@ -97,8 +97,9 @@ jobs:
         - name: Download built package
           uses: actions/download-artifact@v4
           with:
-                name: production-rcb-be
-                path: .
+            name: production-rcb-be
+        - name: Display structure of downloaded files
+          run: ls -R
 
         - name: Install Java on the remote server
           # https://adoptium.net/installation/linux/
