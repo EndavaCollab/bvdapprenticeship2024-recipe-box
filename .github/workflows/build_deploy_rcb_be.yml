@@ -47,7 +47,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    #  TODO: Uncomment -> if: ${{ github.event_name == 'push'}}
+    if: ${{ github.event_name == 'push'}}
     environment: deploy
     needs: build
 
