@@ -1,12 +1,18 @@
 name: Build & Deploy RecipeBox Backend
 
 on:
-    push:
-        branches:
-            - main
-    pull_request:
-        branches:
-            - main
+  push:
+    branches:
+      - main
+    paths:
+      - recipe-box-backend/**
+      - .github/workflows/build_deploy_rcb_be.yml
+  pull_request:
+    branches:
+      - main
+    paths:
+      - recipe-box-backend/**
+      - .github/workflows/build_deploy_rcb_be.yml
 
 # for logging in w/ azure
 permissions:
