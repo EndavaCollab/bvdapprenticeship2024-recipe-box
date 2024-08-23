@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,7 +22,6 @@ public class RecipeServiceImpl implements RecipeService {
 
     private final RecipeRepository recipeRepository;
     private final RecipeMapper recipeMapper;
-
 
     @Autowired
     public RecipeServiceImpl(RecipeRepository recipeRepository, RecipeMapper recipeMapper) {
@@ -38,6 +38,11 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeMapper.map(recipeRepository.findAll().stream()
                 .filter(RecipeServiceImpl::isPublic)
                 .collect(Collectors.toList()));
+    }
+
+    @Override
+    public Optional<Recipe> getRecipeById(Long recipeId) {
+        return recipeRepository.findById(recipeId);
     }
 
     @Override
