@@ -133,7 +133,7 @@ jobs:
           run: ssh rcb 'sudo rm -rf ~/rcb-be/*'
 
         - name: Move backend package to server
-          run: scp -r ./rcb-server.jar rcb:~/rcb-be/
+          run: scp ./rcb-server.jar rcb:~/rcb-be/
 
         - name: Run backend on screen
           run: ssh rcb 'screen -S "rcb-be" -X stuff "java -jar ~/rcb-be/rcb-server.jar$(printf \\r)"'
