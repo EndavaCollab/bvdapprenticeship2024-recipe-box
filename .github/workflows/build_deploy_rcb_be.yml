@@ -85,6 +85,15 @@ jobs:
           run: |
             ssh-keyscan -p 22 $IP_ADDRESS >> ~/.ssh/known_hosts
 
+        - name: Create ssh host
+          run: |
+            cat >> ~/.ssh/config <<CONTENT
+            Host rcb
+              HostName $IP_ADDRESS
+              User ${{ secrets.SSH_ADMIN_USERNAME }}
+              IdentityFile ~/.ssh/id_rsa
+            CONTENT
+
         - name: Download built package
           uses: actions/download-artifact@v4
           with:
