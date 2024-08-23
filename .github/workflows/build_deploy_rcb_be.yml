@@ -117,15 +117,15 @@ jobs:
         - name: Install screen on server (if it's not installed)
           run: ssh rcb 'sudo apt -qq update & sudo apt -qq install screen'
 
-        - name: Check if there is a screen running in the backend
+        - name: Check if the server is running and recreate the screen
           run: |
             ssh rcb <<'CONTENT'
-                if ! screen -list | grep -q "rcb-be"; then
-                    screen -d -m -S "rcb-be"
-                else 
-                    screen -S "rcb-be" -X stuff "exit$(printf \\r)"
+                if screen -list | grep -q "rcb-be"; then
+                    screen -S "rcb-be" -X stuff "^C"
                     sleep 10s
+                    screen -S "rcb-be" -X stuff "exit$(printf \\r)"
                 fi
+                screen -d -m -S "rcb-be"
             CONTENT
 
         - name: Delete old server data (if there is any)
