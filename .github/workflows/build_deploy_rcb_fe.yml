@@ -11,7 +11,7 @@ on:
     branches:
       - main
     paths:
-      - recipe-box-backend/**
+      - recipe-box-frontend/**
       - .github/workflows/build_deploy_rcb_fe.yml
 
 # Azure login
