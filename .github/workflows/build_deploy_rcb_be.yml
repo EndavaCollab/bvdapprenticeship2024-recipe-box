@@ -14,7 +14,7 @@ on:
       - recipe-box-backend/**
       - .github/workflows/build_deploy_rcb_be.yml
 
-# for logging in w/ azure
+# Azure login
 permissions:
   id-token: write
   contents: read
@@ -36,19 +36,19 @@ jobs:
           run: sudo apt -qq update & sudo apt -qq install maven -y
 
         - name: Package server app using maven
-          run: mvn package -B -q -DskipTests=true # todo: remove skipping tests
+          run: mvn package -B -q -DskipTests=true # TODO: remove skipping tests
           working-directory: recipe-box-backend
 
         - name: Upload generated bundle as an artifact
           uses: actions/upload-artifact@v4
           with:
             name: production-rcb-be
-            path: ./recipe-box-backend/target/recipe-box-backend-0.0.1-SNAPSHOT.jar # adapt version / ask team to use finalName
+            path: ./recipe-box-backend/target/recipe-box-backend-0.0.1-SNAPSHOT.jar # TODO: adapt version / ask team to use finalName
 
     deploy:
       runs-on: ubuntu-latest
-      # if: ${{ github.event_name == 'push'}}
-      environment: deploy # for logging in w/ azure
+      #  TODO: Uncomment -> if: ${{ github.event_name == 'push'}}
+      environment: deploy
       needs: build
 
       steps:
@@ -114,8 +114,7 @@ jobs:
               echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | sudo tee /etc/apt/sources.list.d/adoptium.list
               sudo apt update && sudo apt install -y temurin-21-jre
             CONTENT
-          
-                
+
         - name: Create folder for server JAR
           run: ssh rcb 'mkdir ~/rcb-be/'
           continue-on-error: true
