@@ -104,8 +104,8 @@ jobs:
         run: |
           ssh rcb <<CONTENT
 
-          sudo apt update
-          sudo apt install nginx -y
+          sudo apt -qq update
+          sudo apt -qq install nginx -y
 
           CONTENT
 
