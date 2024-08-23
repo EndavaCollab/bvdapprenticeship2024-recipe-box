@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 
@@ -55,7 +54,7 @@ public class RecipeController {
         }
 
         Recipe recipe = recipeOptional.get();
-        if (recipe.getRecipeStatus().equals(RecipeStatus.PRIVATE) && !Objects.equals(recipe.getUser().getId(), userId)) {
+        if (recipe.getRecipeStatus().equals(RecipeStatus.PRIVATE) && recipe.getUser().getId().equals(userId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not allowed to access this recipe.");
         }
 
