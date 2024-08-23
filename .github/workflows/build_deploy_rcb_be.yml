@@ -113,7 +113,7 @@ jobs:
                 if ! screen -list | grep -q "rcb-be"; then
                     screen -d -m -S "rcb-be"
                 else 
-                    screen -S "rcb-be" -X "^C"
+                    screen -S "rcb-be" -X stuff "^C"
                     sleep 10s
                 fi
             CONTENT
@@ -125,7 +125,7 @@ jobs:
           run: scp -r ./rcb-server.jar rcb:~/rcb-be/
 
         - name: Run backend on screen
-          run: ssh rcb 'screen -dm -S "rcb-be" -X "java -jar ~/rcb-be/rcb-server.jar"'
+          run: ssh rcb 'screen -S "rcb-be" -X stuff "java -jar ~/rcb-be/rcb-server.jar"'
 
         # - name: Create / Update DNS Records on domain to point to server (server.domain)
         #   uses: everpcpc/cloudflare-dns-action@v1
