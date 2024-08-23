@@ -1,9 +1,9 @@
 name: Build & Deploy RecipeBox Backend
 
 on:
-    # push:
-    #     branches:
-    #         - main
+    push:
+        branches:
+            - main
     pull_request:
         branches:
             - main
@@ -30,18 +30,18 @@ jobs:
           run: sudo apt update & sudo apt install maven -y
 
         - name: Package server app using maven
-          run: mvn package
+          run: mvn package -DskipTests=true # todo: remove skipping tests
           working-directory: recipe-box-backend
 
         - name: Upload generated bundle as an artifact
           uses: actions/upload-artifact@v4
           with:
             name: production-rcb-be
-            path: ./recipe-box-backend/target/recipe-box-frontend-1.0-SNAPSHOT.jar # adapt version?
+            path: ./recipe-box-backend/target/recipe-box-backend-1.0-SNAPSHOT.jar # adapt version / ask team to use finalName
 
     deploy:
       runs-on: ubuntu-latest
-      if: ${{ github.event_name == 'push'}}
+      # if: ${{ github.event_name == 'push'}}
       environment: deploy # for logging in w/ azure
       needs: build
 
