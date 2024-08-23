@@ -27,7 +27,7 @@ jobs:
             java-version: '21'
 
         - name: Download and install maven
-          run: sudo -qq apt update & sudo -qq apt install maven -y
+          run: sudo apt -qq update & sudo apt -qq install maven -y
 
         - name: Package server app using maven
           run: mvn package -B -q -DskipTests=true # todo: remove skipping tests
