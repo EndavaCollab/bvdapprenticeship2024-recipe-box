@@ -42,7 +42,7 @@ public class Recipe {
     private Difficulty difficulty;
 
     @Column(name = "preparation_time", nullable = false)
-    private Duration preparationTime;
+    private int preparationTime;
 
     @Column(name = "imageUrl", nullable = false)
     private String imageUrl;
