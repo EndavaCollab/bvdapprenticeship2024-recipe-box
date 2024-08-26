@@ -1,7 +1,10 @@
 #!/bin/bash
 
+# make temp configs directory
+ssh rcb "sudo mkdir -r /tmp/configs/"
+
 # Move the nginx config file to the remote
-rsync -r ../configs/* rcb:/tmp/configs/*
+scp -r ../configs/* rcb:/tmp/configs/*
 
 ssh rcb <<CONTENT
     # Install dependencies if required
