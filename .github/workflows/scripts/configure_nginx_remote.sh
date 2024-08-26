@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # make temp configs directory
-ssh rcb "sudo mkdir -r /tmp/configs/"
+ssh rcb "sudo mkdir -p /tmp/configs/"
 
 # Move the nginx config file to the remote
 scp -r ../configs/* rcb:/tmp/configs/*
