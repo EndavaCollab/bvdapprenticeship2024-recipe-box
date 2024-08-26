@@ -4,7 +4,7 @@
 # write the private key into id_rsa and change permissions accordingly
 
 mkdir ~/.ssh
-echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
 chmod 600 ~/.ssh/id_rsa
 chmod 700 ~/.ssh
 
@@ -16,7 +16,7 @@ ssh-keyscan -p 22 $IP_ADDRESS >> ~/.ssh/known_hosts
 cat >> ~/.ssh/config <<CONTENT
 Host rcb
 HostName $IP_ADDRESS
-User ${{ secrets.SSH_ADMIN_USERNAME }}
+User $SSH_ADMIN_USERNAME
 IdentityFile ~/.ssh/id_rsa
 CONTENT
 

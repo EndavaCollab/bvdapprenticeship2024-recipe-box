@@ -70,6 +70,9 @@ jobs:
 
       - name: Config SSH connection on the Github Worker
         working-directory: .github/workflows/scripts
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_ADMIN_USERNAME: ${{ secrets.SSH_ADMIN_USERNAME }}
         run: bash ./worker_config_ssh.sh
 
       - name: Config nginx on remote
