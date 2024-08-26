@@ -4,7 +4,7 @@
 ssh rcb "rm -rf ~/deployconfigs/* && mkdir -p ~/deployconfigs/"
 
 # Move the config files to the remote
-scp -r ../configs/* rcb:~/deployconfigs/*
+scp -r ../configs/* rcb:~/deployconfigs/
 
 ssh rcb <<CONTENT
     # Install dependencies if required
