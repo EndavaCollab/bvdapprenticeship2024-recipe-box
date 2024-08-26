@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Move the nginx config file to the remote
-scp -r ../configs/* rcb:/tmp/configs/*
+rsync -r ../configs/* rcb:/tmp/configs/*
 
 ssh rcb <<CONTENT
     # Install dependencies if required
