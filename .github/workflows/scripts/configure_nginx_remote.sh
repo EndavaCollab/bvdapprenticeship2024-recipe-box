@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # make temp configs directory
-ssh rcb "sudo mkdir -p /tmp/configs/"
+ssh rcb "rm -rf ~/deployconfigs/* && mkdir -p ~/deployconfigs/"
 
-# Move the nginx config file to the remote
-scp -r ../configs/* rcb:/tmp/configs/*
+# Move the config files to the remote
+scp -r ../configs/* rcb:~/deployconfigs/*
 
 ssh rcb <<CONTENT
     # Install dependencies if required
@@ -21,8 +21,8 @@ ssh rcb <<CONTENT
     sudo chmod -R 755 /var/www/$GITHUB_FE_SITE_DOMAIN
             
     # Modify nginx script so that the domain is replaced and move it into the corresponding folder
-    sed -i "s/REPLACE_DOMAIN/$GITHUB_FE_SITE_DOMAIN/g" /tmp/configs/nginx.conf
-    sudo mv /tmp/configs/nginx.conf /etc/nginx/sites-available/$GITHUB_FE_SITE_DOMAIN
+    sed -i "s/REPLACE_DOMAIN/$GITHUB_FE_SITE_DOMAIN/g" ~/deployconfigs/nginx.conf
+    sudo mv ~/deployconfigs/nginx.conf /etc/nginx/sites-available/$GITHUB_FE_SITE_DOMAIN
 
     # Symlink site from available to enabled
     sudo ln -s /etc/nginx/sites-available/$GITHUB_FE_SITE_DOMAIN /etc/nginx/sites-enabled/
