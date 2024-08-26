@@ -66,11 +66,11 @@ jobs:
             
       - name: Fetch server public IP address
         working-directory: .github/workflows/scripts
-        run: chmod +x fetch_ip.sh & sudo ./fetch_ip.sh
+        run: bash ./fetch_ip.sh
 
       - name: Config SSH connection on the Github Worker
         working-directory: .github/workflows/scripts
-        run: chmod +x fetch_ip.sh & sudo ./worker_config_ssh.sh
+        run: bash ./worker_config_ssh.sh
 
       - name: Config nginx on remote
         continue-on-error: true
@@ -78,7 +78,7 @@ jobs:
         env:
           GITHUB_FE_SITE_DOMAIN: ${{ vars.DOMAIN_NAME }}
           GITHUB_ADMIN_USERNAME: ${{ secrets.SSH_ADMIN_USERNAME }}
-        run: chmod +x fetch_ip.sh & sudo ./configure_nginx_remote.sh
+        run: bash ./configure_nginx_remote.sh
 
       - name: Download built site
         uses: actions/download-artifact@v4
