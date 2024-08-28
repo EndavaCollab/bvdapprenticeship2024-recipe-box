@@ -1,10 +1,9 @@
 package com.endava.recipebox;
 
-import com.endava.recipebox.dto.RecipeRequestDTO;
+import com.endava.recipebox.dto.RecipeAddRequestDTO;
 import com.endava.recipebox.dto.UserIngredientRequestDTO;
 import com.endava.recipebox.model.Difficulty;
 import com.endava.recipebox.model.MealType;
-import com.endava.recipebox.model.Recipe;
 import com.endava.recipebox.service.RecipeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -52,38 +51,33 @@ class RecipeBoxBackendApplicationTests {
     @Test
     void testCreateRecipe() throws Exception {
 
-        RecipeRequestDTO recipeRequestDTO = new RecipeRequestDTO();
-        recipeRequestDTO.setName("Test Recipe");
-        recipeRequestDTO.setDescription("This is a test recipe");
-        recipeRequestDTO.setImageUrl("http://example.com/image.jpg");
-        recipeRequestDTO.setPreparationTime(30);
-        recipeRequestDTO.setDifficulty(Difficulty.Medium);
-        recipeRequestDTO.setServings(4);
-        recipeRequestDTO.setPublic(true);
-        recipeRequestDTO.setMealType(MealType.Breakfast);
+        RecipeAddRequestDTO recipeAddRequestDTO = new RecipeAddRequestDTO();
+        recipeAddRequestDTO.setName("Test Recipe");
+        recipeAddRequestDTO.setDescription("This is a test recipe");
+        recipeAddRequestDTO.setImageURL("http://example.com/image.jpg");
+        recipeAddRequestDTO.setCookingTime("30");
+        recipeAddRequestDTO.setDifficulty("Medium");
+        recipeAddRequestDTO.setServings(4);
+        recipeAddRequestDTO.setRecipeStatus("public");
+        recipeAddRequestDTO.setMealType("Breakfast");
 
         UserIngredientRequestDTO ingredientDTO = new UserIngredientRequestDTO();
         ingredientDTO.setIngredientId(1L);
         ingredientDTO.setQuantity(100);
         ingredientDTO.setUnit("grams");
-        recipeRequestDTO.setIngredients(Collections.singletonList(ingredientDTO));
+        recipeAddRequestDTO.setIngredients(Collections.singletonList(ingredientDTO));
 
-        Recipe mockRecipe = new Recipe();
-        mockRecipe.setId(1L);
-        mockRecipe.setName("Test Recipe");
+        Mockito.when(recipeService.createRecipe(Mockito.any(RecipeAddRequestDTO.class), Mockito.anyLong()))
+                .thenReturn("Recipe added successfully");
 
-        Mockito.when(recipeService.createRecipe(Mockito.any(RecipeRequestDTO.class), Mockito.anyLong()))
-                .thenReturn(mockRecipe);
+        String recipeJson = objectMapper.writeValueAsString(recipeAddRequestDTO);
 
-        String recipeJson = objectMapper.writeValueAsString(recipeRequestDTO);
-
-        mockMvc.perform(post("/recipes/create")
+        mockMvc.perform(post("/recipes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(recipeJson)
                         .param("userId", "1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.name").value("Test Recipe"));
+                .andExpect(jsonPath("$").value("Recipe added successfully"));
     }
 
 }

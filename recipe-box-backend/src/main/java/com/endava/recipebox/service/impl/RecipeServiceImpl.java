@@ -1,12 +1,14 @@
 package com.endava.recipebox.service.impl;
 
 
-import com.endava.recipebox.dto.RecipeRequestDTO;
+import com.endava.recipebox.dto.RecipeAddRequestDTO;
+import com.endava.recipebox.exceptions.UnauthorizedActionException;
 import com.endava.recipebox.model.*;
 import com.endava.recipebox.repository.*;
 import com.endava.recipebox.dto.RecipeDTO;
 import com.endava.recipebox.mapper.RecipeMapper;
 import com.endava.recipebox.service.RecipeService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,26 +66,26 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     @Transactional
-    public Recipe createRecipe(RecipeRequestDTO recipeRequestDTO, Long userId) {
+    public String createRecipe(RecipeAddRequestDTO recipeAddRequestDTO, Long userId) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
         if (user.getRole() != Role.Admin )
-            throw new RuntimeException("Only admins can create recipes");
+            throw new UnauthorizedActionException("Only admins can create recipes");
 
-        Recipe recipe = recipeMapper.toEntity(recipeRequestDTO);
+        Recipe recipe = recipeMapper.toEntity(recipeAddRequestDTO);
 
         recipe.setUser(user);
 
         Recipe savedRecipe = recipeRepository.save(recipe);
 
-        List<RecipeIngredient> recipeIngredients = recipeRequestDTO.getIngredients().stream()
+        List<RecipeIngredient> recipeIngredients = recipeAddRequestDTO.getIngredients().stream()
                 .map(ingredientDTO -> {
                     RecipeIngredient recipeIngredient = new RecipeIngredient();
                     recipeIngredient.setRecipe(savedRecipe);
 
                     UserIngredient ingredient = userIngredientRepository.findById(ingredientDTO.getIngredientId())
-                            .orElseThrow(() -> new RuntimeException("Ingredient not found"));
+                            .orElseThrow(() -> new EntityNotFoundException("No ingredient found in the DB."));
 
                     recipeIngredient.setIngredient(ingredient.getIngredient());
                     recipeIngredient.setQuantity(ingredientDTO.getQuantity());
@@ -95,6 +97,6 @@ public class RecipeServiceImpl implements RecipeService {
 
         recipeIngredientRepository.saveAll(recipeIngredients);
 
-        return savedRecipe;
+        return "Recipe added successfully";
     }
 }
