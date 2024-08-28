@@ -1,6 +1,9 @@
 package com.endava.recipebox.service.impl;
 
 
+import com.endava.recipebox.dto.RecipeDetailsDTO;
+import com.endava.recipebox.exception.BadRequestException;
+import com.endava.recipebox.exception.UnauthorizedActionException;
 import com.endava.recipebox.model.MealType;
 import com.endava.recipebox.model.Recipe;
 import com.endava.recipebox.model.RecipeStatus;
@@ -41,11 +44,6 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Optional<Recipe> getRecipeById(Long recipeId) {
-        return recipeRepository.findById(recipeId);
-    }
-
-    @Override
     public List<RecipeDTO> getAllPublicRecipesByName(String recipeName) {
         return  recipeMapper.map(recipeRepository.findAll().stream()
                 .filter(RecipeServiceImpl::isPublic)
@@ -59,5 +57,32 @@ public class RecipeServiceImpl implements RecipeService {
                 .filter(RecipeServiceImpl::isPublic)
                 .filter(r -> r.getMealType() == mealType)
                 .collect(Collectors.toList()));
+    }
+
+    @Override
+    public Recipe getRecipeById(Long recipeId) {
+        Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
+        if (recipeOptional.isEmpty()) {
+            throw new BadRequestException("Recipe with ID " + recipeId + " not found.");
+        }
+        return recipeOptional.get();
+    }
+
+    @Override
+    public RecipeDTO getRecipeDTOById(Long recipeId) {
+        Recipe recipe = getRecipeById(recipeId);
+        if (recipe.getRecipeStatus() == RecipeStatus.PRIVATE) {
+            throw new UnauthorizedActionException("You do not have access to this private recipe.");
+        }
+        return recipeMapper.mapRecipe(recipe);
+    }
+
+    @Override
+    public RecipeDetailsDTO getDetailedRecipeById(Long recipeId, Long userId) {
+        Recipe recipe = getRecipeById(recipeId);
+        if (recipe.getRecipeStatus() == RecipeStatus.PRIVATE && !recipe.getUser().getId().equals(userId)) {
+            throw new UnauthorizedActionException("You do not have access to this private recipe.");
+        }
+        return recipeMapper.mapDetailedRecipe(recipe);
     }
 }
