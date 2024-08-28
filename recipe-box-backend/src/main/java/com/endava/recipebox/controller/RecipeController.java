@@ -40,10 +40,7 @@ public class RecipeController {
 
     @PostMapping
     public ResponseEntity<String> createRecipe(@Validated @RequestBody RecipeAddRequestDTO recipeAddRequestDTO, @RequestParam Long userId) {
-        if (recipeAddRequestDTO != null && userId != null) {
-            return ResponseEntity.ok(recipeService.createRecipe(recipeAddRequestDTO, userId));
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Recipe failed to be created.");
+        return ResponseEntity.ok(recipeService.createRecipe(recipeAddRequestDTO, userId));
     }
 
 
