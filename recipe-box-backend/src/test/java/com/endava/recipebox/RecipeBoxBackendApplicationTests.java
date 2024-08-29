@@ -32,7 +32,7 @@ class RecipeBoxBackendApplicationTests {
     // CREATE User
     @Test
     public void shouldSaveAndReturnUserIfSuccessful() throws Exception {
-        String username = "wew12";
+        String username = "wew2122";
         this.mockMvc.perform(post("/login").contentType(MediaType.APPLICATION_JSON)
                         .content(username))
                 .andExpect(status().isOk())
