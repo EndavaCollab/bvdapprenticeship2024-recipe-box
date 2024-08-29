@@ -29,7 +29,7 @@ public class RecipeDTO {
     @JsonIgnore
     private Difficulty difficulty;
     @JsonIgnore
-    private Duration preparationTime;
+    private int preparationTime;
     @JsonIgnore
     private MealType mealType;
     @JsonIgnore

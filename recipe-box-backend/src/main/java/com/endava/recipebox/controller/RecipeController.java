@@ -1,11 +1,14 @@
 package com.endava.recipebox.controller;
 
 
+import com.endava.recipebox.dto.RecipeAddRequestDTO;
 import com.endava.recipebox.model.MealType;
 import com.endava.recipebox.dto.RecipeDTO;
 import com.endava.recipebox.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -35,5 +38,9 @@ public class RecipeController {
         return ResponseEntity.ok(recipeService.getAllPublicRecipesByName(recipeName));
     }
 
+    @PostMapping
+    public ResponseEntity<String> createRecipe(@Validated @RequestBody RecipeAddRequestDTO recipeAddRequestDTO, @RequestParam Long userId) {
+        return ResponseEntity.ok(recipeService.createRecipe(recipeAddRequestDTO, userId));
+    }
 
 }
