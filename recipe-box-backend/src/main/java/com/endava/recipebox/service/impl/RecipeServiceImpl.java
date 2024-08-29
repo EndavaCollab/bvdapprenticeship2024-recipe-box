@@ -1,10 +1,16 @@
 package com.endava.recipebox.service.impl;
 
 
-import com.endava.recipebox.dto.RecipeAddRequestDTO;
 import com.endava.recipebox.dto.RecipeDTO;
-import com.endava.recipebox.dto.RecipeEditRequestDTO;
+import com.endava.recipebox.dto.RecipeDetailsDTO;
+import com.endava.recipebox.dto.RecipeIngredientDTO;
+import com.endava.recipebox.exception.BadRequestException;
+import com.endava.recipebox.exception.UnauthorizedActionException;
+import com.endava.recipebox.dto.RecipeAddRequestDTO;
 import com.endava.recipebox.exceptions.UnauthorizedActionException;
+import com.endava.recipebox.model.*;
+import com.endava.recipebox.repository.*;
+import com.endava.recipebox.dto.RecipeDTO;
 import com.endava.recipebox.mapper.RecipeMapper;
 import com.endava.recipebox.model.*;
 import com.endava.recipebox.repository.IngredientRepository;
@@ -17,7 +23,10 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
+
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
@@ -99,6 +108,42 @@ public class RecipeServiceImpl implements RecipeService {
         recipeIngredientRepository.saveAll(recipeIngredients);
 
         return "Recipe added successfully";
+    }
+
+    @Override
+    public Recipe getRecipeById(Long recipeId) {
+        Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
+        if (recipeOptional.isEmpty()) {
+            throw new BadRequestException("Recipe with ID " + recipeId + " not found.");
+        }
+        return recipeOptional.get();
+    }
+
+    @Override
+    public RecipeDTO getRecipeDTOById(Long recipeId) {
+        Recipe recipe = getRecipeById(recipeId);
+        if (!isPublic(recipe)) {
+            throw new UnauthorizedActionException("You do not have access to this private recipe.");
+        }
+        return recipeMapper.mapRecipe(recipe);
+    }
+
+    @Override
+    public RecipeDetailsDTO getDetailedRecipeById(Long recipeId, Long userId) {
+        Recipe recipe = getRecipeById(recipeId);
+        if (!isPublic(recipe) && !recipe.getUser().getId().equals(userId)) {
+            throw new UnauthorizedActionException("You do not have access to this private recipe.");
+        }
+        RecipeDetailsDTO recipeDetailsDTO = recipeMapper.mapDetailedRecipe(recipe);
+        recipeDetailsDTO.setRecipeIngredients(recipe.getRecipeIngredients().stream()
+                .map(recipeIngredient -> RecipeIngredientDTO.builder()
+                        .ingredientId(recipeIngredient.getIngredient().getId())
+                        .name(recipeIngredient.getIngredient().getName())
+                        .quantity(recipeIngredient.getQuantity())
+                        .unit(recipeIngredient.getUnit()).build())
+                .toList());
+
+        return recipeDetailsDTO;
     }
 
     @Override

@@ -1,10 +1,11 @@
-package com.endava.recipebox.exceptions;
+package com.endava.recipebox.exception;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+
 public class ErrorResponse {
     private String message;
     private int statusCode;

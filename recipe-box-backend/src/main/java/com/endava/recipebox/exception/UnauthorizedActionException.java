@@ -1,4 +1,4 @@
-package com.endava.recipebox.exceptions;
+package com.endava.recipebox.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -9,3 +9,4 @@ public class UnauthorizedActionException extends RuntimeException {
         super(message);
     }
 }
+
