@@ -2,6 +2,8 @@ package com.endava.recipebox.controller;
 
 import com.endava.recipebox.dto.IngredientRequestDTO;
 import com.endava.recipebox.dto.RecipeAddRequestDTO;
+import com.endava.recipebox.dto.RecipeEditRequestDTO;
+import com.endava.recipebox.exceptions.UnauthorizedActionException;
 import com.endava.recipebox.service.RecipeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -15,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Collections;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -60,5 +63,41 @@ class RecipeControllerTest {
                         .param("userId", "1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").value("Recipe added successfully"));
+    }
+
+    @Test
+    void editRecipe_UserAuthorized_ReturnsOk() throws Exception {
+
+        String responseMessage = "Recipe update successfully!";
+        Mockito.when(recipeService.editRecipe(Mockito.any(RecipeEditRequestDTO.class), Mockito.eq(1L))).thenReturn(responseMessage);
+
+        String recipeJson = "{ \"id\": 1, \"name\": \"New Recipe\", \"description\": \"Description\", \"imageURL\": \"http://image.url\", " +
+                            "\"mealType\": \"dinner\", \"ingredients\": [{ \"name\": \"Ingredient\", \"quantity\": \"2\" }], \"cookingTime\": " +
+                            "\"30 minutes\", \"difficulty\": \"easy\", \"recipeStatus\": \"public\", \"servings\": 2 }";
+
+        mockMvc.perform(patch("/recipes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(recipeJson)
+                        .param("userId", "1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value("Recipe update successfully!"));
+    }
+
+    @Test
+    void editRecipe_UserUnauthorized_ReturnsForbidden() throws Exception {
+
+        Mockito.doThrow(new UnauthorizedActionException("You do not have permission to edit this recipe"))
+                .when(recipeService).editRecipe(Mockito.any(RecipeEditRequestDTO.class), Mockito.eq(2L));
+
+        String recipeJson = "{ \"id\": 1, \"name\": \"New Recipe\", \"description\": \"Description\", \"imageURL\": \"http://image.url\", " +
+                            "\"mealType\": \"dinner\", \"ingredients\": [{ \"name\": \"Ingredient\", \"quantity\": \"2\" }], \"cookingTime\": " +
+                            "\"30 minutes\", \"difficulty\": \"easy\", \"recipeStatus\": \"public\", \"servings\": 2 }";
+
+        mockMvc.perform(patch("/recipes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(recipeJson)
+                        .param("userId", "2"))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$").value("{\"message\":\"You do not have permission to edit this recipe\",\"status\":403}"));
     }
 }
