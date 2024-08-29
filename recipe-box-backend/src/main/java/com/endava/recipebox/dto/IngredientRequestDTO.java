@@ -1,6 +1,5 @@
 package com.endava.recipebox.dto;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 

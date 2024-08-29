@@ -1,15 +1,15 @@
 package com.endava.recipebox.service.impl;
 
 
-import com.endava.recipebox.dto.RecipeDTO;
-import com.endava.recipebox.dto.RecipeDetailsDTO;
-import com.endava.recipebox.dto.RecipeIngredientDTO;
+import com.endava.recipebox.dto.*;
 import com.endava.recipebox.exception.BadRequestException;
 import com.endava.recipebox.exception.UnauthorizedActionException;
-import com.endava.recipebox.dto.RecipeAddRequestDTO;
-import com.endava.recipebox.model.*;
-import com.endava.recipebox.repository.*;
 import com.endava.recipebox.mapper.RecipeMapper;
+import com.endava.recipebox.model.*;
+import com.endava.recipebox.repository.IngredientRepository;
+import com.endava.recipebox.repository.RecipeIngredientRepository;
+import com.endava.recipebox.repository.RecipeRepository;
+import com.endava.recipebox.repository.UserRepository;
 import com.endava.recipebox.service.RecipeService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -27,6 +27,7 @@ public class RecipeServiceImpl implements RecipeService {
     private final IngredientRepository ingredientRepository;
     private final RecipeIngredientRepository recipeIngredientRepository;
     private final RecipeMapper recipeMapper;
+
 
     @Autowired
     public RecipeServiceImpl(RecipeRepository recipeRepository, RecipeMapper recipeMapper, UserRepository userRepository,
@@ -88,6 +89,7 @@ public class RecipeServiceImpl implements RecipeService {
                     Ingredient ingredient = ingredientRepository.findById(ingredientDTO.getIngredientId())
                             .orElseThrow(() -> new EntityNotFoundException("No ingredient found in the DB."));
 
+                    recipeIngredient.setId(new RecipeIngredientId(recipe.getId(), ingredient.getId()));
                     recipeIngredient.setIngredient(ingredient);
                     recipeIngredient.setQuantity(ingredientDTO.getQuantity());
                     recipeIngredient.setUnit(ingredient.getUnit());
@@ -134,5 +136,40 @@ public class RecipeServiceImpl implements RecipeService {
                 .toList());
 
         return recipeDetailsDTO;
+    }
+
+    @Override
+    @Transactional
+    public String updateRecipe(RecipeEditRequestDTO recipeAddRequestDTO, Long userId){
+        Recipe recipe = recipeRepository.findById(recipeAddRequestDTO.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Recipe not found"));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        boolean isAdmin = user.getRole().equals(Role.Admin);
+        boolean isOwner = recipe.getUser().getId().equals(userId);
+
+        if (isAdmin || isOwner) {
+            Recipe updateRecipe = recipeMapper.toEntity(recipeAddRequestDTO);
+
+            recipe.setName(updateRecipe.getName());
+            recipe.setDescription(updateRecipe.getDescription());
+            recipe.setImageUrl(updateRecipe.getImageUrl());
+            recipe.setMealType(updateRecipe.getMealType());
+            recipe.setRecipeIngredients(updateRecipe.getRecipeIngredients());
+            recipe.setPreparationTime(updateRecipe.getPreparationTime());
+            recipe.setDifficulty(updateRecipe.getDifficulty());
+            recipe.setRecipeStatus(updateRecipe.getRecipeStatus());
+            recipe.setServings(updateRecipe.getServings());
+
+            recipeRepository.save(recipe);
+        }
+        else
+        {
+            throw new UnauthorizedActionException("You do not have permission to edit this recipe");
+        }
+
+        return "Recipe update successfully!";
     }
 }
