@@ -2,20 +2,21 @@ package com.endava.recipebox.service.impl;
 
 
 import com.endava.recipebox.dto.RecipeAddRequestDTO;
+import com.endava.recipebox.dto.RecipeDTO;
 import com.endava.recipebox.dto.RecipeEditRequestDTO;
 import com.endava.recipebox.exceptions.UnauthorizedActionException;
-import com.endava.recipebox.model.*;
-import com.endava.recipebox.repository.*;
-import com.endava.recipebox.dto.RecipeDTO;
 import com.endava.recipebox.mapper.RecipeMapper;
+import com.endava.recipebox.model.*;
+import com.endava.recipebox.repository.IngredientRepository;
+import com.endava.recipebox.repository.RecipeIngredientRepository;
+import com.endava.recipebox.repository.RecipeRepository;
+import com.endava.recipebox.repository.UserRepository;
 import com.endava.recipebox.service.RecipeService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @Service
@@ -102,7 +103,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     @Transactional
-    public String editRecipe(RecipeEditRequestDTO recipeAddRequestDTO, Long userId){
+    public String updateRecipe(RecipeEditRequestDTO recipeAddRequestDTO, Long userId){
         Recipe recipe = recipeRepository.findById(recipeAddRequestDTO.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Recipe not found"));
 
@@ -112,23 +113,26 @@ public class RecipeServiceImpl implements RecipeService {
         boolean isAdmin = user.getRole().equals(Role.Admin);
         boolean isOwner = recipe.getUser().getId().equals(userId);
 
-        if (!isAdmin && !isOwner) {
+        if (isAdmin || isOwner) {
+            Recipe updateRecipe = recipeMapper.toEntity(recipeAddRequestDTO);
+
+            recipe.setName(updateRecipe.getName());
+            recipe.setDescription(updateRecipe.getDescription());
+            recipe.setImageUrl(updateRecipe.getImageUrl());
+            recipe.setMealType(updateRecipe.getMealType());
+            recipe.setRecipeIngredients(updateRecipe.getRecipeIngredients());
+            recipe.setPreparationTime(updateRecipe.getPreparationTime());
+            recipe.setDifficulty(updateRecipe.getDifficulty());
+            recipe.setRecipeStatus(updateRecipe.getRecipeStatus());
+            recipe.setServings(updateRecipe.getServings());
+
+            recipeRepository.save(recipe);
+        }
+        else
+        {
             throw new UnauthorizedActionException("You do not have permission to edit this recipe");
         }
 
-        Recipe updateRecipe = recipeMapper.toEntity(recipeAddRequestDTO);
-
-        recipe.setName(updateRecipe.getName());
-        recipe.setDescription(updateRecipe.getDescription());
-        recipe.setImageUrl(updateRecipe.getImageUrl());
-        recipe.setMealType(updateRecipe.getMealType());
-        recipe.setRecipeIngredients(updateRecipe.getRecipeIngredients());
-        recipe.setPreparationTime(updateRecipe.getPreparationTime());
-        recipe.setDifficulty(updateRecipe.getDifficulty());
-        recipe.setRecipeStatus(updateRecipe.getRecipeStatus());
-        recipe.setServings(updateRecipe.getServings());
-
-        recipeRepository.save(recipe);
         return "Recipe update successfully!";
     }
 }

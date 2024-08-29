@@ -69,7 +69,7 @@ class RecipeControllerTest {
     void editRecipe_UserAuthorized_ReturnsOk() throws Exception {
 
         String responseMessage = "Recipe update successfully!";
-        Mockito.when(recipeService.editRecipe(Mockito.any(RecipeEditRequestDTO.class), Mockito.eq(1L))).thenReturn(responseMessage);
+        Mockito.when(recipeService.updateRecipe(Mockito.any(RecipeEditRequestDTO.class), Mockito.eq(1L))).thenReturn(responseMessage);
 
         String recipeJson = "{ \"id\": 1, \"name\": \"New Recipe\", \"description\": \"Description\", \"imageURL\": \"http://image.url\", " +
                             "\"mealType\": \"dinner\", \"ingredients\": [{ \"name\": \"Ingredient\", \"quantity\": \"2\" }], \"cookingTime\": " +
@@ -87,7 +87,7 @@ class RecipeControllerTest {
     void editRecipe_UserUnauthorized_ReturnsForbidden() throws Exception {
 
         Mockito.doThrow(new UnauthorizedActionException("You do not have permission to edit this recipe"))
-                .when(recipeService).editRecipe(Mockito.any(RecipeEditRequestDTO.class), Mockito.eq(2L));
+                .when(recipeService).updateRecipe(Mockito.any(RecipeEditRequestDTO.class), Mockito.eq(2L));
 
         String recipeJson = "{ \"id\": 1, \"name\": \"New Recipe\", \"description\": \"Description\", \"imageURL\": \"http://image.url\", " +
                             "\"mealType\": \"dinner\", \"ingredients\": [{ \"name\": \"Ingredient\", \"quantity\": \"2\" }], \"cookingTime\": " +
