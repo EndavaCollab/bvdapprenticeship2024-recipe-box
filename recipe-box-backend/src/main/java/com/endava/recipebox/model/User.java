@@ -29,7 +29,4 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Recipe> recipes;
-
-    @OneToMany(mappedBy = "user")
-    private List<UserIngredient> userIngredients;
 }

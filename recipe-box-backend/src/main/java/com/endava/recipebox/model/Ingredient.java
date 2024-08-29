@@ -25,6 +25,9 @@ public class Ingredient {
     @Column(name = "carbs")
     private int carbs;
 
+    @Column(name = "unit")
+    private String unit;
+
     @Column(name = "fat")
     private int fat;
 
@@ -37,9 +40,6 @@ public class Ingredient {
 
     @OneToMany(mappedBy = "ingredient")
     private List<RecipeIngredient> recipeIngredients;
-
-    @OneToMany(mappedBy = "ingredient")
-    private List<UserIngredient> userIngredients;
 
 
 }
