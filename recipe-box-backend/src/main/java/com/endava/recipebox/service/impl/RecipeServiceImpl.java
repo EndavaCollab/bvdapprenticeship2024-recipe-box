@@ -1,20 +1,19 @@
 package com.endava.recipebox.service.impl;
 
 
+import com.endava.recipebox.dto.RecipeDTO;
 import com.endava.recipebox.dto.RecipeDetailsDTO;
+import com.endava.recipebox.dto.RecipeIngredientDTO;
 import com.endava.recipebox.exception.BadRequestException;
 import com.endava.recipebox.exception.UnauthorizedActionException;
+import com.endava.recipebox.mapper.RecipeMapper;
 import com.endava.recipebox.model.MealType;
 import com.endava.recipebox.model.Recipe;
 import com.endava.recipebox.model.RecipeStatus;
 import com.endava.recipebox.repository.RecipeRepository;
-import com.endava.recipebox.dto.RecipeDTO;
-import com.endava.recipebox.mapper.RecipeMapper;
 import com.endava.recipebox.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-
 
 import java.util.List;
 import java.util.Optional;
@@ -83,6 +82,15 @@ public class RecipeServiceImpl implements RecipeService {
         if (recipe.getRecipeStatus() == RecipeStatus.PRIVATE && !recipe.getUser().getId().equals(userId)) {
             throw new UnauthorizedActionException("You do not have access to this private recipe.");
         }
-        return recipeMapper.mapDetailedRecipe(recipe);
+        RecipeDetailsDTO recipeDetailsDTO = recipeMapper.mapDetailedRecipe(recipe);
+        recipeDetailsDTO.setRecipeIngredients(recipe.getRecipeIngredients().stream()
+                .map(recipeIngredient -> RecipeIngredientDTO.builder()
+                        .ingredientId(recipeIngredient.getIngredient().getId())
+                        .name(recipeIngredient.getIngredient().getName())
+                        .quantity(recipeIngredient.getQuantity())
+                        .unit(recipeIngredient.getUnit()).build())
+                .toList());
+
+        return recipeDetailsDTO;
     }
 }

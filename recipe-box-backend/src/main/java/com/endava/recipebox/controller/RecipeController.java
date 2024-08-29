@@ -37,23 +37,19 @@ public class RecipeController {
     }
 
     @GetMapping("/{recipeId}")
-    public ResponseEntity<RecipeDTO> getRecipeById(@PathVariable Long recipeId, @RequestParam(required = false)Long userId) {
+    public ResponseEntity<Object> getRecipeById(@PathVariable Long recipeId, @RequestParam(required = false)Long userId) {
         if (recipeId == null)
         {
             throw new BadRequestException("Recipe ID is null.");
         }
 
-        RecipeDTO recipeDTO;
         if (userId == null) {
-            recipeDTO = recipeService.getRecipeDTOById(recipeId);
+            return ResponseEntity.ok(recipeService.getRecipeDTOById(recipeId));
         }
         else {
-            recipeDTO = recipeService.getDetailedRecipeById(recipeId, userId);
+            return ResponseEntity.ok(recipeService.getDetailedRecipeById(recipeId, userId));
         }
-
-        return ResponseEntity.ok(recipeDTO);
     }
-
 
 
 }
