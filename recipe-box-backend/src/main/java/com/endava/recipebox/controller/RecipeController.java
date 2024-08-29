@@ -53,7 +53,6 @@ public class RecipeController {
         }
     }
 
-
     @PostMapping
     public ResponseEntity<String> createRecipe(@Validated @RequestBody RecipeAddRequestDTO recipeAddRequestDTO, @RequestParam Long userId) {
         return ResponseEntity.ok(recipeService.createRecipe(recipeAddRequestDTO, userId));

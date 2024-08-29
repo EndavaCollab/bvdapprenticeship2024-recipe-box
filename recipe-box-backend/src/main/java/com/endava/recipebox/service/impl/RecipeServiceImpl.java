@@ -7,7 +7,6 @@ import com.endava.recipebox.dto.RecipeIngredientDTO;
 import com.endava.recipebox.exception.BadRequestException;
 import com.endava.recipebox.exception.UnauthorizedActionException;
 import com.endava.recipebox.dto.RecipeAddRequestDTO;
-import com.endava.recipebox.exceptions.UnauthorizedActionException;
 import com.endava.recipebox.model.*;
 import com.endava.recipebox.repository.*;
 import com.endava.recipebox.mapper.RecipeMapper;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
@@ -114,7 +112,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public RecipeDTO getRecipeDTOById(Long recipeId) {
         Recipe recipe = getRecipeById(recipeId);
-        if (recipe.getRecipeStatus() == RecipeStatus.PRIVATE) {
+        if (!isPublic(recipe)) {
             throw new UnauthorizedActionException("You do not have access to this private recipe.");
         }
         return recipeMapper.mapRecipe(recipe);
@@ -123,7 +121,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public RecipeDetailsDTO getDetailedRecipeById(Long recipeId, Long userId) {
         Recipe recipe = getRecipeById(recipeId);
-        if (recipe.getRecipeStatus() == RecipeStatus.PRIVATE && !recipe.getUser().getId().equals(userId)) {
+        if (!isPublic(recipe) && !recipe.getUser().getId().equals(userId)) {
             throw new UnauthorizedActionException("You do not have access to this private recipe.");
         }
         RecipeDetailsDTO recipeDetailsDTO = recipeMapper.mapDetailedRecipe(recipe);
