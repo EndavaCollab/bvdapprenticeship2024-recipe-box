@@ -1,7 +1,7 @@
 package com.endava.recipebox.controller;
 
+import com.endava.recipebox.dto.IngredientRequestDTO;
 import com.endava.recipebox.dto.RecipeAddRequestDTO;
-import com.endava.recipebox.dto.UserIngredientRequestDTO;
 import com.endava.recipebox.service.RecipeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -43,7 +43,7 @@ class RecipeControllerTest {
         recipeAddRequestDTO.setRecipeStatus("public");
         recipeAddRequestDTO.setMealType("Breakfast");
 
-        UserIngredientRequestDTO ingredientDTO = new UserIngredientRequestDTO();
+        IngredientRequestDTO ingredientDTO = new IngredientRequestDTO();
         ingredientDTO.setIngredientId(1L);
         ingredientDTO.setQuantity(100);
         ingredientDTO.setUnit("grams");

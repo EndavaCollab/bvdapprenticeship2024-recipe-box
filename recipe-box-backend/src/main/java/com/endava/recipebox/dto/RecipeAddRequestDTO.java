@@ -41,7 +41,7 @@ public class RecipeAddRequestDTO {
     @NotNull(message = "Ingredients cannot be null")
     @Size(min = 1, message = "There must be at least one ingredient")
     @Valid
-    private List<UserIngredientRequestDTO> ingredients;
+    private List<IngredientRequestDTO> ingredients;
 
     @NotNull(message = "Cooking time cannot be null")
     @NotBlank(message = "Cooking time cannot be blank")

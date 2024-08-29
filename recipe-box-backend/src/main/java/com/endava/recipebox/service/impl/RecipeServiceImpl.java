@@ -22,19 +22,19 @@ public class RecipeServiceImpl implements RecipeService {
 
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
-    private final UserIngredientRepository userIngredientRepository;
+    private final IngredientRepository ingredientRepository;
     private final RecipeIngredientRepository recipeIngredientRepository;
     private final RecipeMapper recipeMapper;
 
 
     @Autowired
     public RecipeServiceImpl(RecipeRepository recipeRepository, RecipeMapper recipeMapper, UserRepository userRepository,
-                             RecipeIngredientRepository recipeIngredientRepository, UserIngredientRepository userIngredientRepository) {
+                             RecipeIngredientRepository recipeIngredientRepository, IngredientRepository ingredientRepository) {
         this.recipeRepository = recipeRepository;
         this.recipeMapper = recipeMapper;
         this.userRepository = userRepository;
         this.recipeIngredientRepository = recipeIngredientRepository;
-        this.userIngredientRepository = userIngredientRepository;
+        this.ingredientRepository = ingredientRepository;
     }
 
     public static boolean isPublic(Recipe recipe) {
@@ -84,13 +84,12 @@ public class RecipeServiceImpl implements RecipeService {
                     RecipeIngredient recipeIngredient = new RecipeIngredient();
                     recipeIngredient.setRecipe(savedRecipe);
 
-                    UserIngredient ingredient = userIngredientRepository.findById(ingredientDTO.getIngredientId())
+                    Ingredient ingredient = ingredientRepository.findById(ingredientDTO.getIngredientId())
                             .orElseThrow(() -> new EntityNotFoundException("No ingredient found in the DB."));
 
-                    recipeIngredient.setIngredient(ingredient.getIngredient());
+                    recipeIngredient.setIngredient(ingredient);
                     recipeIngredient.setQuantity(ingredientDTO.getQuantity());
-                    recipeIngredient.setUnit(ingredientDTO.getUnit());
-                    ingredient.setQuantity(ingredient.getQuantity()-ingredientDTO.getQuantity());
+                    recipeIngredient.setUnit(ingredient.getUnit());
                     return recipeIngredient;
                 })
                 .toList();

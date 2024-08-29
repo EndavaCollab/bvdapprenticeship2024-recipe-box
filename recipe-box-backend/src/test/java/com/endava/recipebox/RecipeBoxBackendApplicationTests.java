@@ -1,13 +1,8 @@
 package com.endava.recipebox;
 
-import com.endava.recipebox.dto.RecipeAddRequestDTO;
-import com.endava.recipebox.dto.UserIngredientRequestDTO;
-import com.endava.recipebox.model.Difficulty;
-import com.endava.recipebox.model.MealType;
 import com.endava.recipebox.service.RecipeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
