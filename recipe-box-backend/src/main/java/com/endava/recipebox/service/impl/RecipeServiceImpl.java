@@ -1,16 +1,9 @@
 package com.endava.recipebox.service.impl;
 
 
-import com.endava.recipebox.dto.RecipeDTO;
-import com.endava.recipebox.dto.RecipeDetailsDTO;
-import com.endava.recipebox.dto.RecipeIngredientDTO;
+import com.endava.recipebox.dto.*;
 import com.endava.recipebox.exception.BadRequestException;
 import com.endava.recipebox.exception.UnauthorizedActionException;
-import com.endava.recipebox.dto.RecipeAddRequestDTO;
-import com.endava.recipebox.exceptions.UnauthorizedActionException;
-import com.endava.recipebox.model.*;
-import com.endava.recipebox.repository.*;
-import com.endava.recipebox.dto.RecipeDTO;
 import com.endava.recipebox.mapper.RecipeMapper;
 import com.endava.recipebox.model.*;
 import com.endava.recipebox.repository.IngredientRepository;
@@ -22,8 +15,6 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-
 
 import java.util.List;
 import java.util.Optional;
@@ -98,6 +89,7 @@ public class RecipeServiceImpl implements RecipeService {
                     Ingredient ingredient = ingredientRepository.findById(ingredientDTO.getIngredientId())
                             .orElseThrow(() -> new EntityNotFoundException("No ingredient found in the DB."));
 
+                    recipeIngredient.setId(new RecipeIngredientId(recipe.getId(), ingredient.getId()));
                     recipeIngredient.setIngredient(ingredient);
                     recipeIngredient.setQuantity(ingredientDTO.getQuantity());
                     recipeIngredient.setUnit(ingredient.getUnit());

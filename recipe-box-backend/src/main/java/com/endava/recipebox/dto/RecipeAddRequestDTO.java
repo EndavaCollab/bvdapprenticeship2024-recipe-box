@@ -27,7 +27,7 @@
 
         @NotNull(message = "Description cannot be null")
         @NotBlank(message = "Description cannot be blank")
-        private String imageURL;
+        private String imageUrl;
 
         @NotNull(message = "Type cannot be null")
         @NotBlank(message = "Type cannot be blank")
