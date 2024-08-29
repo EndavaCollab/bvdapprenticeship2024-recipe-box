@@ -42,7 +42,7 @@ public class RecipeController {
         return ResponseEntity.ok(recipeService.createRecipe(recipeAddRequestDTO, userId));
     }
 
-    @PatchMapping
+    @PutMapping
     public ResponseEntity<String> editRecipe(@Validated @RequestBody RecipeEditRequestDTO recipeEditRequestDTO, @RequestParam Long userId){
         return ResponseEntity.ok(recipeService.updateRecipe(recipeEditRequestDTO,userId));
     }
