@@ -15,6 +15,8 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Objects;
@@ -73,10 +75,18 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public List<RecipeDTO> getAllPrivateRecipesByUserId(Long userId) {
-        return recipeMapper.map(recipeRepository.findAll().stream()
+        Logger log = LoggerFactory.getLogger(RecipeServiceImpl.class);
+
+        List<Recipe> recipes = recipeRepository.findAll().stream()
                 .filter(RecipeServiceImpl::isPrivate)
                 .filter(r -> Objects.equals(r.getUser().getId(), userId))
-                .toList());
+                .toList();
+
+        if (recipes.isEmpty()) {
+            log.info("No private recipes found for userId: {}", userId);
+        }
+
+        return recipeMapper.map(recipes);
     }
 
     @Override
