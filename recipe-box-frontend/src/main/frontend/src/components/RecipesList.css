@@ -1,8 +1,0 @@
-.recipes-list {
-    padding: 20px;
-    padding-bottom: 60px; /*footer*/
-}
-
-.recipes-list main {
-    min-height: calc(100vh - 120px);
-}

@@ -1,0 +1,12 @@
+.recipes-list {
+    padding: 20px;
+    padding-bottom: 60px;
+    margin: 0 200px;
+    display: flex;
+    flex-direction: column;
+}
+
+.recipes-list main {
+    flex: 1;
+    padding-top: 100px;
+}

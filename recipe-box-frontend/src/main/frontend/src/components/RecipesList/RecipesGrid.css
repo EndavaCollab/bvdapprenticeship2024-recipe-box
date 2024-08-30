@@ -1,0 +1,26 @@
+.recipes-grid {
+    display: grid;
+    gap: 40px;
+    padding: 30px 0 50px 0;
+    justify-content: center;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.recipes-grid .card {
+    width: 100%;
+    max-width: 300px;
+}
+
+@media (min-width: 1100px) {
+    .recipes-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1400px) {
+    .recipes-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
