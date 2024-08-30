@@ -1,7 +1,6 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./HomePage.css";
-import { ReactComponent as Logo } from "../assets/images/recipe_box_logo_light.svg";
+import { ReactComponent as Logo } from "../../assets/images/recipe_box_logo_light.svg";
 
 function HomePage() {
     const navigate = useNavigate();
