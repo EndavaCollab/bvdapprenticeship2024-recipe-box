@@ -13,6 +13,13 @@ on:
     paths:
       - recipe-box-backend/**
       - .github/workflows/build_deploy_rcb_be.yml
+  workflow_dispatch: 
+    inputs:
+      run_deploy:
+        type: boolean
+        default: true
+        description: Should the backend app be deployed?
+        required: true
 
 # Azure login
 permissions:
@@ -40,6 +47,7 @@ jobs:
         working-directory: recipe-box-backend
 
       - name: Upload generated bundle as an artifact
+        if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.run_deploy == 'true')}}
         uses: actions/upload-artifact@v4
         with:
           name: production-rcb-be
@@ -47,7 +55,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' }}
+    if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.run_deploy == 'true')}}
     environment: deploy
     needs: build
 
