@@ -51,7 +51,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: production-rcb-be
-          path: ./recipe-box-backend/target/recipe-box-backend-0.0.1-SNAPSHOT.jar # TODO: adapt version / ask team to use finalName
+          path: ./recipe-box-backend/target/*.jar
 
   deploy:
     runs-on: ubuntu-latest
@@ -60,6 +60,9 @@ jobs:
     needs: build
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Login with Azure
         uses: azure/login@v2
         with:
@@ -68,81 +71,24 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           
       - name: Fetch server public IP address
-        run: |
-          cmd_output=$(az network public-ip show \
-            --resource-group apprenticeship-2024-rg \
-            --name rcb-public-ip \
-            --query "ipAddress" \
-            --output tsv 2> ./ip_fetch_error.log) || \
-            { \
-              echo "Fetching IP Address failed! Please check the error."; \
-              cat ./ip_fetch_error.log; \
-              exit 1; \
-            } \
-          
-          if [ -z "$cmd_output" ]; then
-            echo "Fetching IP Address failed! Please check that the infrastructure was deployed and the query is correct."
-            exit 1
-          else
-            echo "IP_ADDRESS=$cmd_output" > $GITHUB_ENV
-            echo "Successfully fetched IP address into IP_ADDRESS"
-          fi
+        working-directory: .github/workflows/scripts
+        run: bash ./fetch_ip.sh
 
-      - name: Generate temp SSH private key file
-        run: | 
-          mkdir ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          chmod 700 ~/.ssh
-
-      - name: Trust server and fetch public key
-        run: |
-          ssh-keyscan -p 22 $IP_ADDRESS >> ~/.ssh/known_hosts
-
-      - name: Create ssh host
-        run: |
-          cat >> ~/.ssh/config <<CONTENT
-          Host rcb
-            HostName $IP_ADDRESS
-            User ${{ secrets.SSH_ADMIN_USERNAME }}
-            IdentityFile ~/.ssh/id_rsa
-          CONTENT
+      - name: Config SSH connection on the Github Worker
+        working-directory: .github/workflows/scripts
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_ADMIN_USERNAME: ${{ secrets.SSH_ADMIN_USERNAME }}
+        run: bash ./worker_config_ssh.sh
 
       - name: Download built package
         uses: actions/download-artifact@v4
         with:
           name: production-rcb-be
 
-      - name: Install Java on the remote server
-        # https://adoptium.net/installation/linux/
-        run: |
-          ssh rcb <<'CONTENT'
-            sudo apt -qq install -y wget apt-transport-https gpg
-            wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/adoptium.gpg > /dev/null
-            echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | sudo tee /etc/apt/sources.list.d/adoptium.list
-            sudo apt update && sudo apt install -y temurin-21-jre
-          CONTENT
-
-      - name: Create folder for server JAR
-        run: ssh rcb 'mkdir ~/rcb-be/'
-        continue-on-error: true
-
-      - name: Install screen on server (if it's not installed)
-        run: ssh rcb 'sudo apt -qq update & sudo apt -qq install screen'
-
-      - name: Check if the server is running and recreate the screen
-        run: |
-          ssh rcb <<'CONTENT'
-              if screen -list | grep -q "rcb-be"; then
-                  screen -S "rcb-be" -X stuff "^C"
-                  sleep 10s
-                  screen -S "rcb-be" -X stuff "exit$(printf \\r)"
-              fi
-              screen -d -m -S "rcb-be"
-          CONTENT
-
-      - name: Delete old server data (if there is any)
-        run: ssh rcb 'sudo rm -rf ~/rcb-be/*'
+      - name: Install dependencies on the remote server and start a screen
+        working-directory: .github/workflows/scripts
+        run: bash ./be_remote_configure.sh
 
       - name: Move backend package to server
         run: scp ./recipe-box-backend-0.0.1-SNAPSHOT.jar rcb:~/rcb-be/
