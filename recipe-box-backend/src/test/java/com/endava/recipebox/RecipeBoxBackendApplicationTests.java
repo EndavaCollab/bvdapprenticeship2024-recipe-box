@@ -33,12 +33,12 @@ class RecipeBoxBackendApplicationTests {
     @Test
     public void shouldSaveAndReturnUserIfSuccessful() throws Exception {
         String username = "wew2122";
-        this.mockMvc.perform(post("/login").contentType(MediaType.APPLICATION_JSON)
+        this.mockMvc.perform(post("/users/login").contentType(MediaType.APPLICATION_JSON)
                         .content(username))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value(username));
 
-        this.mockMvc.perform(get("/login"))
+        this.mockMvc.perform(get("/users/login"))
                 .andExpect(status().isBadRequest());
     }
 }

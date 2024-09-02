@@ -3,7 +3,7 @@ package com.endava.recipebox.controller;
 import com.endava.recipebox.dto.IngredientRequestDTO;
 import com.endava.recipebox.dto.RecipeAddRequestDTO;
 import com.endava.recipebox.dto.RecipeEditRequestDTO;
-import com.endava.recipebox.exceptions.UnauthorizedActionException;
+import com.endava.recipebox.exception.UnauthorizedActionException;
 import com.endava.recipebox.service.RecipeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -17,8 +17,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Collections;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -39,7 +39,7 @@ class RecipeControllerTest {
         RecipeAddRequestDTO recipeAddRequestDTO = new RecipeAddRequestDTO();
         recipeAddRequestDTO.setName("Test Recipe");
         recipeAddRequestDTO.setDescription("This is a test recipe");
-        recipeAddRequestDTO.setImageURL("http://example.com/image.jpg");
+        recipeAddRequestDTO.setImageUrl("http://example.com/image.jpg");
         recipeAddRequestDTO.setCookingTime("30");
         recipeAddRequestDTO.setDifficulty("Medium");
         recipeAddRequestDTO.setServings(4);
@@ -75,7 +75,7 @@ class RecipeControllerTest {
                             "\"mealType\": \"dinner\", \"ingredients\": [{ \"name\": \"Ingredient\", \"quantity\": \"2\" }], \"cookingTime\": " +
                             "\"30 minutes\", \"difficulty\": \"easy\", \"recipeStatus\": \"public\", \"servings\": 2 }";
 
-        mockMvc.perform(patch("/recipes")
+        mockMvc.perform(put("/recipes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(recipeJson)
                         .param("userId", "1"))
@@ -93,7 +93,7 @@ class RecipeControllerTest {
                             "\"mealType\": \"dinner\", \"ingredients\": [{ \"name\": \"Ingredient\", \"quantity\": \"2\" }], \"cookingTime\": " +
                             "\"30 minutes\", \"difficulty\": \"easy\", \"recipeStatus\": \"public\", \"servings\": 2 }";
 
-        mockMvc.perform(patch("/recipes")
+        mockMvc.perform(put("/recipes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(recipeJson)
                         .param("userId", "2"))

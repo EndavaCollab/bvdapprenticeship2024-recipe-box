@@ -10,6 +10,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
+    <packaging>jar</packaging>
     <groupId>com.endava</groupId>
     <artifactId>recipe-box-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
