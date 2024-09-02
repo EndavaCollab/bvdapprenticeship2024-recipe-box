@@ -1,5 +1,5 @@
 .home-page {
-    background-image: url("../assets/images/start_screen_bg.png");
+    background-image: url("../../assets/images/start_screen_bg.png");
     background-size: cover;
     background-position: center;
     height: 100vh;
@@ -21,11 +21,12 @@
     background-color: #01ae3a;
     border-radius: 5px;
     border: none;
-    text-align: center;
     width: 350px;
-    height: 60px;
+    padding: 0px;
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
 }
 
 .start-button:hover {
-    background-color: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
