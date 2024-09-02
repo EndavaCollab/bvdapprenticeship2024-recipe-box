@@ -80,6 +80,8 @@
     white-space: nowrap;
     font-family: "Segoe UI";
     border-radius: 5px;
+
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
 }
 
 .signup-button {
@@ -100,4 +102,9 @@
 
 .input-group.error .validation-message {
     color: red;
+}
+
+.login-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
