@@ -98,7 +98,7 @@ jobs:
       - name: Run backend on screen
         run: | 
           ssh rcb <<CONTENT
-            lines_to_add=("export DB_URL=\"${{ vars.DB_URL }}\"" "export DB_USERNAME="${{ vars.DB_USERNAME }}\"" "export DB_PASSWORD=\"${{ secrets.DB_PASSWORD }}\"")
+            lines_to_add=("export DB_URL=\"${{ vars.DB_URL }}\"" "export DB_USERNAME=\"${{ vars.DB_USERNAME }}\"" "export DB_PASSWORD=\"${{ secrets.DB_PASSWORD }}\"")
             output_file="~/.bashrc"
 
             for line in "${lines_to_add[@]}"; do
