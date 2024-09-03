@@ -98,6 +98,14 @@ jobs:
       - name: Run backend on screen
         run: | 
           ssh rcb <<CONTENT
+            lines_to_add=("DB_URL=${{ vars.DB_URL }}" "DB_USERNAME=${{ vars.DB_USERNAME }}" "DB_PASSWORD=${{ secrets.DB_PASSWORD }}")
+            output_file="/etc/environment"
+
+            for line in "${lines_to_add[@]}"; do
+              if ! sudo grep -Fxq "$line" "$output_file"; then
+                  echo "$line" >> sudo tee -a "$output_file"
+              fi
+            done
             export DB_URL="${{ vars.DB_URL }}"
             export DB_USERNAME="${{ vars.DB_USERNAME }}"
             export DB_PASSWORD="${{ secrets.DB_PASSWORD }}"
