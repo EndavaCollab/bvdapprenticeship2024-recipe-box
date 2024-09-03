@@ -98,11 +98,11 @@ jobs:
       - name: Run backend on screen
         run: | 
           ssh rcb <<CONTENT
-            lines_to_add=("export DB_URL=\"${{ vars.DB_URL }}\"" "export DB_USERNAME=\"${{ vars.DB_USERNAME }}\"" "export DB_PASSWORD=\"${{ secrets.DB_PASSWORD }}\"")
+            lines_to_add=("export DB_URL=\"\${{ vars.DB_URL }}\"" "export DB_USERNAME=\"\${{ vars.DB_USERNAME }}\"" "export DB_PASSWORD=\"\${{ secrets.DB_PASSWORD }}\"")
 
-            for line in "${lines_to_add[@]}"; do
-              if ! sudo grep -Fxq "$line" ~/.bashrc; then
-                  echo "$line" >> sudo tee -a ~/.bashrc
+            for line in "\${lines_to_add[@]}"; do
+              if ! sudo grep -Fxq "\$line" ~/.bashrc; then
+                echo "\$line" | sudo tee -a ~/.bashrc > /dev/null
               fi
             done
 
@@ -110,3 +110,4 @@ jobs:
 
             screen -S "rcb-be" -X stuff "java -jar ~/rcb-be/recipe-box-backend-0.0.1-SNAPSHOT.jar$(printf \\r)"
           CONTENT
+
