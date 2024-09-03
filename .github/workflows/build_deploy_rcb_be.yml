@@ -102,7 +102,7 @@ jobs:
 
             for line in "${lines_to_add[@]}"; do
               if ! sudo grep -Fxq "$line" ~/.bashrc; then
-                  echo "$line" >> sudo tee -a "$output_file"
+                  echo "$line" >> sudo tee -a ~/.bashrc
               fi
             done
 
