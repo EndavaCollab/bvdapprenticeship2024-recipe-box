@@ -27,14 +27,14 @@
     display: flex;
     align-items: center;
     margin: 5px 0;
-    flex-basis: 45%; /* Pentru a face două elemente pe rând */
+    flex-basis: 45%;
 }
 
 .icon {
     margin-right: 8px;
     width: 20px;
     height: 20px;
-    fill: green; /* Schimbă culoarea pictogramelor SVG */
+    fill: green;
 }
 
 .meta-item span {
