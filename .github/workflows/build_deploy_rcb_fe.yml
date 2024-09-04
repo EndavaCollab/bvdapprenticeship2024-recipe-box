@@ -37,7 +37,7 @@ jobs:
         run: sudo apt -qq update & sudo apt -qq install maven -y
 
       - name: Build web app using maven
-        run: mvn install -B -q
+        run: mvn install -B -e
         working-directory: recipe-box-frontend
 
       - name: Upload generated bundle as an artifact

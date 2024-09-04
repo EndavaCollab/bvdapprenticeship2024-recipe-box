@@ -45,7 +45,7 @@ jobs:
           sudo apt -qq install maven -y
       - name: Package server app using maven
         # run: mvn package -B -q -DskipTests=true # TODO: remove skipping tests
-        run: mvn package -B -q
+        run: mvn package -B -e
         working-directory: recipe-box-backend
 
       - name: Upload generated bundle as an artifact
