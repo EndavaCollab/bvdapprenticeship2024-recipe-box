@@ -99,8 +99,4 @@ jobs:
         run: scp .github/workflows/scripts/start_backend.sh rcb:~/rcb-be/
 
       - name: Run backend on screen
-        run: |
-          ssh rcb <<CONTENT
-            cd ~/rcb-be/
-            bash ./start_backend.sh ${{ vars.DB_URL }} ${{ vars.DB_USERNAME }} ${{ secrets.DB_PASSWORD }}
-          CONTENT
+        run: ssh rcb 'bash ./start_backend.sh "${{ vars.DB_URL }}" "${{ vars.DB_USERNAME }}" "${{ secrets.DB_PASSWORD }}"'
