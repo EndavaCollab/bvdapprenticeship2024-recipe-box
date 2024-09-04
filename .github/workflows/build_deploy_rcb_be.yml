@@ -95,19 +95,12 @@ jobs:
       - name: Move backend package to server
         run: scp ./recipe-box-backend-0.0.1-SNAPSHOT.jar rcb:~/rcb-be/
 
+      - name: Move backend script to server
+        run: scp .github/workflows/scripts/start_backend.sh rcb:~/rcb-be/
+
       - name: Run backend on screen
-        run: | 
+        run: |
           ssh rcb <<CONTENT
-            lines_to_add=("export DB_URL=\"${{ vars.DB_URL }}\"" "export DB_USERNAME=\"${{ vars.DB_USERNAME }}\"" "export DB_PASSWORD=\"${{ secrets.DB_PASSWORD }}\"")
-
-            for line in "\${lines_to_add[@]}"; do
-              if ! sudo grep -Fxq "\$line" ~/.bashrc; then
-                echo "\$line" | sudo tee -a ~/.bashrc > /dev/null
-              fi
-            done
-
-            source ~/.bashrc
-
-            screen -S "rcb-be" -X stuff "java -jar ~/rcb-be/recipe-box-backend-0.0.1-SNAPSHOT.jar$(printf \\r)"
+            cd ~/rcb-be/
+            bash ./start_backend.sh ${{ vars.DB_URL }} ${{ vars.DB_USERNAME }} ${{ secrets.DB_PASSWORD }}
           CONTENT
-
