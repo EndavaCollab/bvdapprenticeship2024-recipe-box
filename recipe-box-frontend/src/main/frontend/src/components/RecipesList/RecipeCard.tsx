@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import "./RecipeCard.css";
+import {useNavigate} from "react-router-dom";
 
 interface RecipeCardProps {
     title: string;
@@ -13,6 +14,7 @@ export default function RecipeCard({
     imageUrl,
 }: RecipeCardProps) {
     const imageRef = useRef<HTMLImageElement>(null);
+    const navigate = useNavigate();
 
     const handleMouseMove = (
         e: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -39,6 +41,10 @@ export default function RecipeCard({
         image.style.transform = `rotateX(0deg) rotateY(0deg)`;
     };
 
+    const navigateToRecipeView = () => {
+        navigate("/recipeView");
+    }
+
     return (
         <div className="recipe-card">
             <img
@@ -53,7 +59,7 @@ export default function RecipeCard({
                 <h2>{title}</h2>
                 <p>{description}</p>
             </div>
-            <button className="view-recipe-button">VIEW RECIPE</button>
+            <button className="view-recipe-button" onClick={navigateToRecipeView}>VIEW RECIPE</button>
         </div>
     );
 }

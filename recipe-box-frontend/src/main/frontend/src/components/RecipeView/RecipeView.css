@@ -1,0 +1,12 @@
+.recipe-view-container {
+    padding: 20px;
+    padding-bottom: 60px;
+    margin: 0 200px;
+    display: flex;
+    flex-direction: column;
+}
+
+.recipe-view-container main {
+    flex: 1;
+    padding-top: 100px;
+}

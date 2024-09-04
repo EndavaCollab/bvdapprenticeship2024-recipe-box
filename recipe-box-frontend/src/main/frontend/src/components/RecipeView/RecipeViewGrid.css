@@ -1,0 +1,13 @@
+.parent-grid{
+    display: flex;
+    width: 90%;
+}
+.recipe-view-grid {
+    padding-left: 50px;
+    display: grid;
+    grid-template-columns: 3fr 3fr;
+    gap: 50px;
+    align-items: start;
+}
+
+
