@@ -6,7 +6,7 @@ function HomePage() {
     const navigate = useNavigate();
 
     const navigateToRecipesList = () => {
-        navigate("/recipeslist");
+        navigate("/recipes/list");
     };
 
     return (

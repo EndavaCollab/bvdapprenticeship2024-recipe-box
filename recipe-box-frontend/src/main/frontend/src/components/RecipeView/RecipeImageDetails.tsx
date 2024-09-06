@@ -20,19 +20,19 @@ const RecipeImageDetails: React.FC<RecipeImageDetailsProps> = ({ imageUrl, time,
             <div className="recipe-meta">
                 <div className="meta-item">
                     <Clock className="icon"/>
-                    <span>{time} Min</span>
+                    <span style={{fontSize: '1rem'}}>{time} Min</span>
                 </div>
                 <div className="meta-item">
                     <Tachometer className="icon"/>
-                    <span>{difficulty}</span>
+                    <span style={{fontSize: '1rem'}}>{difficulty}</span>
                 </div>
                 <div className="meta-item">
                     <PizzaSlice className="icon"/>
-                    <span>{servings} Servings</span>
+                    <span style={{fontSize: '1rem'}}>{servings} Servings</span>
                 </div>
                 <div className="meta-item">
                     <Battery className="icon"/>
-                    <span>{calories} Kcal/serving</span>
+                    <span style={{fontSize: '1rem'}}>{calories} Kcal/serving</span>
                 </div>
             </div>
         </div>

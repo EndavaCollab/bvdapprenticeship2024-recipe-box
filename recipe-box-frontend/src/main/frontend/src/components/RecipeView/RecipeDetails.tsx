@@ -12,10 +12,10 @@ interface RecipeDetailsProps {
 const RecipeDetails: React.FC<RecipeDetailsProps> = ({ name, description, ingredients }) => {
     return (
         <div className="recipe-details">
-            <h1>{name}</h1>
-            <h3>Description:</h3>
+            <h1 style={{fontSize: '3rem'}}>{name}</h1>
+            <h3 style={{fontSize: '1.5rem'}}>Description:</h3>
             <p>{description}</p>
-            <h3>Ingredients:</h3>
+            <h3 style={{fontSize: '1.5rem'}}>Ingredients:</h3>
             <ul className="ingredients-list">
                 {ingredients.map((ingredient) => (
                     <li key={ingredient.id}>
