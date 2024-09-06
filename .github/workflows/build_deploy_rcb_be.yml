@@ -40,15 +40,12 @@ jobs:
           java-version: '21'
 
       - name: Download and install maven
-        run: sudo apt -qq update & sudo apt -qq install maven -y
-
+        run: |
+          sudo apt -qq update
+          sudo apt -qq install maven -y
       - name: Package server app using maven
-        env:
-          DB_URL: ${{ vars.DB_URL }}
-          DB_USERNAME: ${{ vars.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         # run: mvn package -B -q -DskipTests=true # TODO: remove skipping tests
-        run: mvn package -B -q
+        run: mvn package -B -e
         working-directory: recipe-box-backend
 
       - name: Upload generated bundle as an artifact
@@ -98,5 +95,8 @@ jobs:
       - name: Move backend package to server
         run: scp ./recipe-box-backend-0.0.1-SNAPSHOT.jar rcb:~/rcb-be/
 
+      - name: Move backend script to server
+        run: scp .github/workflows/scripts/start_backend.sh rcb:~/rcb-be/
+
       - name: Run backend on screen
-        run: ssh rcb 'screen -S "rcb-be" -X stuff "java -jar ~/rcb-be/recipe-box-backend-0.0.1-SNAPSHOT.jar$(printf \\r)"'
+        run: ssh rcb 'bash ~/rcb-be/start_backend.sh "${{ vars.DB_URL }}" "${{ vars.DB_USERNAME }}" "${{ secrets.DB_PASSWORD }}"'
