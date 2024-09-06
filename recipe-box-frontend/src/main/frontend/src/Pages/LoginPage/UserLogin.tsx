@@ -8,10 +8,7 @@ import { backendUrl } from "../../App";
 
 export default function UserLogin() {
     const navigate = useNavigate();
-    const [errors, setErrors] = useState<{
-        username: boolean;
-        password: boolean;
-    }>({ username: false, password: false });
+    const [errors, setErrors] = useState({ username: false, password: false });
     const usernameRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
 
@@ -46,6 +43,8 @@ export default function UserLogin() {
             }
 
             const data = await response.json();
+            sessionStorage.setItem("userToken", data.token);
+            sessionStorage.setItem("username", username);
             navigate("/recipeslist");
         } catch (error) {
             alert("An error occurred during login.");
@@ -59,8 +58,14 @@ export default function UserLogin() {
                 onClick={() => navigate("/recipeslist")}
             />
             <Logo className="login-logo" />
-            <div className={`input-group ${errors.username ? "error" : ""}`}>
-                <div className={errors.username ? "error-text" : ""}>
+            <div
+                className={`input-group ${errors.username ? "error" : ""}`}
+                style={{ position: "relative" }}
+            >
+                <div
+                    className={errors.username ? "error-text" : ""}
+                    style={{ marginBottom: "5px" }}
+                >
                     Username
                 </div>
                 <input
@@ -70,12 +75,21 @@ export default function UserLogin() {
                         errors.username ? "input-error" : ""
                     }`}
                 />
-                <div className="validation-message">
-                    You must enter your username
-                </div>
+                {errors.username && (
+                    <div className="validation-message">
+                        You must enter your username
+                    </div>
+                )}
             </div>
-            <div className={`input-group ${errors.password ? "error" : ""}`}>
-                <div className={errors.password ? "error-text" : ""}>
+
+            <div
+                className={`input-group ${errors.password ? "error" : ""}`}
+                style={{ position: "relative" }}
+            >
+                <div
+                    className={errors.password ? "error-text" : ""}
+                    style={{ marginBottom: "5px" }}
+                >
                     Password
                 </div>
                 <input
@@ -85,10 +99,13 @@ export default function UserLogin() {
                         errors.password ? "input-error" : ""
                     }`}
                 />
-                <div className="validation-message">
-                    You must enter your password
-                </div>
+                {errors.password && (
+                    <div className="validation-message">
+                        You must enter your password
+                    </div>
+                )}
             </div>
+
             <button className="login-button" onClick={handleLogin}>
                 LOGIN
             </button>
