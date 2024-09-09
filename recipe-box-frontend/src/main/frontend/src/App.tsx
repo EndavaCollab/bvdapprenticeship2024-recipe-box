@@ -2,7 +2,7 @@ import "./App.css";
 import HomePage from "./Pages/HomePage/HomePage";
 import RecipesList from "./components/RecipesList/RecipesList";
 import LayoutWithHeaderMainFooter from "./layouts/LayoutWithHeaderMainFooter";
-import RecipeViewGrid from "./Pages/RecipeViewPage/RecipeViewGrid";
+import RecipeViewPage from "./Pages/RecipeViewPage/RecipeViewPage";
 import {recipeLoader} from "./loaders/RecipeLoader"
 import {createBrowserRouter, createRoutesFromElements, Route} from "react-router-dom";
 
@@ -15,7 +15,7 @@ function App() {
                  <Route path="/" element={<HomePage />} />
                  <Route path="recipes" element={<LayoutWithHeaderMainFooter/>}>
                      <Route index path="list" element={<RecipesList />}/>
-                     <Route path="view/:recipeId" element={<RecipeViewGrid/>} loader={recipeLoader}/>
+                     <Route path="view/:recipeId" element={<RecipeViewPage/>} loader={recipeLoader}/>
                  </Route>
              </>
          )

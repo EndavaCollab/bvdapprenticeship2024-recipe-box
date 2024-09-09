@@ -3,9 +3,9 @@ import {useRouteError, useLoaderData} from 'react-router-dom';
 import RecipeDetails from '../../components/RecipeView/RecipeDetails';
 import RecipeImageDetails from '../../components/RecipeView/RecipeImageDetails';
 import { Recipe } from '../../components/RecipeView/types';
-import "./RecipeViewGrid.css";
+import "./RecipeViewPage.css";
 
-const RecipeViewGrid: React.FC = () => {
+const RecipeViewPage: React.FC = () => {
     const recipeDetails = useLoaderData() as Recipe | {error: string};
     const errorR = useRouteError() as Error;
     const [error] = useState<string | null>(null);
@@ -43,6 +43,6 @@ const RecipeViewGrid: React.FC = () => {
     );
 }
 
-export default RecipeViewGrid;
+export default RecipeViewPage;
 
 
