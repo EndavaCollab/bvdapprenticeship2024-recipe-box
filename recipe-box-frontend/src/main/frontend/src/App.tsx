@@ -9,6 +9,7 @@ import {
     createRoutesFromElements,
     Route,
 } from "react-router-dom";
+import UserLogin from "./Pages/LoginPage/UserLogin";
 
 export const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
@@ -25,6 +26,7 @@ function App() {
                         loader={recipeLoader}
                     />
                 </Route>
+                <Route path="/userlogin" element={<UserLogin />} />
             </>
         )
     );
