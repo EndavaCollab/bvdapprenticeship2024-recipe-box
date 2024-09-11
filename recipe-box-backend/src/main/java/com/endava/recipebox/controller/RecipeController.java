@@ -62,4 +62,9 @@ public class RecipeController {
         return ResponseEntity.ok(recipeService.updateRecipe(recipeEditRequestDTO,userId));
     }
 
+    @DeleteMapping("/{recipeId}")
+    public ResponseEntity<String> deleteRecipe(@PathVariable Long recipeId, @RequestParam Long userId) {
+        return ResponseEntity.ok(recipeService.deleteRecipe(recipeId, userId));
+    }
+
 }
