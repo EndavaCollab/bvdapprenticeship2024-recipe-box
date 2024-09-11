@@ -37,6 +37,11 @@ public class RecipeController {
         return ResponseEntity.ok(recipeService.getAllPublicRecipesByName(recipeName, mealType));
     }
 
+    @GetMapping("/search/private")
+    public ResponseEntity<List<RecipeDTO>> getAllPrivateRecipesByUserId(@RequestParam Long userId) {
+        return ResponseEntity.ok(recipeService.getAllPrivateRecipesByUserId(userId));
+    }
+
     @GetMapping("/{recipeId}")
     public ResponseEntity<Object> getRecipeById(@PathVariable Long recipeId, @RequestParam(required = false)Long userId) {
         if (recipeId == null)
@@ -60,6 +65,11 @@ public class RecipeController {
     @PutMapping
     public ResponseEntity<String> editRecipe(@Validated @RequestBody RecipeEditRequestDTO recipeEditRequestDTO, @RequestParam Long userId){
         return ResponseEntity.ok(recipeService.updateRecipe(recipeEditRequestDTO,userId));
+    }
+
+    @DeleteMapping("/{recipeId}")
+    public ResponseEntity<String> deleteRecipe(@PathVariable Long recipeId, @RequestParam Long userId) {
+        return ResponseEntity.ok(recipeService.deleteRecipe(recipeId, userId));
     }
 
 }
