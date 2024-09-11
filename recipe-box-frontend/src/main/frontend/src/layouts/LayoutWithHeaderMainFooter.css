@@ -1,0 +1,12 @@
+.layout-container {
+    padding: 20px 20px 60px 20px;
+    margin: 0 200px;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.layout-container main {
+    flex: 1;
+    padding-top: 100px;
+}

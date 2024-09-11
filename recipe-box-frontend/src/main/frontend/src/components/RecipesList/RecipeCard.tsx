@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import { Link } from "react-router-dom";
 import "./RecipeCard.css";
 
 interface RecipeCardProps {
@@ -8,10 +9,10 @@ interface RecipeCardProps {
 }
 
 export default function RecipeCard({
-    title,
-    description,
-    imageUrl,
-}: RecipeCardProps) {
+                                       title,
+                                       description,
+                                       imageUrl,
+                                   }: RecipeCardProps) {
     const imageRef = useRef<HTMLImageElement>(null);
 
     const handleMouseMove = (
@@ -53,7 +54,9 @@ export default function RecipeCard({
                 <h2>{title}</h2>
                 <p>{description}</p>
             </div>
-            <button className="view-recipe-button">VIEW RECIPE</button>
+            <Link to={`/recipes/view/10`} className="view-recipe-button">
+                VIEW RECIPE
+            </Link>
         </div>
     );
 }
