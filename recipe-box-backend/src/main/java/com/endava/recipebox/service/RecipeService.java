@@ -18,4 +18,5 @@ public interface RecipeService {
     RecipeDetailsDTO getDetailedRecipeById(Long recipeId, Long userId);
     String createRecipe(RecipeAddRequestDTO recipeAddRequestDTO, Long userId);
     String updateRecipe(RecipeEditRequestDTO recipeAddRequestDTO, Long userId);
+    String deleteRecipe(Long recipeId, Long userId);
 }
