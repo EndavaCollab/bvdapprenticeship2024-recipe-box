@@ -16,7 +16,7 @@ interface RecipesGridProps {
     searchQuery?: string;
 }
 export default function RecipesGrid({
-    mealType = "",
+    mealType,
     searchQuery = "",
 }: RecipesGridProps) {
     const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -25,10 +25,11 @@ export default function RecipesGrid({
         const controller = new AbortController();
         const signal = controller.signal;
 
-        let url = `${backendUrl}${mealType ? `?mealType=${mealType}` : ""}`;
+        let url = `${backendUrl}/recipes/${mealType ? `?mealType=${mealType}` : ""}`;
+        console.log(mealType);
 
         fetch(
-            searchQuery ? `${backendUrl}search?recipeName=${searchQuery}` : url,
+            searchQuery ? `${backendUrl}/recipes/search?recipeName=${searchQuery}${mealType ? `&mealType=${mealType}` : ""}` : url,
             {
                 signal,
             }
@@ -55,18 +56,12 @@ export default function RecipesGrid({
         };
     }, [mealType, searchQuery]);
 
-    const recipesToDisplay = recipes.length > 0 ? recipes : testRecipes;
-
-    const filteredRecipes = recipesToDisplay
-        .filter((recipe) => mealType === "" || recipe.mealType === mealType)
-        .filter((recipe) =>
-            recipe.name.toLowerCase().includes(searchQuery.toLowerCase())
-        );
 
     return (
         <div className="recipes-grid">
-            {filteredRecipes.map((recipe) => (
+            {recipes.map((recipe) => (
                 <RecipeCard
+                    id={recipe.id}
                     key={recipe.id}
                     title={recipe.name}
                     description={recipe.description}
@@ -76,96 +71,3 @@ export default function RecipesGrid({
         </div>
     );
 }
-
-const testRecipes: Recipe[] = [
-    {
-        id: 1,
-        name: "Spaghetti Carbonara",
-        description:
-            "A classic Italian pasta dish made with eggs, cheese, pancetta, and pepper.",
-        imageUrl:
-            "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-        mealType: "Dinner",
-    },
-    {
-        id: 2,
-        name: "Chicken Curry",
-        description:
-            "A spicy and flavorful dish made with chicken, spices, and coconut milk.",
-        imageUrl:
-            "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-        mealType: "Dinner",
-    },
-    {
-        id: 3,
-        name: "Beef Tacos",
-        description:
-            "Mexican-style tacos with seasoned beef, fresh vegetables, and salsa.",
-        imageUrl:
-            "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-        mealType: "Lunch",
-    },
-    {
-        id: 4,
-        name: "Vegetable Stir Fry",
-        description:
-            "A healthy and quick stir fry with fresh vegetables and a savory sauce.",
-        imageUrl:
-            "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-        mealType: "Lunch",
-    },
-    {
-        id: 5,
-        name: "Pancakes",
-        description:
-            "Fluffy pancakes served with syrup and butter, perfect for breakfast.",
-        imageUrl:
-            "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-        mealType: "Breakfast",
-    },
-    {
-        id: 6,
-        name: "Caesar Salad",
-        description:
-            "A fresh salad with romaine lettuce, croutons, and Caesar dressing.",
-        imageUrl:
-            "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-        mealType: "Lunch",
-    },
-    {
-        id: 7,
-        name: "Chocolate Cake",
-        description:
-            "A rich and moist chocolate cake topped with creamy chocolate frosting.",
-        imageUrl:
-            "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-        mealType: "Dessert",
-    },
-    {
-        id: 8,
-        name: "Fruit Smoothie",
-        description:
-            "A refreshing smoothie made with a blend of fresh fruits and yogurt.",
-        imageUrl:
-            "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-        mealType: "Snack",
-    },
-    {
-        id: 9,
-        name: "Grilled Cheese Sandwich",
-        description:
-            "A classic sandwich with melted cheese between two slices of grilled bread.",
-        imageUrl:
-            "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-        mealType: "Lunch",
-    },
-    {
-        id: 10,
-        name: "Apple Pie",
-        description:
-            "A traditional dessert with a flaky crust and a spiced apple filling.",
-        imageUrl:
-            "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-        mealType: "Dessert",
-    },
-];

@@ -33,8 +33,8 @@ public class RecipeController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<RecipeDTO>> getAllPublicRecipesByName(@RequestParam String recipeName) {
-        return ResponseEntity.ok(recipeService.getAllPublicRecipesByName(recipeName));
+    public ResponseEntity<List<RecipeDTO>> getAllPublicRecipesByName(@RequestParam String recipeName, @RequestParam(required = false) MealType mealType) {
+        return ResponseEntity.ok(recipeService.getAllPublicRecipesByName(recipeName, mealType));
     }
 
     @GetMapping("/{recipeId}")

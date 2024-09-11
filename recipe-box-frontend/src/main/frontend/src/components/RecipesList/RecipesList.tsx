@@ -4,12 +4,12 @@ import Categories from "./Categories";
 import React, {useState} from "react";
 
 export default function RecipesList() {
-    const [mealType, setMealtype] = useState("");
+    const [mealType, setMealType] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
     return (
         <div className="recipes-list">
             <Categories
-                onChangeMealType={setMealtype}
+                onChangeMealType={setMealType}
                 onChangeSearchQuery={setSearchQuery}
             />
             <RecipesGrid mealType={mealType} searchQuery={searchQuery} />

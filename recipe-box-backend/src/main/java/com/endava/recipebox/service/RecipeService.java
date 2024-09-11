@@ -11,10 +11,10 @@ import java.util.List;
 
 public interface RecipeService {
     List<RecipeDTO> getAllPublicRecipes();
-    List<RecipeDTO> getAllPublicRecipesByName(String recipeName);
+    List<RecipeDTO> getAllPublicRecipesByName(String recipeName, MealType mealType);
     List<RecipeDTO> getAllPublicRecipesByType(MealType mealType);
     Recipe getRecipeById(Long recipeId);
-    RecipeDTO getRecipeDTOById(Long recipeId);
+    RecipeDetailsDTO getRecipeDTOById(Long recipeId);
     RecipeDetailsDTO getDetailedRecipeById(Long recipeId, Long userId);
     String createRecipe(RecipeAddRequestDTO recipeAddRequestDTO, Long userId);
     String updateRecipe(RecipeEditRequestDTO recipeAddRequestDTO, Long userId);

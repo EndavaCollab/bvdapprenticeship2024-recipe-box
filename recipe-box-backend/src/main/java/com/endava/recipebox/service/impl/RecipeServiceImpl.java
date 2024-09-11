@@ -51,10 +51,11 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public List<RecipeDTO> getAllPublicRecipesByName(String recipeName) {
+    public List<RecipeDTO> getAllPublicRecipesByName(String recipeName, MealType mealType) {
         return  recipeMapper.map(recipeRepository.findAll().stream()
                 .filter(RecipeServiceImpl::isPublic)
-                .filter(r -> r.getName().equals(recipeName))
+                .filter(r -> mealType == null ?  r.getName().toLowerCase().contains(recipeName.toLowerCase()) :
+                                                r.getName().toLowerCase().contains(recipeName.toLowerCase()) && r.getMealType() == mealType)
                 .toList());
     }
 
@@ -112,12 +113,12 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public RecipeDTO getRecipeDTOById(Long recipeId) {
+    public RecipeDetailsDTO getRecipeDTOById(Long recipeId) {
         Recipe recipe = getRecipeById(recipeId);
         if (!isPublic(recipe)) {
             throw new UnauthorizedActionException("You do not have access to this private recipe.");
         }
-        return recipeMapper.mapRecipe(recipe);
+        return recipeMapper.mapDetailedRecipe(recipe);
     }
 
     @Override

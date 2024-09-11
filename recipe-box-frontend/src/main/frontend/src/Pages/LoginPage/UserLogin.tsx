@@ -35,7 +35,7 @@ export default function UserLogin() {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ username, password }),
+                body: username,
             });
 
             if (!response.ok) {
@@ -43,9 +43,10 @@ export default function UserLogin() {
             }
 
             const data = await response.json();
+            console.log(data);
             sessionStorage.setItem("userToken", data.token);
             sessionStorage.setItem("username", username);
-            navigate("/recipeslist");
+            navigate("/recipes/list");
         } catch (error) {
             alert("An error occurred during login.");
         }
@@ -55,7 +56,7 @@ export default function UserLogin() {
         <div className="login-card">
             <CloseButton
                 className="close-button"
-                onClick={() => navigate("/recipeslist")}
+                onClick={() => navigate("/recipes/list")}
             />
             <Logo className="login-logo" />
             <div

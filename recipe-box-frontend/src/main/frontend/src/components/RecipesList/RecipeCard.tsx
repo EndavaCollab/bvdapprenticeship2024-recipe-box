@@ -3,12 +3,14 @@ import { Link } from "react-router-dom";
 import "./RecipeCard.css";
 
 interface RecipeCardProps {
+    id: number;
     title: string;
     description: string;
     imageUrl: string;
 }
 
 export default function RecipeCard({
+                                       id,
                                        title,
                                        description,
                                        imageUrl,
@@ -54,7 +56,7 @@ export default function RecipeCard({
                 <h2>{title}</h2>
                 <p>{description}</p>
             </div>
-            <Link to={`/recipes/view/10`} className="view-recipe-button">
+            <Link to={`/recipes/view/${id}`} className="view-recipe-button">
                 VIEW RECIPE
             </Link>
         </div>
