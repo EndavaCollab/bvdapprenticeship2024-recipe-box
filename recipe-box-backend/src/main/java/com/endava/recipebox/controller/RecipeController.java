@@ -37,6 +37,11 @@ public class RecipeController {
         return ResponseEntity.ok(recipeService.getAllPublicRecipesByName(recipeName));
     }
 
+    @GetMapping("/search/private")
+    public ResponseEntity<List<RecipeDTO>> getAllPrivateRecipesByUserId(@RequestParam Long userId) {
+        return ResponseEntity.ok(recipeService.getAllPrivateRecipesByUserId(userId));
+    }
+
     @GetMapping("/{recipeId}")
     public ResponseEntity<Object> getRecipeById(@PathVariable Long recipeId, @RequestParam(required = false)Long userId) {
         if (recipeId == null)

@@ -13,6 +13,7 @@ public interface RecipeService {
     List<RecipeDTO> getAllPublicRecipes();
     List<RecipeDTO> getAllPublicRecipesByName(String recipeName);
     List<RecipeDTO> getAllPublicRecipesByType(MealType mealType);
+    List<RecipeDTO> getAllPrivateRecipesByUserId(Long userId);
     Recipe getRecipeById(Long recipeId);
     RecipeDTO getRecipeDTOById(Long recipeId);
     RecipeDetailsDTO getDetailedRecipeById(Long recipeId, Long userId);
