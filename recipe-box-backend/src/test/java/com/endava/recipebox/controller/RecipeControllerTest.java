@@ -17,8 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Collections;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -100,4 +99,5 @@ class RecipeControllerTest {
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$").value("{\"message\":\"You do not have permission to edit this recipe\",\"status\":403}"));
     }
+
 }

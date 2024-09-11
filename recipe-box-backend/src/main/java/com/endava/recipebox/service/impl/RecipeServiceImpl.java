@@ -94,11 +94,11 @@ public class RecipeServiceImpl implements RecipeService {
     public String createRecipe(RecipeAddRequestDTO recipeAddRequestDTO, Long userId) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
-        if (user.getRole() != Role.Admin )
-            throw new UnauthorizedActionException("Only admins can create recipes");
+                .orElseThrow(() -> new BadRequestException("User not found."));
 
         Recipe recipe = recipeMapper.toEntity(recipeAddRequestDTO);
+        if (user.getRole() != Role.Admin && isPublic(recipe))
+            throw new UnauthorizedActionException("Only admins can create public recipes");
 
         recipe.setUser(user);
 
@@ -165,10 +165,10 @@ public class RecipeServiceImpl implements RecipeService {
     @Transactional
     public String updateRecipe(RecipeEditRequestDTO recipeAddRequestDTO, Long userId){
         Recipe recipe = recipeRepository.findById(recipeAddRequestDTO.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Recipe not found"));
+                .orElseThrow(() -> new BadRequestException("Recipe not found."));
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+                .orElseThrow(() -> new BadRequestException("User not found."));
 
         boolean isAdmin = user.getRole().equals(Role.Admin);
         boolean isOwner = recipe.getUser().getId().equals(userId);
@@ -194,5 +194,23 @@ public class RecipeServiceImpl implements RecipeService {
         }
 
         return "Recipe update successfully!";
+    }
+
+    @Override
+    public String deleteRecipe(Long recipeId, Long userId) {
+        Recipe recipe = getRecipeById(recipeId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BadRequestException("User not found."));
+
+
+        Role userRole = user.getRole();
+        if (userRole.equals(Role.Admin) && !isPublic(recipe) || userRole.equals(Role.Chef) && !recipe.getUser().getId().equals(userId))
+        {
+            throw new UnauthorizedActionException("You do not have permission to delete this recipe");
+        }
+
+        recipe.getRecipeIngredients().forEach(recipeIngredientRepository::delete);
+        recipeRepository.delete(recipe);
+        return "The recipe was successfully deleted.";
     }
 }
