@@ -141,7 +141,15 @@ public class RecipeServiceImpl implements RecipeService {
         if (!isPublic(recipe)) {
             throw new UnauthorizedActionException("You do not have access to this private recipe.");
         }
-        return recipeMapper.mapDetailedRecipe(recipe);
+        RecipeDetailsDTO recipeDetailsDTO = recipeMapper.mapDetailedRecipe(recipe);
+        recipeDetailsDTO.setRecipeIngredients(recipe.getRecipeIngredients().stream()
+                .map(recipeIngredient -> RecipeIngredientDTO.builder()
+                        .ingredientId(recipeIngredient.getIngredient().getId())
+                        .name(recipeIngredient.getIngredient().getName())
+                        .quantity(recipeIngredient.getQuantity())
+                        .unit(recipeIngredient.getUnit()).build())
+                .toList());
+        return recipeDetailsDTO;
     }
 
     @Override

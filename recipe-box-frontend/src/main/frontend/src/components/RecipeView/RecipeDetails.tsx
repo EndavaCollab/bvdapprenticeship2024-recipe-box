@@ -18,7 +18,7 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({ name, description, ingred
             <h3 style={{fontSize: '1.5rem'}}>Ingredients:</h3>
             <ul className="ingredients-list">
                 {ingredients.map((ingredient) => (
-                    <li key={ingredient.id}>
+                    <li key= {`ingredient-${ingredient.name}`}>
                         <Check className="check-icon" /> <span className="ingredient-name">{ingredient.name} </span> {ingredient.quantity} {ingredient.unit}
                     </li>
                 ))}

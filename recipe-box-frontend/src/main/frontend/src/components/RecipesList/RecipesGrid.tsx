@@ -26,7 +26,6 @@ export default function RecipesGrid({
         const signal = controller.signal;
 
         let url = `${backendUrl}/recipes/${mealType ? `?mealType=${mealType}` : ""}`;
-        console.log(mealType);
 
         fetch(
             searchQuery ? `${backendUrl}/recipes/search?recipeName=${searchQuery}${mealType ? `&mealType=${mealType}` : ""}` : url,

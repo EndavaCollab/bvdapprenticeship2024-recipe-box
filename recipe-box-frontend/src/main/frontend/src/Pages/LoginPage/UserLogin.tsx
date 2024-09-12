@@ -43,7 +43,6 @@ export default function UserLogin() {
             }
 
             const data = await response.json();
-            console.log(data);
             sessionStorage.setItem("userToken", data.token);
             sessionStorage.setItem("username", username);
             navigate("/recipes/list");
