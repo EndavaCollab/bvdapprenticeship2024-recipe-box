@@ -29,6 +29,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: deploy
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -36,7 +37,22 @@ jobs:
       - name: Download and install maven
         run: sudo apt -qq update && sudo apt -qq install maven -y
 
+      - name: Login with Azure to fetch IP
+        if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.run_deploy == 'true')}}
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+            
+      - name: Fetch server public IP address
+        if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.run_deploy == 'true')}}
+        working-directory: .github/workflows/scripts
+        run: bash ./fetch_ip.sh
+
       - name: Build web app using maven
+        env:
+          REACT_APP_BACKEND_URL: "http://${{ env.IP_ADDRESS || 'localhost' }}:8080"
         run: mvn install -B -e
         working-directory: recipe-box-frontend
 
