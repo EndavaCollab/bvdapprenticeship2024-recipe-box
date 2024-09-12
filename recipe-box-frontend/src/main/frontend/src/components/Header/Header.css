@@ -16,13 +16,22 @@
     margin: 0;
     padding: 0;
     display: flex;
-    align-items: center;
+    align-items: baseline;
     justify-content: space-between;
 }
 
 .left-items {
+    display: flex;
     gap: 40px;
     margin-left: 0.5px;
+    align-items: center;
+}
+
+.pages-items {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-left: 120px;
 }
 
 .logo-image {
@@ -41,11 +50,72 @@
     text-decoration: none;
     border-radius: 6px;
     border: 2px solid #fff;
-    font-weight: bold;
     font-size: 12px;
 }
 
 .right .button:hover {
     background-color: #333;
     border-color: #fff;
+}
+
+.nav-item:hover {
+    color: #ddd;
+}
+
+.nav-item, .dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.nav-item {
+    text-decoration: none;
+    text-align: start;
+    background-color: transparent;
+    color: white;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 10px 40px 10px 0px;
+    font-family: "Segoe UI";
+    font-weight: 400;
+}
+
+.nav-item:hover {
+    color: #ddd;
+}
+
+.dropdown-menu {
+    flex-direction: column;
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ddd;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-item {
+    font-weight: 500;
+    display: block;
+    padding: 5px ;
+    color: #333;
+    text-decoration: none;
+}
+
+.dropdown-item:hover {
+    background-color: #f1f1f1;
+    color: black;
+}
+
+.profile-icon img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.right {
+    margin-left: 20px;
 }
