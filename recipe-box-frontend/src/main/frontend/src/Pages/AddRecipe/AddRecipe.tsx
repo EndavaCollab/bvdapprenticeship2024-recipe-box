@@ -1,15 +1,22 @@
 import React, { useState, ChangeEvent } from "react";
 import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
+import { ReactComponent as CheckIcon } from "../../assets/icons/check.svg";
+import { ReactComponent as RemoveIcon } from "../../assets/icons/close copy.svg";
 import "./AddRecipe.css";
+
+interface ImageFile {
+    fileName: string;
+    fileData: string;
+}
 
 interface RecipeAddRequestDTO {
     name: string;
     description: string;
-    imageUrl: string | null;
+    imageUrl: string | undefined;
     mealType: string;
     ingredients: string[];
-    cookingTime: string;
+    cookingTime: number;
     difficulty: string;
     ingredientsQuantities: number[];
     servings: number;
@@ -20,7 +27,7 @@ export default function AddRecipe() {
         [0]
     );
     const [description, setDescription] = useState<string>("");
-    const [image, setImage] = useState<string | null>(null);
+    const [image, setImage] = useState<ImageFile | null>(null);
 
     const [ingredients, setIngredients] = useState<string[]>([""]);
     const [recipeName, setRecipeName] = useState<string>("");
@@ -77,24 +84,40 @@ export default function AddRecipe() {
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                setImage(reader.result as string);
+                setImage({
+                    fileName: file.name,
+                    fileData: reader.result as string,
+                });
             };
             reader.readAsDataURL(file);
         }
     };
-    // Todo: de inlocuit tipul pentru imagine cu un obiect ce contine numele filei si imaginea
+
+    const handleRemoveImage = () => {
+        setImage(null);
+    };
 
     const handleSaveRecipe = async () => {
+        const totalPreparationTime = preparationHours * 60 + preparationMinutes;
+
+        // const imageUrl = image ? await uploadImage(image.fileData) : '';   // de decomentat daca o sa putem trimite o imagine
+        const imageUrl = image?.fileName;
+        const recipeIngredients = ingredients.map((ingredient, index) => ({
+            ingredientId: ingredient,
+            quantity: ingredientsQuantities[index],
+            unit: "grams", //pe moment nu avem ingrediente lichide, so this will do for the demo
+        }));
+
         const recipeData: RecipeAddRequestDTO = {
             name: recipeName,
             description,
             difficulty,
             mealType: category,
             servings,
-            imageUrl: image,
+            imageUrl,
             ingredients,
             ingredientsQuantities,
-            cookingTime: `${preparationHours}h ${preparationMinutes}m`,
+            cookingTime: totalPreparationTime,
         };
 
         try {
@@ -281,8 +304,12 @@ export default function AddRecipe() {
 
                     <div className="right-column">
                         <div>Recipe Image</div>
+
                         {!image && (
-                            <>
+                            <div
+                                className="add-image-button-dashed-border"
+                                style={{ margin: 0 }}
+                            >
                                 <input
                                     type="file"
                                     accept="image/*"
@@ -296,11 +323,26 @@ export default function AddRecipe() {
                                 >
                                     + ADD IMAGE
                                 </label>
-                            </>
+                            </div>
                         )}
                         {image && (
-                            <div className="image-preview">
-                                <img src={image} alt="Photo" />
+                            <div
+                                className="added-image-dashed-border"
+                                style={{ margin: 0 }}
+                            >
+                                <div
+                                    className="image-file-name"
+                                    style={{
+                                        margin: "15px 10px",
+                                    }}
+                                >
+                                    <CheckIcon className="check-icon" />
+                                    {image.fileName}
+                                    <RemoveIcon
+                                        className="remove-icon"
+                                        onClick={handleRemoveImage}
+                                    />
+                                </div>
                             </div>
                         )}
 
@@ -311,7 +353,9 @@ export default function AddRecipe() {
                             onChange={handleDescriptionChange}
                         />
 
-                        <div>Ingredient Quantity</div>
+                        <div style={{ marginBottom: 6 }}>
+                            Ingredient Quantity
+                        </div>
                         {ingredientsQuantities.map((quantity, index) => (
                             <select
                                 key={index}
