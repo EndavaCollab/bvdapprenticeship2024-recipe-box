@@ -34,7 +34,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Download and install maven
-        run: sudo apt -qq update & sudo apt -qq install maven -y
+        run: sudo apt -qq update && sudo apt -qq install maven -y
 
       - name: Build web app using maven
         run: mvn install -B -e
