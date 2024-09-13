@@ -13,7 +13,7 @@ ssh-keyscan -p 22 $IP_ADDRESS >> ~/.ssh/known_hosts
 
 # Add a SSH host to the config file so that it's easier to run SSH commands
 cat >> ~/.ssh/config <<CONTENT
-Host rcb
+Host $1
 HostName $IP_ADDRESS
 User $SSH_ADMIN_USERNAME
 IdentityFile ~/.ssh/id_rsa

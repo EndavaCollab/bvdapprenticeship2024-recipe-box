@@ -91,7 +91,7 @@ jobs:
         env:
           SSH_PRIVATE_KEY:    ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_ADMIN_USERNAME: ${{ secrets.SSH_ADMIN_USERNAME }}
-        run: bash ./worker_config_ssh.sh
+        run: bash ./worker_config_ssh.sh "rcb"
 
       - name: Remote - Config nginx
         continue-on-error: true
