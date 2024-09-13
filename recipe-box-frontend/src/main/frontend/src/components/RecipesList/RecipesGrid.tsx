@@ -12,10 +12,12 @@ interface Recipe {
 }
 
 interface RecipesGridProps {
+    privateRecipes?: boolean;
     mealType?: string;
     searchQuery?: string;
 }
 export default function RecipesGrid({
+    privateRecipes = false,
     mealType,
     searchQuery = "",
 }: RecipesGridProps) {
@@ -29,6 +31,7 @@ export default function RecipesGrid({
         console.log(mealType);
 
         fetch(
+            privateRecipes ? `${backendUrl}/recipes/search/private?userId=1` : 
             searchQuery ? `${backendUrl}/recipes/search?recipeName=${searchQuery}${mealType ? `&mealType=${mealType}` : ""}` : url,
             {
                 signal,
@@ -54,7 +57,7 @@ export default function RecipesGrid({
         return () => {
             controller.abort();
         };
-    }, [mealType, searchQuery]);
+    }, [privateRecipes, mealType, searchQuery]);
 
 
     return (

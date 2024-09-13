@@ -10,7 +10,7 @@ export async function recipeLoader({ params }: LoaderFunctionArgs) {
             throw new Error('Base URL is not defined');
         }
 
-        const url = `${baseUrl}/recipes/${recipeId}`;
+        const url = `${baseUrl}/recipes/${recipeId}?userId=1`;
 
         const response = await fetch(url);
 

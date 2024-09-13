@@ -21,9 +21,9 @@ const Header: React.FC = () => {
                                 Recipes &#x25BE;
                             </button>
                             {isOpen && (
-                                <ul className="dropdown-menu">
-                                    <li style={{textAlign:"left"}} ><Link to="/recipes/list" className="dropdown-item">Public Recipes</Link></li>
-                                    <li><Link to="/recipes/my-list" className="dropdown-item">My Recipes</Link></li>
+                                <ul className="dropdown-menu" onClick={() => setIsOpen(!isOpen)}>
+                                    <li><Link to="/recipes/list" className="dropdown-item">Public Recipes</Link></li>
+                                    <li><Link to="/recipes/myRecipes" className="dropdown-item">My Recipes</Link></li>
                                     <li><Link to="/recipes/ingredients" className="dropdown-item">Recipes with My Ingredients</Link></li>
                                 </ul>
                             )}

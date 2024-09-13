@@ -25,6 +25,13 @@ function App() {
                         element={<RecipeViewPage />}
                         loader={recipeLoader}
                     />
+
+                    <Route index path="myRecipes" element={<RecipesList privateRecipes={true} />} />
+                    <Route
+                        path="view/:recipeId"
+                        element={<RecipeViewPage />}
+                        loader={recipeLoader}
+                    />
                 </Route>
                 <Route path="/userlogin" element={<UserLogin />} />
             </>
