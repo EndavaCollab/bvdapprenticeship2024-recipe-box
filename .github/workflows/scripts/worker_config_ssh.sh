@@ -3,7 +3,7 @@
 # Create the default ssh folder if it's not already created,
 # write the private key into id_rsa and change permissions accordingly
 
-mkdir ~/.ssh
+mkdir -p ~/.ssh
 echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
 chmod 600 ~/.ssh/id_rsa
 chmod 700 ~/.ssh
