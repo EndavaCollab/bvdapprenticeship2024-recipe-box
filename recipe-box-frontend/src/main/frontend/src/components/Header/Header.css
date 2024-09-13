@@ -109,13 +109,6 @@
     color: black;
 }
 
-.profile-icon img {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    cursor: pointer;
-}
-
 .right {
     margin-left: 20px;
 }
