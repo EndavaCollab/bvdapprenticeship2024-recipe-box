@@ -18,8 +18,8 @@ on:
       run_deploy:
         type: boolean
         default: true
-        description: Should the frontend app be deployed?
         required: true
+        description: Should the frontend app be deployed?
 
 # Azure login
 permissions:
@@ -31,32 +31,34 @@ jobs:
     runs-on: ubuntu-latest
     environment: deploy
     steps:
-      - name: Checkout repository
+      - name: Worker - Checkout repo
         uses: actions/checkout@v4
 
-      - name: Download and install maven
-        run: sudo apt -qq update && sudo apt -qq install maven -y
+      - name: Worker - Maven setup
+        run: |
+          sudo apt -qq update
+          sudo apt -qq install maven -y
 
-      - name: Login with Azure to fetch IP
+      - name: Worker - Azure login
         if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.run_deploy == 'true')}}
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          client-id:       ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id:       ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
             
-      - name: Fetch server public IP address
+      - name: Worker - Fetch Remote IP address
         if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.run_deploy == 'true')}}
         working-directory: .github/workflows/scripts
-        run: bash ./fetch_ip.sh
+        run: bash ./fetch_ip.sh "rcb-public-ip"
 
-      - name: Build web app using maven
+      - name: Worker - Build web app using Maven
         env:
           REACT_APP_BACKEND_URL: "http://${{ env.IP_ADDRESS || 'localhost' }}:8080"
         run: mvn install -B -e
         working-directory: recipe-box-frontend
 
-      - name: Upload generated bundle as an artifact
+      - name: Worker - Upload .jar as artifact
         if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.run_deploy == 'true')}}
         uses: actions/upload-artifact@v4
         with:
@@ -65,33 +67,33 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    needs: build
     if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.run_deploy == 'true')}}
     environment: deploy # Azure login
-    needs: build
 
     steps:
-      - name: Checkout repository
+      - name: Worker - Checkout repo
         uses: actions/checkout@v4
 
-      - name: Login with Azure
+      - name: Worker - Azure login
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          client-id:       ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id:       ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
             
-      - name: Fetch server public IP address
+      - name: Worker - Fetch Remote IP address
         working-directory: .github/workflows/scripts
-        run: bash ./fetch_ip.sh
+        run: bash ./fetch_ip.sh "rcb-public-ip"
 
-      - name: Config SSH connection on the Github Worker
+      - name: Worker - Config SSH
         working-directory: .github/workflows/scripts
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_PRIVATE_KEY:    ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_ADMIN_USERNAME: ${{ secrets.SSH_ADMIN_USERNAME }}
         run: bash ./worker_config_ssh.sh
 
-      - name: Config nginx on remote
+      - name: Remote - Config nginx
         continue-on-error: true
         working-directory: .github/workflows/scripts
         env:
@@ -99,19 +101,19 @@ jobs:
           GITHUB_ADMIN_USERNAME: ${{ secrets.SSH_ADMIN_USERNAME }}
         run: bash ./configure_nginx_remote.sh
 
-      - name: Download built site
+      - name: Worker - Download build site
         uses: actions/download-artifact@v4
         with:
           name: production-rcb-fe
           path: ./rcb-webapp
 
-      - name: Move built site to server
+      - name: Worker - Move built site to remote
         run: scp -r ./rcb-webapp/* rcb:/var/www/${{ vars.DOMAIN_NAME }}/html
 
-      - name: Restart Nginx
+      - name: Remote - Restart nginx
         run : ssh rcb 'sudo systemctl restart nginx'
 
-      - name: Create / Update DNS Records on domain to point to server (domain)
+      - name: Cloudflare - Update / Create DNS Entry (domain)
         uses: everpcpc/cloudflare-dns-action@v1
         with:
           type: "A"
@@ -122,7 +124,7 @@ jobs:
           token: ${{ secrets.CLOUDFLARE_TOKEN }}
           zone: ${{ secrets.CLOUDFLARE_ZONE }}
         
-      - name: Create / Update DNS Records on domain to point to server (www.domain)
+      - name: Cloudflare - Update / Create DNS Entry (www.domain)
         uses: everpcpc/cloudflare-dns-action@v1
         with:
           type: "A"

@@ -9,7 +9,6 @@ chmod 600 ~/.ssh/id_rsa
 chmod 700 ~/.ssh
 
 # This fetches the server's public key and makes it a known host to avoid fingerprinting errors
-# TODO: bad approach, see method of caching these values on first run and using them instead
 ssh-keyscan -p 22 $IP_ADDRESS >> ~/.ssh/known_hosts
 
 # Add a SSH host to the config file so that it's easier to run SSH commands

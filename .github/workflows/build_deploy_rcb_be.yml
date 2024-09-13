@@ -1,5 +1,4 @@
 name: Build & Deploy RecipeBox Backend
-
 on:
   push:
     branches:
@@ -18,8 +17,8 @@ on:
       run_deploy:
         type: boolean
         default: true
-        description: Should the backend app be deployed?
         required: true
+        description: Should the backend app be deployed?
 
 # Azure login
 permissions:
@@ -30,23 +29,25 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Worker - Checkout repo
         uses: actions/checkout@v4
 
-      - name: Download and setup Java
+      - name: Worker - Java setup
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Download and install maven
-        run: sudo apt -qq update && sudo apt -qq install maven -y
-      - name: Package server app using maven
-        # run: mvn package -B -q -DskipTests=true # TODO: remove skipping tests
-        run: mvn package -B -e
-        working-directory: recipe-box-backend
+      - name: Worker - Maven setup
+        run: |
+          sudo apt -qq update
+          sudo apt -qq install maven -y
 
-      - name: Upload generated bundle as an artifact
+      - name: Worker - Package .jar using maven
+        working-directory: recipe-box-backend
+        run: mvn package -B -e
+
+      - name: Worker - Upload .jar as artifact
         if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.run_deploy == 'true')}}
         uses: actions/upload-artifact@v4
         with:
@@ -60,41 +61,41 @@ jobs:
     needs: build
 
     steps:
-      - name: Checkout repository
+      - name: Worker - Checkout repo
         uses: actions/checkout@v4
 
-      - name: Login with Azure
+      - name: Worker - Azure login
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          client-id:       ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id:       ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           
-      - name: Fetch server public IP address
+      - name: Worker - Fetch Remote IP address
         working-directory: .github/workflows/scripts
-        run: bash ./fetch_ip.sh
+        run: bash ./fetch_ip.sh "rcb-public-ip"
 
-      - name: Config SSH connection on the Github Worker
+      - name: Worker - Config SSH
         working-directory: .github/workflows/scripts
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_PRIVATE_KEY:    ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_ADMIN_USERNAME: ${{ secrets.SSH_ADMIN_USERNAME }}
         run: bash ./worker_config_ssh.sh
 
-      - name: Download built package
+      - name: Worker - Download .jar
         uses: actions/download-artifact@v4
         with:
           name: production-rcb-be
 
-      - name: Install dependencies on the remote server and start a screen
+      - name: Remote - Install dependencies & start screen
         working-directory: .github/workflows/scripts
         run: bash ./be_remote_configure.sh
 
-      - name: Move backend package to server
+      - name: Worker - Move .jar to remote
         run: scp ./recipe-box-backend-0.0.1-SNAPSHOT.jar rcb:~/rcb-be/
 
-      - name: Move backend script to server
+      - name: Worker - Move backend start script to remote
         run: scp .github/workflows/scripts/start_backend.sh rcb:~/rcb-be/
 
-      - name: Run backend on screen
+      - name: Remote - Run backend on screen
         run: ssh rcb 'bash ~/rcb-be/start_backend.sh "${{ vars.DB_URL }}" "${{ vars.DB_USERNAME }}" "${{ secrets.DB_PASSWORD }}"'
