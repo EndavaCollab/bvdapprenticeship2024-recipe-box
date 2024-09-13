@@ -58,7 +58,7 @@ jobs:
         run: mvn install -B -e
         working-directory: recipe-box-frontend
 
-      - name: Worker - Upload .jar as artifact
+      - name: Worker - Upload site as artifact
         if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.run_deploy == 'true')}}
         uses: actions/upload-artifact@v4
         with:
