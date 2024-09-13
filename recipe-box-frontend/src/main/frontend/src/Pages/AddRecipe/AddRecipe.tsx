@@ -18,7 +18,6 @@ interface RecipeAddRequestDTO {
     ingredients: string[];
     cookingTime: number;
     difficulty: string;
-    ingredientsQuantities: number[];
     servings: number;
 }
 
@@ -103,7 +102,8 @@ export default function AddRecipe() {
         // const imageUrl = image ? await uploadImage(image.fileData) : '';   // de decomentat daca o sa putem trimite o imagine
         const imageUrl = image?.fileName;
         const recipeIngredients = ingredients.map((ingredient, index) => ({
-            ingredientId: ingredient,
+            ingredientId: null,
+            ingredientName: ingredient,
             quantity: ingredientsQuantities[index],
             unit: "grams", //pe moment nu avem ingrediente lichide, so this will do for the demo
         }));
@@ -116,7 +116,6 @@ export default function AddRecipe() {
             servings,
             imageUrl,
             ingredients,
-            ingredientsQuantities,
             cookingTime: totalPreparationTime,
         };
 
@@ -375,7 +374,9 @@ export default function AddRecipe() {
                                 <option value="0" disabled hidden>
                                     Select quantity
                                 </option>
-                                <option value="1">1</option>
+                                <option style={{ color: "#000" }} value="1">
+                                    1
+                                </option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
                                 <option value="4">4</option>
