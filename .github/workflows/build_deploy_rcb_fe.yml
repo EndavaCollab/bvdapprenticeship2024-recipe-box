@@ -39,22 +39,22 @@ jobs:
           sudo apt -qq update
           sudo apt -qq install maven -y
 
-      - name: Worker - Azure login
-        if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.run_deploy == 'true')}}
-        uses: azure/login@v2
-        with:
-          client-id:       ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id:       ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      # - name: Worker - Azure login
+      #   if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.run_deploy == 'true')}}
+      #   uses: azure/login@v2
+      #   with:
+      #     client-id:       ${{ secrets.AZURE_CLIENT_ID }}
+      #     tenant-id:       ${{ secrets.AZURE_TENANT_ID }}
+      #     subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
             
-      - name: Worker - Fetch Remote IP address
-        if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.run_deploy == 'true')}}
-        working-directory: .github/workflows/scripts
-        run: bash ./fetch_ip.sh "rcb-public-ip"
+      # - name: Worker - Fetch Remote IP address
+      #   if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.run_deploy == 'true')}}
+      #   working-directory: .github/workflows/scripts
+      #   run: bash ./fetch_ip.sh "rcb-public-ip"
 
       - name: Worker - Build web app using Maven
         env:
-          REACT_APP_BACKEND_URL: "http://${{ env.IP_ADDRESS || 'localhost' }}:8080"
+          REACT_APP_BACKEND_URL: "https://${{ vars.DOMAIN_NAME }}:8080"
         run: mvn install -B -e
         working-directory: recipe-box-frontend
 
