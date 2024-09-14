@@ -44,7 +44,7 @@ export default function UserLogin() {
 
             const data = await response.json();
             console.log(data);
-            
+
             const { id } = data;
             const { role } = data;
             sessionStorage.setItem("userId", id);
@@ -53,6 +53,7 @@ export default function UserLogin() {
             navigate("/recipes/list");
         } catch (error) {
             alert("An error occurred during login.");
+            //localStorage.setItem("username", username); // FOR TESTING ONLY
         }
     };
 

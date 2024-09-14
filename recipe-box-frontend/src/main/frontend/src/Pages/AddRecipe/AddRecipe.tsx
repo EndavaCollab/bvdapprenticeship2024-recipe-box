@@ -15,20 +15,45 @@ interface RecipeAddRequestDTO {
     description: string;
     imageUrl: string | undefined;
     mealType: string;
-    ingredients: string[];
+    ingredients: IngredientRequestDTO[];
     cookingTime: number;
     difficulty: string;
     servings: number;
 }
 
+interface IngredientRequestDTO {
+    ingredientID: number;
+    ingredientName: string;
+    quantity: number;
+    unit: string;
+}
+
+const ingredientOptions = [
+    { id: 1, name: "Flour" },
+    { id: 2, name: "Sugar" },
+    { id: 3, name: "Butter" },
+    { id: 4, name: "Eggs" },
+];
+
 export default function AddRecipe() {
-    const [ingredientsQuantities, setIngredientQuantities] = useState<number[]>(
-        [0]
-    );
+    const username = localStorage.getItem("username");
+
+    const defaultIngredient = {
+        ingredientID: 0,
+        unit: "grams",
+    };
+
+    // const [ingredientsQuantities, setIngredientQuantities] = useState<number[]>(
+    //     [0]
+    // );
+
+    const [ingredients, setIngredients] = useState<IngredientRequestDTO[]>([
+        { ...defaultIngredient, ingredientName: "", quantity: 0 },
+    ]);
     const [description, setDescription] = useState<string>("");
     const [image, setImage] = useState<ImageFile | null>(null);
 
-    const [ingredients, setIngredients] = useState<string[]>([""]);
+    // const [ingredients, setIngredients] = useState<string[]>([""]);
     const [recipeName, setRecipeName] = useState<string>("");
     const [preparationHours, setPreparationHours] = useState<number>(-1);
     const [preparationMinutes, setPreparationMinutes] = useState<number>(-1);
@@ -37,13 +62,33 @@ export default function AddRecipe() {
     const [servings, setServings] = useState<number>(0);
 
     const handleAddIngredient = () => {
-        setIngredients([...ingredients, ""]);
-        setIngredientQuantities([...ingredientsQuantities, 0]);
+        setIngredients([
+            ...ingredients,
+            {
+                ...defaultIngredient,
+                ingredientID: ingredients.length,
+                ingredientName: "",
+                quantity: 0,
+            },
+        ]);
     };
 
     const handleIngredientChange = (index: number, value: string) => {
+        const selectedIngredient = ingredientOptions.find(
+            (ingredient) => ingredient.name === value
+        );
+
         const newIngredients = [...ingredients];
-        newIngredients[index] = value;
+        newIngredients[index] = {
+            ...newIngredients[index],
+            ingredientName: value,
+            ingredientID: selectedIngredient ? selectedIngredient.id : 0,
+        };
+        setIngredients(newIngredients);
+    };
+    const handleIngredientQuantityChange = (index: number, value: number) => {
+        const newIngredients = [...ingredients];
+        newIngredients[index] = { ...newIngredients[index], quantity: value };
         setIngredients(newIngredients);
     };
 
@@ -66,12 +111,6 @@ export default function AddRecipe() {
 
     const handleServingsChange = (e: ChangeEvent<HTMLSelectElement>) => {
         setServings(Number(e.target.value));
-    };
-
-    const handleIngredientQuantityChange = (index: number, value: number) => {
-        const newIngredientQuantity = [...ingredientsQuantities];
-        newIngredientQuantity[index] = value;
-        setIngredientQuantities(newIngredientQuantity);
     };
 
     const handleDescriptionChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -101,12 +140,12 @@ export default function AddRecipe() {
 
         // const imageUrl = image ? await uploadImage(image.fileData) : '';   // de decomentat daca o sa putem trimite o imagine
         const imageUrl = image?.fileName;
-        const recipeIngredients = ingredients.map((ingredient, index) => ({
-            ingredientId: null,
-            ingredientName: ingredient,
-            quantity: ingredientsQuantities[index],
-            unit: "grams", //pe moment nu avem ingrediente lichide, so this will do for the demo
-        }));
+        // const recipeIngredients = ingredients.map((ingredient, index) => ({
+        //     ingredientId: null,
+        //     ingredientName: ingredient,
+        //     quantity: ingredientsQuantities[index],
+        //     unit: "grams", //pe moment nu avem ingrediente lichide, so this will do for the demo
+        // }));
 
         const recipeData: RecipeAddRequestDTO = {
             name: recipeName,
@@ -120,7 +159,7 @@ export default function AddRecipe() {
         };
 
         try {
-            const response = await fetch("/recipes?userId=", {
+            const response = await fetch(`/recipes?userId=${username}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -137,7 +176,7 @@ export default function AddRecipe() {
             alert("Recipe successfully added.");
         } catch (error) {
             console.error("Error:", error);
-            alert("An error occured! The recipe has not been added.");
+            alert("An error occurred! The recipe has not been added.");
         }
     };
 
@@ -264,11 +303,11 @@ export default function AddRecipe() {
                             <select
                                 key={index}
                                 className={
-                                    ingredient === ""
+                                    ingredient.ingredientName === ""
                                         ? "ingredient-select"
                                         : "ingredient-selected"
                                 }
-                                value={ingredient}
+                                value={ingredient.ingredientName}
                                 onChange={(e) =>
                                     handleIngredientChange(
                                         index,
@@ -279,10 +318,11 @@ export default function AddRecipe() {
                                 <option value="" disabled hidden>
                                     Select ingredient
                                 </option>
-                                <option value="flour">Flour</option>
-                                <option value="sugar">Sugar</option>
-                                <option value="butter">Butter</option>
-                                <option value="eggs">Eggs</option>
+                                {ingredientOptions.map((option) => (
+                                    <option key={option.id} value={option.name}>
+                                        {option.name}
+                                    </option>
+                                ))}
                             </select>
                         ))}
 
@@ -355,15 +395,15 @@ export default function AddRecipe() {
                         <div style={{ marginBottom: 6 }}>
                             Ingredient Quantity
                         </div>
-                        {ingredientsQuantities.map((quantity, index) => (
+                        {ingredients.map((ingredient, index) => (
                             <select
                                 key={index}
                                 className={
-                                    quantity === 0
+                                    ingredient.quantity === 0
                                         ? "ingredient-select"
                                         : "ingredient-selected"
                                 }
-                                value={quantity}
+                                value={ingredient.quantity}
                                 onChange={(e) =>
                                     handleIngredientQuantityChange(
                                         index,
@@ -377,12 +417,24 @@ export default function AddRecipe() {
                                 <option style={{ color: "#000" }} value="1">
                                     1
                                 </option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                                <option value="10">10</option>
-                                <option value="100">100</option>
+                                <option style={{ color: "#000" }} value="2">
+                                    2
+                                </option>
+                                <option style={{ color: "#000" }} value="3">
+                                    3
+                                </option>
+                                <option style={{ color: "#000" }} value="4">
+                                    4
+                                </option>
+                                <option style={{ color: "#000" }} value="5">
+                                    5
+                                </option>
+                                <option style={{ color: "#000" }} value="10">
+                                    10
+                                </option>
+                                <option style={{ color: "#000" }} value="100">
+                                    100
+                                </option>
                             </select>
                         ))}
                     </div>
