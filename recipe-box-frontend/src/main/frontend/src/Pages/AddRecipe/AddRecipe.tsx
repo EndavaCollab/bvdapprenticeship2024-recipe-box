@@ -43,23 +43,21 @@ export default function AddRecipe() {
         unit: "grams",
     };
 
-    // const [ingredientsQuantities, setIngredientQuantities] = useState<number[]>(
-    //     [0]
-    // );
-
     const [ingredients, setIngredients] = useState<IngredientRequestDTO[]>([
         { ...defaultIngredient, ingredientName: "", quantity: 0 },
     ]);
     const [description, setDescription] = useState<string>("");
     const [image, setImage] = useState<ImageFile | null>(null);
 
-    // const [ingredients, setIngredients] = useState<string[]>([""]);
     const [recipeName, setRecipeName] = useState<string>("");
-    const [preparationHours, setPreparationHours] = useState<number>(-1);
-    const [preparationMinutes, setPreparationMinutes] = useState<number>(-1);
+    const [preparationHours, setPreparationHours] = useState<number>(0);
+    const [preparationMinutes, setPreparationMinutes] = useState<number>(0);
     const [difficulty, setDifficulty] = useState<string>("");
     const [category, setCategory] = useState<string>("");
     const [servings, setServings] = useState<number>(0);
+    const [wasSubmited, setWasSubmited] = useState(false);
+
+    const totalPreparationTime = preparationHours * 60 + preparationMinutes;
 
     const handleAddIngredient = () => {
         setIngredients([
@@ -135,17 +133,40 @@ export default function AddRecipe() {
         setImage(null);
     };
 
+    const incompleteFields = {
+        recipeNameError: wasSubmited && !recipeName,
+        preparationTimeError: wasSubmited && !totalPreparationTime,
+        difficultyError: wasSubmited && !difficulty,
+        categoryError: wasSubmited && !category,
+        servingsError: wasSubmited && !servings,
+        ingredientsError:
+            wasSubmited &&
+            ingredients.some(
+                (ingredient) =>
+                    !ingredient.ingredientName || !ingredient.quantity
+            ),
+        recipeImageError: wasSubmited && !image,
+    };
+
     const handleSaveRecipe = async () => {
-        const totalPreparationTime = preparationHours * 60 + preparationMinutes;
+        setWasSubmited(true);
+
+        if (
+            !recipeName ||
+            !totalPreparationTime ||
+            !difficulty ||
+            !category ||
+            !servings ||
+            ingredients.some(
+                ({ ingredientName, quantity }) => !ingredientName || !quantity
+            ) ||
+            !image
+        ) {
+            return;
+        }
 
         // const imageUrl = image ? await uploadImage(image.fileData) : '';   // de decomentat daca o sa putem trimite o imagine
         const imageUrl = image?.fileName;
-        // const recipeIngredients = ingredients.map((ingredient, index) => ({
-        //     ingredientId: null,
-        //     ingredientName: ingredient,
-        //     quantity: ingredientsQuantities[index],
-        //     unit: "grams", //pe moment nu avem ingrediente lichide, so this will do for the demo
-        // }));
 
         const recipeData: RecipeAddRequestDTO = {
             name: recipeName,
@@ -172,6 +193,7 @@ export default function AddRecipe() {
             }
 
             const data = await response.json();
+            setWasSubmited(true);
             console.log("Recipe successfully added:", data);
             alert("Recipe successfully added.");
         } catch (error) {
@@ -186,23 +208,31 @@ export default function AddRecipe() {
             <div className="add-recipe-container">
                 <div className="add-recipe-fields">
                     <div className="left-column">
-                        <div>Recipe Name</div>
+                        <div>Recipe Name*</div>
                         <input
                             type="text"
                             placeholder="Recipe name"
-                            className="recipe-name-input-box"
+                            className={`recipe-name-input-box ${
+                                incompleteFields.recipeNameError
+                                    ? "incomplete-field"
+                                    : ""
+                            }`}
                             value={recipeName}
                             onChange={handleRecipeNameChange}
                         />
 
-                        <div>Preparation time</div>
+                        <div>Preparation time*</div>
                         <div className="preparation-time-container">
                             <select
-                                className={
-                                    preparationHours === -1
+                                className={`${
+                                    preparationHours === 0
                                         ? "prep-duration-select"
                                         : "prep-duration-selected"
-                                }
+                                } ${
+                                    incompleteFields.preparationTimeError
+                                        ? "incomplete-field"
+                                        : ""
+                                }`}
                                 value={preparationHours}
                                 onChange={(e) =>
                                     handlePreparationTimeChange(
@@ -211,7 +241,7 @@ export default function AddRecipe() {
                                     )
                                 }
                             >
-                                <option value="-1" disabled hidden>
+                                <option value="0" disabled hidden>
                                     HH
                                 </option>
                                 <option value="0">00</option>
@@ -219,11 +249,15 @@ export default function AddRecipe() {
                                 <option value="2">02</option>
                             </select>
                             <select
-                                className={
-                                    preparationMinutes === -1
+                                className={`${
+                                    preparationMinutes === 0
                                         ? "prep-duration-select"
                                         : "prep-duration-selected"
-                                }
+                                } ${
+                                    incompleteFields.preparationTimeError
+                                        ? "incomplete-field"
+                                        : ""
+                                }`}
                                 value={preparationMinutes}
                                 onChange={(e) =>
                                     handlePreparationTimeChange(
@@ -232,7 +266,7 @@ export default function AddRecipe() {
                                     )
                                 }
                             >
-                                <option value="-1" disabled hidden>
+                                <option value="0" disabled hidden>
                                     MM
                                 </option>
                                 <option value="15">15</option>
@@ -241,13 +275,17 @@ export default function AddRecipe() {
                             </select>
                         </div>
 
-                        <div>Difficulty</div>
+                        <div>Difficulty*</div>
                         <select
-                            className={
+                            className={`${
                                 difficulty
                                     ? "ingredient-selected"
                                     : "ingredient-select"
-                            }
+                            } ${
+                                incompleteFields.difficultyError
+                                    ? "incomplete-field"
+                                    : ""
+                            }`}
                             value={difficulty}
                             onChange={handleDifficultyChange}
                         >
@@ -259,13 +297,17 @@ export default function AddRecipe() {
                             <option value="hard">Hard</option>
                         </select>
 
-                        <div>Category</div>
+                        <div>Category*</div>
                         <select
-                            className={
+                            className={`${
                                 category
                                     ? "ingredient-selected"
                                     : "ingredient-select"
-                            }
+                            } ${
+                                incompleteFields.categoryError
+                                    ? "incomplete-field"
+                                    : ""
+                            }`}
                             value={category}
                             onChange={handleCategoryChange}
                         >
@@ -279,13 +321,17 @@ export default function AddRecipe() {
                             <option value="Snack">Snack</option>
                         </select>
 
-                        <div>Servings</div>
+                        <div>Servings*</div>
                         <select
-                            className={
+                            className={`${
                                 servings
                                     ? "ingredient-selected"
                                     : "ingredient-select"
-                            }
+                            } ${
+                                incompleteFields.servingsError
+                                    ? "incomplete-field"
+                                    : ""
+                            }`}
                             value={servings}
                             onChange={handleServingsChange}
                         >
@@ -298,15 +344,19 @@ export default function AddRecipe() {
                             <option value="4">4</option>
                         </select>
 
-                        <div>Ingredient name</div>
+                        <div>Ingredient name*</div>
                         {ingredients.map((ingredient, index) => (
                             <select
                                 key={index}
-                                className={
+                                className={`${
                                     ingredient.ingredientName === ""
                                         ? "ingredient-select"
                                         : "ingredient-selected"
-                                }
+                                } ${
+                                    incompleteFields.ingredientsError
+                                        ? "incomplete-field"
+                                        : ""
+                                }`}
                                 value={ingredient.ingredientName}
                                 onChange={(e) =>
                                     handleIngredientChange(
@@ -342,11 +392,15 @@ export default function AddRecipe() {
                     </div>
 
                     <div className="right-column">
-                        <div>Recipe Image</div>
+                        <div>Recipe Image*</div>
 
                         {!image && (
                             <div
-                                className="add-image-button-dashed-border"
+                                className={`${"add-image-button-dashed-border"} ${
+                                    incompleteFields.recipeImageError
+                                        ? "incomplete-field"
+                                        : ""
+                                }`}
                                 style={{ margin: 0 }}
                             >
                                 <input
@@ -393,16 +447,20 @@ export default function AddRecipe() {
                         />
 
                         <div style={{ marginBottom: 6 }}>
-                            Ingredient Quantity
+                            Ingredient Quantity*
                         </div>
                         {ingredients.map((ingredient, index) => (
                             <select
                                 key={index}
-                                className={
+                                className={`${
                                     ingredient.quantity === 0
                                         ? "ingredient-select"
                                         : "ingredient-selected"
-                                }
+                                } ${
+                                    incompleteFields.ingredientsError
+                                        ? "incomplete-field"
+                                        : ""
+                                }`}
                                 value={ingredient.quantity}
                                 onChange={(e) =>
                                     handleIngredientQuantityChange(

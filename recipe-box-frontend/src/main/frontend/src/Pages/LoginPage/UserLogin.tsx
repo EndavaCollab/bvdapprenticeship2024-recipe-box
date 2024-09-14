@@ -52,7 +52,7 @@ export default function UserLogin() {
             sessionStorage.setItem("username", username);
             navigate("/recipes/list");
         } catch (error) {
-            alert("An error occurred during login.");
+            alert("An error occurred during login!");
             //localStorage.setItem("username", username); // FOR TESTING ONLY
         }
     };

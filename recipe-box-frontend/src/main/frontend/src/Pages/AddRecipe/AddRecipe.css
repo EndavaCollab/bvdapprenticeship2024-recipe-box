@@ -230,3 +230,7 @@
     transform: translateY(-50%);
     cursor: pointer;
 }
+
+.incomplete-field {
+    border-color: red !important;
+}
