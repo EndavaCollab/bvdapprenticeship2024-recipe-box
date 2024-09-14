@@ -244,9 +244,15 @@ export default function AddRecipe() {
                                 <option value="0" disabled hidden>
                                     HH
                                 </option>
-                                <option value="0">00</option>
-                                <option value="1">01</option>
-                                <option value="2">02</option>
+                                <option style={{ color: "#000" }} value="0">
+                                    1 hour
+                                </option>
+                                <option style={{ color: "#000" }} value="1">
+                                    2 hours
+                                </option>
+                                <option style={{ color: "#000" }} value="2">
+                                    3 hours
+                                </option>
                             </select>
                             <select
                                 className={`${
@@ -269,9 +275,15 @@ export default function AddRecipe() {
                                 <option value="0" disabled hidden>
                                     MM
                                 </option>
-                                <option value="15">15</option>
-                                <option value="30">30</option>
-                                <option value="45">45</option>
+                                <option style={{ color: "#000" }} value="15">
+                                    15 min
+                                </option>
+                                <option style={{ color: "#000" }} value="30">
+                                    30 min
+                                </option>
+                                <option style={{ color: "#000" }} value="45">
+                                    45 min
+                                </option>
                             </select>
                         </div>
 
@@ -292,9 +304,15 @@ export default function AddRecipe() {
                             <option value="" disabled hidden>
                                 Select difficulty
                             </option>
-                            <option value="easy">Easy</option>
-                            <option value="medium">Medium</option>
-                            <option value="hard">Hard</option>
+                            <option style={{ color: "#000" }} value="easy">
+                                Easy
+                            </option>
+                            <option style={{ color: "#000" }} value="medium">
+                                Medium
+                            </option>
+                            <option style={{ color: "#000" }} value="hard">
+                                Hard
+                            </option>
                         </select>
 
                         <div>Category*</div>
@@ -314,11 +332,21 @@ export default function AddRecipe() {
                             <option value="" disabled hidden>
                                 Select category
                             </option>
-                            <option value="Breakfast">Breakfast</option>
-                            <option value="Lunch">Lunch</option>
-                            <option value="Dinner">Dinner</option>
-                            <option value="Dessert">Dessert</option>
-                            <option value="Snack">Snack</option>
+                            <option style={{ color: "#000" }} value="Breakfast">
+                                Breakfast
+                            </option>
+                            <option style={{ color: "#000" }} value="Lunch">
+                                Lunch
+                            </option>
+                            <option style={{ color: "#000" }} value="Dinner">
+                                Dinner
+                            </option>
+                            <option style={{ color: "#000" }} value="Dessert">
+                                Dessert
+                            </option>
+                            <option style={{ color: "#000" }} value="Snack">
+                                Snack
+                            </option>
                         </select>
 
                         <div>Servings*</div>
@@ -338,10 +366,18 @@ export default function AddRecipe() {
                             <option value="0" disabled hidden>
                                 Select no. of servings
                             </option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
+                            <option style={{ color: "#000" }} value="1">
+                                1
+                            </option>
+                            <option style={{ color: "#000" }} value="2">
+                                2
+                            </option>
+                            <option style={{ color: "#000" }} value="3">
+                                3
+                            </option>
+                            <option style={{ color: "#000" }} value="4">
+                                4
+                            </option>
                         </select>
 
                         <div>Ingredient name*</div>
@@ -369,7 +405,11 @@ export default function AddRecipe() {
                                     Select ingredient
                                 </option>
                                 {ingredientOptions.map((option) => (
-                                    <option key={option.id} value={option.name}>
+                                    <option
+                                        style={{ color: "#000" }}
+                                        key={option.id}
+                                        value={option.name}
+                                    >
                                         {option.name}
                                     </option>
                                 ))}
