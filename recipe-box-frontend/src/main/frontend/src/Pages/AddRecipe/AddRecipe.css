@@ -231,6 +231,11 @@
     cursor: pointer;
 }
 
-.incomplete-field {
+/* .incomplete-field {
     border-color: red !important;
+} */
+
+.save-recipe-button:disabled {
+    background-color: grey;
+    opacity: 0.7;
 }

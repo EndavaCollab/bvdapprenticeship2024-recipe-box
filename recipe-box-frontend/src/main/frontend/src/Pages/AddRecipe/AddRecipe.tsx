@@ -3,6 +3,8 @@ import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import { ReactComponent as CheckIcon } from "../../assets/icons/check.svg";
 import { ReactComponent as RemoveIcon } from "../../assets/icons/close copy.svg";
+import SelectInput from "../../components/SelectInput/SelectInput";
+
 import "./AddRecipe.css";
 
 interface ImageFile {
@@ -35,6 +37,17 @@ const ingredientOptions = [
     { id: 4, name: "Eggs" },
 ];
 
+const quantityOptions = [
+    { value: 0, label: "0" },
+    { value: 1, label: "1" },
+    { value: 2, label: "2" },
+    { value: 3, label: "3" },
+    { value: 4, label: "4" },
+    { value: 5, label: "5" },
+    { value: 10, label: "10" },
+    { value: 100, label: "100" },
+];
+
 export default function AddRecipe() {
     const username = localStorage.getItem("username");
 
@@ -55,7 +68,7 @@ export default function AddRecipe() {
     const [difficulty, setDifficulty] = useState<string>("");
     const [category, setCategory] = useState<string>("");
     const [servings, setServings] = useState<number>(0);
-    const [wasSubmited, setWasSubmited] = useState(false);
+    const [triedToSubmit, settriedToSubmit] = useState(false);
 
     const totalPreparationTime = preparationHours * 60 + preparationMinutes;
 
@@ -133,35 +146,45 @@ export default function AddRecipe() {
         setImage(null);
     };
 
+    // const incompleteFields = {
+    //     recipeNameError: triedToSubmit && !recipeName,
+    //     preparationTimeError: triedToSubmit && !totalPreparationTime,
+    //     difficultyError: triedToSubmit && !difficulty,
+    //     categoryError: triedToSubmit && !category,
+    //     servingsError: triedToSubmit && !servings,
+    //     ingredientsError:
+    //         triedToSubmit &&
+    //         ingredients.some(
+    //             (ingredient) =>
+    //                 !ingredient.ingredientName || !ingredient.quantity
+    //         ),
+    //     recipeImageError: triedToSubmit && !image,
+    // };
     const incompleteFields = {
-        recipeNameError: wasSubmited && !recipeName,
-        preparationTimeError: wasSubmited && !totalPreparationTime,
-        difficultyError: wasSubmited && !difficulty,
-        categoryError: wasSubmited && !category,
-        servingsError: wasSubmited && !servings,
-        ingredientsError:
-            wasSubmited &&
-            ingredients.some(
-                (ingredient) =>
-                    !ingredient.ingredientName || !ingredient.quantity
-            ),
-        recipeImageError: wasSubmited && !image,
+        recipeNameError: !recipeName,
+        preparationTimeError: !totalPreparationTime,
+        difficultyError: !difficulty,
+        categoryError: !category,
+        servingsError: !servings,
+        ingredientsError: ingredients.some(
+            (ingredient) => !ingredient.ingredientName || !ingredient.quantity
+        ),
+        recipeImageError: !image,
     };
 
-    const handleSaveRecipe = async () => {
-        setWasSubmited(true);
+    const submitIsDisabled =
+        incompleteFields.recipeNameError ||
+        incompleteFields.preparationTimeError ||
+        incompleteFields.difficultyError ||
+        incompleteFields.categoryError ||
+        incompleteFields.servingsError ||
+        incompleteFields.ingredientsError ||
+        incompleteFields.recipeImageError;
 
-        if (
-            !recipeName ||
-            !totalPreparationTime ||
-            !difficulty ||
-            !category ||
-            !servings ||
-            ingredients.some(
-                ({ ingredientName, quantity }) => !ingredientName || !quantity
-            ) ||
-            !image
-        ) {
+    const handleSaveRecipe = async () => {
+        settriedToSubmit(true);
+
+        if (submitIsDisabled) {
             return;
         }
 
@@ -193,12 +216,13 @@ export default function AddRecipe() {
             }
 
             const data = await response.json();
-            setWasSubmited(true);
+            settriedToSubmit(false);
             console.log("Recipe successfully added:", data);
             alert("Recipe successfully added.");
         } catch (error) {
             console.error("Error:", error);
             alert("An error occurred! The recipe has not been added.");
+            settriedToSubmit(true); // FOR TESTING ONLY!!!
         }
     };
 
@@ -223,16 +247,7 @@ export default function AddRecipe() {
 
                         <div>Preparation time*</div>
                         <div className="preparation-time-container">
-                            <select
-                                className={`${
-                                    preparationHours === 0
-                                        ? "prep-duration-select"
-                                        : "prep-duration-selected"
-                                } ${
-                                    incompleteFields.preparationTimeError
-                                        ? "incomplete-field"
-                                        : ""
-                                }`}
+                            <SelectInput
                                 value={preparationHours}
                                 onChange={(e) =>
                                     handlePreparationTimeChange(
@@ -240,30 +255,16 @@ export default function AddRecipe() {
                                         preparationMinutes
                                     )
                                 }
-                            >
-                                <option value="0" disabled hidden>
-                                    HH
-                                </option>
-                                <option style={{ color: "#000" }} value="0">
-                                    1 hour
-                                </option>
-                                <option style={{ color: "#000" }} value="1">
-                                    2 hours
-                                </option>
-                                <option style={{ color: "#000" }} value="2">
-                                    3 hours
-                                </option>
-                            </select>
-                            <select
-                                className={`${
-                                    preparationMinutes === 0
-                                        ? "prep-duration-select"
-                                        : "prep-duration-selected"
-                                } ${
-                                    incompleteFields.preparationTimeError
-                                        ? "incomplete-field"
-                                        : ""
-                                }`}
+                                options={[
+                                    { value: 1, label: "1 hour" },
+                                    { value: 2, label: "2 hours" },
+                                    { value: 3, label: "3 hours" },
+                                ]}
+                                placeholder="HH"
+                                hasError={incompleteFields.preparationTimeError}
+                            />
+
+                            <SelectInput
                                 value={preparationMinutes}
                                 onChange={(e) =>
                                     handlePreparationTimeChange(
@@ -271,116 +272,60 @@ export default function AddRecipe() {
                                         Number(e.target.value)
                                     )
                                 }
-                            >
-                                <option value="0" disabled hidden>
-                                    MM
-                                </option>
-                                <option style={{ color: "#000" }} value="15">
-                                    15 min
-                                </option>
-                                <option style={{ color: "#000" }} value="30">
-                                    30 min
-                                </option>
-                                <option style={{ color: "#000" }} value="45">
-                                    45 min
-                                </option>
-                            </select>
+                                options={[
+                                    { value: 15, label: "15 min" },
+                                    { value: 30, label: "30 min" },
+                                    { value: 45, label: "45 min" },
+                                ]}
+                                placeholder="MM"
+                                hasError={incompleteFields.preparationTimeError}
+                            />
                         </div>
 
                         <div>Difficulty*</div>
-                        <select
-                            className={`${
-                                difficulty
-                                    ? "ingredient-selected"
-                                    : "ingredient-select"
-                            } ${
-                                incompleteFields.difficultyError
-                                    ? "incomplete-field"
-                                    : ""
-                            }`}
+                        <SelectInput
                             value={difficulty}
                             onChange={handleDifficultyChange}
-                        >
-                            <option value="" disabled hidden>
-                                Select difficulty
-                            </option>
-                            <option style={{ color: "#000" }} value="easy">
-                                Easy
-                            </option>
-                            <option style={{ color: "#000" }} value="medium">
-                                Medium
-                            </option>
-                            <option style={{ color: "#000" }} value="hard">
-                                Hard
-                            </option>
-                        </select>
+                            options={[
+                                { value: "easy", label: "Easy" },
+                                { value: "medium", label: "Medium" },
+                                { value: "hard", label: "Hard" },
+                            ]}
+                            placeholder="Choose difficulty"
+                            hasError={incompleteFields.difficultyError}
+                        />
 
                         <div>Category*</div>
-                        <select
-                            className={`${
-                                category
-                                    ? "ingredient-selected"
-                                    : "ingredient-select"
-                            } ${
-                                incompleteFields.categoryError
-                                    ? "incomplete-field"
-                                    : ""
-                            }`}
+
+                        <SelectInput
                             value={category}
                             onChange={handleCategoryChange}
-                        >
-                            <option value="" disabled hidden>
-                                Select category
-                            </option>
-                            <option style={{ color: "#000" }} value="Breakfast">
-                                Breakfast
-                            </option>
-                            <option style={{ color: "#000" }} value="Lunch">
-                                Lunch
-                            </option>
-                            <option style={{ color: "#000" }} value="Dinner">
-                                Dinner
-                            </option>
-                            <option style={{ color: "#000" }} value="Dessert">
-                                Dessert
-                            </option>
-                            <option style={{ color: "#000" }} value="Snack">
-                                Snack
-                            </option>
-                        </select>
+                            options={[
+                                { value: "breakfast", label: "Breakfast" },
+                                { value: "lunch", label: "Lunch" },
+                                { value: "dinner", label: "Dinner" },
+                            ]}
+                            placeholder="Select category"
+                            hasError={incompleteFields.categoryError}
+                        />
 
                         <div>Servings*</div>
-                        <select
-                            className={`${
-                                servings
-                                    ? "ingredient-selected"
-                                    : "ingredient-select"
-                            } ${
-                                incompleteFields.servingsError
-                                    ? "incomplete-field"
-                                    : ""
-                            }`}
+
+                        <SelectInput
                             value={servings}
                             onChange={handleServingsChange}
-                        >
-                            <option value="0" disabled hidden>
-                                Select no. of servings
-                            </option>
-                            <option style={{ color: "#000" }} value="1">
-                                1
-                            </option>
-                            <option style={{ color: "#000" }} value="2">
-                                2
-                            </option>
-                            <option style={{ color: "#000" }} value="3">
-                                3
-                            </option>
-                            <option style={{ color: "#000" }} value="4">
-                                4
-                            </option>
-                        </select>
+                            options={[
+                                { value: 1, label: "1" },
+                                { value: 2, label: "2" },
+                                { value: 3, label: "3" },
+                                { value: 4, label: "4" },
+                            ]}
+                            placeholder="Select servings"
+                            hasError={incompleteFields.servingsError}
+                        />
 
                         <div>Ingredient name*</div>
+
                         {ingredients.map((ingredient, index) => (
                             <select
                                 key={index}
@@ -424,6 +369,7 @@ export default function AddRecipe() {
                         </button>
 
                         <button
+                            disabled={submitIsDisabled}
                             className="save-recipe-button"
                             onClick={handleSaveRecipe}
                         >
@@ -509,30 +455,14 @@ export default function AddRecipe() {
                                     )
                                 }
                             >
-                                <option value="0" disabled hidden>
-                                    Select quantity
-                                </option>
-                                <option style={{ color: "#000" }} value="1">
-                                    1
-                                </option>
-                                <option style={{ color: "#000" }} value="2">
-                                    2
-                                </option>
-                                <option style={{ color: "#000" }} value="3">
-                                    3
-                                </option>
-                                <option style={{ color: "#000" }} value="4">
-                                    4
-                                </option>
-                                <option style={{ color: "#000" }} value="5">
-                                    5
-                                </option>
-                                <option style={{ color: "#000" }} value="10">
-                                    10
-                                </option>
-                                <option style={{ color: "#000" }} value="100">
-                                    100
-                                </option>
+                                {quantityOptions.map((option) => (
+                                    <option
+                                        key={option.value}
+                                        value={option.value}
+                                    >
+                                        {option.label}
+                                    </option>
+                                ))}
                             </select>
                         ))}
                     </div>
