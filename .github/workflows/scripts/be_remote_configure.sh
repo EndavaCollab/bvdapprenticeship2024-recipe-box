@@ -1,6 +1,7 @@
+#!/bin/bash
+
 ssh rcb <<'CONTENT'
-    # Java Install
-    # https://adoptium.net/installation/linux/
+    # Java installation - https://adoptium.net/installation/linux/
     sudo apt -qq update
     sudo apt -qq install -y wget apt-transport-https gpg
     wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/adoptium.gpg > /dev/null

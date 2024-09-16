@@ -3,7 +3,7 @@
 # Fetches the public IP for the RCB VM and logs the error into ./ip_fetch_error.log
 cmd_output=$(az network public-ip show \
     --resource-group apprenticeship-2024-rg \
-    --name rcb-public-ip \
+    --name $1 \
     --query "ipAddress" \
     --output tsv 2> ./ip_fetch_error.log) || \
 { \
