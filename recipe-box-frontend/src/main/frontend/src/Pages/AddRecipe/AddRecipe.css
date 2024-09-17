@@ -148,6 +148,7 @@
     width: 100%;
     box-sizing: border-box;
     margin-bottom: 0px;
+    resize: none;
 }
 
 .add-recipe-container .save-recipe-button {

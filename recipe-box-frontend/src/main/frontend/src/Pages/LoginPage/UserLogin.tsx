@@ -50,6 +50,7 @@ export default function UserLogin() {
             sessionStorage.setItem("userId", id);
             sessionStorage.setItem("role", role);
             sessionStorage.setItem("username", username);
+            sessionStorage.setItem("role", role);
             navigate("/recipes/list");
         } catch (error) {
             alert("An error occurred during login!");

@@ -4,50 +4,57 @@ import Header from "../../components/Header/Header";
 import { ReactComponent as CheckIcon } from "../../assets/icons/check.svg";
 import { ReactComponent as RemoveIcon } from "../../assets/icons/close copy.svg";
 import SelectInput from "../../components/SelectInput/SelectInput";
-
 import { useNavigate } from "react-router-dom";
 
 import "./AddRecipe.css";
 
-interface ImageFile {
-    fileName: string;
-    fileData: string;
-}
+import {
+    ingredientOptions,
+    quantityOptions,
+    RecipeAddRequestDTO,
+    IngredientRequestDTO,
+    ImageFile,
+} from "./utils";
 
-interface RecipeAddRequestDTO {
-    name: string;
-    description: string;
-    imageUrl: string | undefined;
-    mealType: string;
-    ingredients: IngredientRequestDTO[];
-    cookingTime: number;
-    difficulty: string;
-    servings: number;
-}
+// interface ImageFile {
+//     fileName: string;
+//     fileData: string;
+// }
 
-interface IngredientRequestDTO {
-    ingredientID: number;
-    ingredientName: string;
-    quantity: number;
-    unit: string;
-}
+// interface RecipeAddRequestDTO {
+//     name: string;
+//     description: string;
+//     imageUrl: string | undefined;
+//     mealType: string;
+//     ingredients: IngredientRequestDTO[];
+//     cookingTime: number;
+//     difficulty: string;
+//     servings: number;
+// }
 
-const ingredientOptions = [
-    { id: 1, name: "Flour" },
-    { id: 2, name: "Sugar" },
-    { id: 3, name: "Butter" },
-    { id: 4, name: "Eggs" },
-];
+// interface IngredientRequestDTO {
+//     ingredientID: number;
+//     ingredientName: string;
+//     quantity: number;
+//     unit: string;
+// }
 
-const quantityOptions = [
-    { value: 1, label: "1" },
-    { value: 2, label: "2" },
-    { value: 3, label: "3" },
-    { value: 4, label: "4" },
-    { value: 5, label: "5" },
-    { value: 10, label: "10" },
-    { value: 100, label: "100" },
-];
+// const ingredientOptions = [
+//     { id: 1, name: "Flour" },
+//     { id: 2, name: "Sugar" },
+//     { id: 3, name: "Butter" },
+//     { id: 4, name: "Eggs" },
+// ];
+
+// const quantityOptions = [
+//     { value: 1, label: "1" },
+//     { value: 2, label: "2" },
+//     { value: 3, label: "3" },
+//     { value: 4, label: "4" },
+//     { value: 5, label: "5" },
+//     { value: 10, label: "10" },
+//     { value: 100, label: "100" },
+// ];
 
 export default function AddRecipe() {
     const navigate = useNavigate();
@@ -284,12 +291,11 @@ export default function AddRecipe() {
 
                         <div>Ingredient name*</div>
 
-                        {/* DE SCHIMBAT ================ */}
+                        {/*  SCHIMBAT ================ */}
 
                         {ingredients.map((ingredient, index) => (
-                            <select
+                            <SelectInput
                                 key={index}
-                                className="recipe-name-input-box"
                                 value={ingredient.ingredientName}
                                 onChange={(e) =>
                                     handleIngredientChange(
@@ -297,23 +303,17 @@ export default function AddRecipe() {
                                         e.target.value
                                     )
                                 }
-                            >
-                                <option value="" disabled hidden>
-                                    Select ingredient
-                                </option>
-                                {ingredientOptions.map((option) => (
-                                    <option
-                                        style={{ color: "#000" }}
-                                        key={option.id}
-                                        value={option.name}
-                                    >
-                                        {option.name}
-                                    </option>
-                                ))}
-                            </select>
+                                options={ingredientOptions.map(
+                                    (ingredient) => ({
+                                        value: ingredient.id,
+                                        label: ingredient.name,
+                                    })
+                                )}
+                                placeholder="Select ingredient"
+                                className="recipe-name-input-box"
+                            />
                         ))}
-
-                        {/* SFARSIT DE SCHIMBAT ===================== */}
+                        {/* SFARSIT  SCHIMBAT ===================== */}
 
                         <button
                             className="add-ingredient-button"
@@ -388,10 +388,22 @@ export default function AddRecipe() {
                             Ingredient Quantity*
                         </div>
 
-                        {/* DE SCHIMBAT ============= */}
+                        {/*  SCHIMBAT ============= */}
                         {ingredients.map((ingredient, index) => (
-                            <select
+                            <SelectInput
                                 key={index}
+                                value={ingredient.quantity}
+                                onChange={(e) =>
+                                    handleIngredientQuantityChange(
+                                        index,
+                                        Number(e.target.value)
+                                    )
+                                }
+                                options={quantityOptions.map((option) => ({
+                                    value: option.value,
+                                    label: option.label,
+                                }))}
+                                placeholder="Select ingredient quantity"
                                 className={`${
                                     ingredient.quantity === 0
                                         ? "ingredient-select"
@@ -401,29 +413,10 @@ export default function AddRecipe() {
                                         ? "incomplete-field"
                                         : ""
                                 }`}
-                                value={ingredient.quantity}
-                                onChange={(e) =>
-                                    handleIngredientQuantityChange(
-                                        index,
-                                        Number(e.target.value)
-                                    )
-                                }
-                            >
-                                <option value="0" disabled hidden>
-                                    Select ingredient quantity
-                                </option>
-                                {quantityOptions.map((option) => (
-                                    <option
-                                        key={option.value}
-                                        value={option.value}
-                                        disabled={option.value === 0}
-                                    >
-                                        {option.label}
-                                    </option>
-                                ))}
-                            </select>
+                                hasError={incompleteFields.ingredientsError}
+                            />
                         ))}
-                        {/* SFARSIT DE SCHIMBAT ==================== */}
+                        {/* SFARSIT  SCHIMBAT ==================== */}
                     </div>
                 </div>
             </div>
