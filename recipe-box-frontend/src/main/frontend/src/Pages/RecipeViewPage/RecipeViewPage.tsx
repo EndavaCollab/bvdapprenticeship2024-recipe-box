@@ -18,6 +18,12 @@ const RecipeViewPage: React.FC = () => {
     if (error) {
         return <p>Error: {errorR.message}</p>;
     }
+    const storedUserId = sessionStorage.getItem("userId");
+    const UserId = storedUserId !== null ? parseInt(storedUserId, 10) : undefined;
+
+    const storedRole = sessionStorage.getItem("role");
+    const role = storedRole ? (storedRole as UserType) : undefined;
+
 
 
     return (
@@ -26,12 +32,12 @@ const RecipeViewPage: React.FC = () => {
                 {(
                     <>
                         <RecipeDetails
+                            userId={UserId}
                             recipeId={recipeDetails.id}
-                            userId={1}
                             name={recipeDetails.name}
                             description={recipeDetails.description}
                             ingredients={recipeDetails.recipeIngredients}
-                            userType={UserType.CHEF}
+                            userType={role}
                         />
                         <RecipeImageDetails
                             imageUrl={recipeDetails.imageUrl}
