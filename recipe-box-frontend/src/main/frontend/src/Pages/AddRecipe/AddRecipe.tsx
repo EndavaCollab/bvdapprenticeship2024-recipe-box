@@ -5,6 +5,8 @@ import { ReactComponent as CheckIcon } from "../../assets/icons/check.svg";
 import { ReactComponent as RemoveIcon } from "../../assets/icons/close copy.svg";
 import SelectInput from "../../components/SelectInput/SelectInput";
 
+import { useNavigate } from "react-router-dom";
+
 import "./AddRecipe.css";
 
 interface ImageFile {
@@ -48,6 +50,8 @@ const quantityOptions = [
 ];
 
 export default function AddRecipe() {
+    const navigate = useNavigate();
+
     const username = localStorage.getItem("username");
 
     const defaultIngredient = {
@@ -171,9 +175,11 @@ export default function AddRecipe() {
             const data = await response.json();
             console.log("Recipe successfully added:", data);
             alert("Recipe successfully added.");
+            navigate("/recipes/list");
         } catch (error) {
             console.error("Error:", error);
             alert("An error occurred! The recipe has not been added.");
+            navigate("/recipes/list"); //TESTING
         }
     };
 
@@ -245,6 +251,7 @@ export default function AddRecipe() {
                         <div>Category*</div>
 
                         <SelectInput
+                            className="recipe-name-input-box"
                             value={category}
                             onChange={(e: ChangeEvent<HTMLSelectElement>) =>
                                 setCategory(e.target.value)
@@ -277,6 +284,8 @@ export default function AddRecipe() {
 
                         <div>Ingredient name*</div>
 
+                        {/* DE SCHIMBAT ================ */}
+
                         {ingredients.map((ingredient, index) => (
                             <select
                                 key={index}
@@ -303,6 +312,8 @@ export default function AddRecipe() {
                                 ))}
                             </select>
                         ))}
+
+                        {/* SFARSIT DE SCHIMBAT ===================== */}
 
                         <button
                             className="add-ingredient-button"
@@ -376,6 +387,8 @@ export default function AddRecipe() {
                         <div style={{ marginBottom: 6 }}>
                             Ingredient Quantity*
                         </div>
+
+                        {/* DE SCHIMBAT ============= */}
                         {ingredients.map((ingredient, index) => (
                             <select
                                 key={index}
@@ -410,6 +423,7 @@ export default function AddRecipe() {
                                 ))}
                             </select>
                         ))}
+                        {/* SFARSIT DE SCHIMBAT ==================== */}
                     </div>
                 </div>
             </div>
