@@ -8,53 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 import "./AddRecipe.css";
 
-import {
-    ingredientOptions,
-    quantityOptions,
-    RecipeAddRequestDTO,
-    IngredientRequestDTO,
-    ImageFile,
-} from "./utils";
-
-// interface ImageFile {
-//     fileName: string;
-//     fileData: string;
-// }
-
-// interface RecipeAddRequestDTO {
-//     name: string;
-//     description: string;
-//     imageUrl: string | undefined;
-//     mealType: string;
-//     ingredients: IngredientRequestDTO[];
-//     cookingTime: number;
-//     difficulty: string;
-//     servings: number;
-// }
-
-// interface IngredientRequestDTO {
-//     ingredientID: number;
-//     ingredientName: string;
-//     quantity: number;
-//     unit: string;
-// }
-
-// const ingredientOptions = [
-//     { id: 1, name: "Flour" },
-//     { id: 2, name: "Sugar" },
-//     { id: 3, name: "Butter" },
-//     { id: 4, name: "Eggs" },
-// ];
-
-// const quantityOptions = [
-//     { value: 1, label: "1" },
-//     { value: 2, label: "2" },
-//     { value: 3, label: "3" },
-//     { value: 4, label: "4" },
-//     { value: 5, label: "5" },
-//     { value: 10, label: "10" },
-//     { value: 100, label: "100" },
-// ];
+import * as Utils from "./utils";
 
 export default function AddRecipe() {
     const navigate = useNavigate();
@@ -66,11 +20,11 @@ export default function AddRecipe() {
         unit: "grams",
     };
 
-    const [ingredients, setIngredients] = useState<IngredientRequestDTO[]>([
-        { ...defaultIngredient, ingredientName: "", quantity: 0 },
-    ]);
+    const [ingredients, setIngredients] = useState<
+        Utils.IngredientRequestDTO[]
+    >([{ ...defaultIngredient, ingredientName: "", quantity: 0 }]);
     const [description, setDescription] = useState<string>("");
-    const [image, setImage] = useState<ImageFile | null>(null);
+    const [image, setImage] = useState<Utils.ImageFile | null>(null);
 
     const [recipeName, setRecipeName] = useState<string>("");
     const [preparationHours, setPreparationHours] = useState<number>(0);
@@ -94,7 +48,7 @@ export default function AddRecipe() {
     };
 
     const handleIngredientChange = (index: number, value: string) => {
-        const selectedIngredient = ingredientOptions.find(
+        const selectedIngredient = Utils.ingredientOptions.find(
             (ingredient) => ingredient.name === value
         );
 
@@ -155,7 +109,7 @@ export default function AddRecipe() {
         // const imageUrl = image ? await uploadImage(image.fileData) : '';   // de decomentat daca o sa putem trimite o imagine
         const imageUrl = image?.fileName;
 
-        const recipeData: RecipeAddRequestDTO = {
+        const recipeData: Utils.RecipeAddRequestDTO = {
             name: recipeName,
             description,
             difficulty,
@@ -186,7 +140,7 @@ export default function AddRecipe() {
         } catch (error) {
             console.error("Error:", error);
             alert("An error occurred! The recipe has not been added.");
-            navigate("/recipes/list"); //TESTING
+            // navigate("/recipes/list"); //TESTING
         }
     };
 
@@ -214,11 +168,7 @@ export default function AddRecipe() {
                                 onChange={(e) =>
                                     setPreparationHours(Number(e.target.value))
                                 }
-                                options={[
-                                    { value: 1, label: "1 hour" },
-                                    { value: 2, label: "2 hours" },
-                                    { value: 3, label: "3 hours" },
-                                ]}
+                                options={Utils.preparationHoursValues}
                                 placeholder="HH"
                                 hasError={incompleteFields.preparationTimeError}
                             />
@@ -230,11 +180,7 @@ export default function AddRecipe() {
                                         Number(e.target.value)
                                     )
                                 }
-                                options={[
-                                    { value: 15, label: "15 min" },
-                                    { value: 30, label: "30 min" },
-                                    { value: 45, label: "45 min" },
-                                ]}
+                                options={Utils.preparationMinutesValues}
                                 placeholder="MM"
                                 hasError={incompleteFields.preparationTimeError}
                             />
@@ -246,11 +192,7 @@ export default function AddRecipe() {
                             onChange={(e: ChangeEvent<HTMLSelectElement>) =>
                                 setDifficulty(e.target.value)
                             }
-                            options={[
-                                { value: "easy", label: "Easy" },
-                                { value: "medium", label: "Medium" },
-                                { value: "hard", label: "Hard" },
-                            ]}
+                            options={Utils.difficultyValues}
                             placeholder="Choose difficulty"
                             hasError={incompleteFields.difficultyError}
                         />
@@ -263,11 +205,7 @@ export default function AddRecipe() {
                             onChange={(e: ChangeEvent<HTMLSelectElement>) =>
                                 setCategory(e.target.value)
                             }
-                            options={[
-                                { value: "breakfast", label: "Breakfast" },
-                                { value: "lunch", label: "Lunch" },
-                                { value: "dinner", label: "Dinner" },
-                            ]}
+                            options={Utils.categoryValues}
                             placeholder="Select category"
                             hasError={incompleteFields.categoryError}
                         />
@@ -279,41 +217,35 @@ export default function AddRecipe() {
                             onChange={(e: ChangeEvent<HTMLSelectElement>) =>
                                 setServings(Number(e.target.value))
                             }
-                            options={[
-                                { value: 1, label: "1" },
-                                { value: 2, label: "2" },
-                                { value: 3, label: "3" },
-                                { value: 4, label: "4" },
-                            ]}
+                            options={Utils.servingsValues}
                             placeholder="Select servings"
                             hasError={incompleteFields.servingsError}
                         />
 
                         <div>Ingredient name*</div>
 
-                        {/*  SCHIMBAT ================ */}
-
                         {ingredients.map((ingredient, index) => (
-                            <SelectInput
-                                key={index}
-                                value={ingredient.ingredientName}
-                                onChange={(e) =>
-                                    handleIngredientChange(
-                                        index,
-                                        e.target.value
-                                    )
-                                }
-                                options={ingredientOptions.map(
-                                    (ingredient) => ({
-                                        value: ingredient.id,
-                                        label: ingredient.name,
-                                    })
-                                )}
-                                placeholder="Select ingredient"
-                                className="recipe-name-input-box"
-                            />
+                            <div style={{ margin: "0 0 10px 0" }}>
+                                <SelectInput
+                                    key={index}
+                                    value={ingredient.ingredientName}
+                                    onChange={(e) =>
+                                        handleIngredientChange(
+                                            index,
+                                            e.target.value
+                                        )
+                                    }
+                                    options={Utils.ingredientOptions.map(
+                                        (ingredient) => ({
+                                            value: ingredient.id,
+                                            label: ingredient.name,
+                                        })
+                                    )}
+                                    placeholder="Select ingredient"
+                                    className="recipe-name-input-box"
+                                />
+                            </div>
                         ))}
-                        {/* SFARSIT  SCHIMBAT ===================== */}
 
                         <button
                             className="add-ingredient-button"
@@ -388,35 +320,29 @@ export default function AddRecipe() {
                             Ingredient Quantity*
                         </div>
 
-                        {/*  SCHIMBAT ============= */}
                         {ingredients.map((ingredient, index) => (
-                            <SelectInput
-                                key={index}
-                                value={ingredient.quantity}
-                                onChange={(e) =>
-                                    handleIngredientQuantityChange(
-                                        index,
-                                        Number(e.target.value)
-                                    )
-                                }
-                                options={quantityOptions.map((option) => ({
-                                    value: option.value,
-                                    label: option.label,
-                                }))}
-                                placeholder="Select ingredient quantity"
-                                className={`${
-                                    ingredient.quantity === 0
-                                        ? "ingredient-select"
-                                        : "ingredient-selected"
-                                } ${
-                                    incompleteFields.ingredientsError
-                                        ? "incomplete-field"
-                                        : ""
-                                }`}
-                                hasError={incompleteFields.ingredientsError}
-                            />
+                            <div style={{ margin: "0 0 10px 0" }}>
+                                <SelectInput
+                                    key={index}
+                                    value={ingredient.quantity}
+                                    onChange={(e) =>
+                                        handleIngredientQuantityChange(
+                                            index,
+                                            Number(e.target.value)
+                                        )
+                                    }
+                                    options={Utils.quantityOptions.map(
+                                        (option) => ({
+                                            value: option.value,
+                                            label: option.label,
+                                        })
+                                    )}
+                                    placeholder="Select ingredient quantity"
+                                    className="recipe-name-input-box"
+                                    hasError={incompleteFields.ingredientsError}
+                                />
+                            </div>
                         ))}
-                        {/* SFARSIT  SCHIMBAT ==================== */}
                     </div>
                 </div>
             </div>
