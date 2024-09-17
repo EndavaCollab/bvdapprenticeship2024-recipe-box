@@ -22,7 +22,7 @@ public class UserController {
 
     @PostMapping
     @RequestMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody String username) {
+    public ResponseEntity<Object> loginUser(@RequestBody String username) {
         if (username == null || username.length() < 5) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(String.format("The required parameter is null or has less than 5 characters."));
         }
