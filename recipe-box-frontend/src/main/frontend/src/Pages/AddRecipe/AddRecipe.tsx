@@ -38,7 +38,6 @@ const ingredientOptions = [
 ];
 
 const quantityOptions = [
-    { value: 0, label: "0" },
     { value: 1, label: "1" },
     { value: 2, label: "2" },
     { value: 3, label: "3" },
@@ -68,7 +67,6 @@ export default function AddRecipe() {
     const [difficulty, setDifficulty] = useState<string>("");
     const [category, setCategory] = useState<string>("");
     const [servings, setServings] = useState<number>(0);
-    const [triedToSubmit, settriedToSubmit] = useState(false);
 
     const totalPreparationTime = preparationHours * 60 + preparationMinutes;
 
@@ -103,31 +101,6 @@ export default function AddRecipe() {
         setIngredients(newIngredients);
     };
 
-    const handleRecipeNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setRecipeName(e.target.value);
-    };
-
-    const handlePreparationTimeChange = (hours: number, minutes: number) => {
-        setPreparationHours(hours);
-        setPreparationMinutes(minutes);
-    };
-
-    const handleDifficultyChange = (e: ChangeEvent<HTMLSelectElement>) => {
-        setDifficulty(e.target.value);
-    };
-
-    const handleCategoryChange = (e: ChangeEvent<HTMLSelectElement>) => {
-        setCategory(e.target.value);
-    };
-
-    const handleServingsChange = (e: ChangeEvent<HTMLSelectElement>) => {
-        setServings(Number(e.target.value));
-    };
-
-    const handleDescriptionChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        setDescription(e.target.value);
-    };
-
     const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
@@ -146,20 +119,6 @@ export default function AddRecipe() {
         setImage(null);
     };
 
-    // const incompleteFields = {
-    //     recipeNameError: triedToSubmit && !recipeName,
-    //     preparationTimeError: triedToSubmit && !totalPreparationTime,
-    //     difficultyError: triedToSubmit && !difficulty,
-    //     categoryError: triedToSubmit && !category,
-    //     servingsError: triedToSubmit && !servings,
-    //     ingredientsError:
-    //         triedToSubmit &&
-    //         ingredients.some(
-    //             (ingredient) =>
-    //                 !ingredient.ingredientName || !ingredient.quantity
-    //         ),
-    //     recipeImageError: triedToSubmit && !image,
-    // };
     const incompleteFields = {
         recipeNameError: !recipeName,
         preparationTimeError: !totalPreparationTime,
@@ -182,12 +141,6 @@ export default function AddRecipe() {
         incompleteFields.recipeImageError;
 
     const handleSaveRecipe = async () => {
-        settriedToSubmit(true);
-
-        if (submitIsDisabled) {
-            return;
-        }
-
         // const imageUrl = image ? await uploadImage(image.fileData) : '';   // de decomentat daca o sa putem trimite o imagine
         const imageUrl = image?.fileName;
 
@@ -216,13 +169,11 @@ export default function AddRecipe() {
             }
 
             const data = await response.json();
-            settriedToSubmit(false);
             console.log("Recipe successfully added:", data);
             alert("Recipe successfully added.");
         } catch (error) {
             console.error("Error:", error);
             alert("An error occurred! The recipe has not been added.");
-            settriedToSubmit(true); // FOR TESTING ONLY!!!
         }
     };
 
@@ -236,13 +187,11 @@ export default function AddRecipe() {
                         <input
                             type="text"
                             placeholder="Recipe name"
-                            className={`recipe-name-input-box ${
-                                incompleteFields.recipeNameError
-                                    ? "incomplete-field"
-                                    : ""
-                            }`}
+                            className="recipe-name-input-box"
                             value={recipeName}
-                            onChange={handleRecipeNameChange}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                                setRecipeName(e.target.value)
+                            }
                         />
 
                         <div>Preparation time*</div>
@@ -250,10 +199,7 @@ export default function AddRecipe() {
                             <SelectInput
                                 value={preparationHours}
                                 onChange={(e) =>
-                                    handlePreparationTimeChange(
-                                        Number(e.target.value),
-                                        preparationMinutes
-                                    )
+                                    setPreparationHours(Number(e.target.value))
                                 }
                                 options={[
                                     { value: 1, label: "1 hour" },
@@ -267,8 +213,7 @@ export default function AddRecipe() {
                             <SelectInput
                                 value={preparationMinutes}
                                 onChange={(e) =>
-                                    handlePreparationTimeChange(
-                                        preparationHours,
+                                    setPreparationMinutes(
                                         Number(e.target.value)
                                     )
                                 }
@@ -285,7 +230,9 @@ export default function AddRecipe() {
                         <div>Difficulty*</div>
                         <SelectInput
                             value={difficulty}
-                            onChange={handleDifficultyChange}
+                            onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                                setDifficulty(e.target.value)
+                            }
                             options={[
                                 { value: "easy", label: "Easy" },
                                 { value: "medium", label: "Medium" },
@@ -299,7 +246,9 @@ export default function AddRecipe() {
 
                         <SelectInput
                             value={category}
-                            onChange={handleCategoryChange}
+                            onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                                setCategory(e.target.value)
+                            }
                             options={[
                                 { value: "breakfast", label: "Breakfast" },
                                 { value: "lunch", label: "Lunch" },
@@ -313,7 +262,9 @@ export default function AddRecipe() {
 
                         <SelectInput
                             value={servings}
-                            onChange={handleServingsChange}
+                            onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                                setServings(Number(e.target.value))
+                            }
                             options={[
                                 { value: 1, label: "1" },
                                 { value: 2, label: "2" },
@@ -329,15 +280,7 @@ export default function AddRecipe() {
                         {ingredients.map((ingredient, index) => (
                             <select
                                 key={index}
-                                className={`${
-                                    ingredient.ingredientName === ""
-                                        ? "ingredient-select"
-                                        : "ingredient-selected"
-                                } ${
-                                    incompleteFields.ingredientsError
-                                        ? "incomplete-field"
-                                        : ""
-                                }`}
+                                className="recipe-name-input-box"
                                 value={ingredient.ingredientName}
                                 onChange={(e) =>
                                     handleIngredientChange(
@@ -382,11 +325,7 @@ export default function AddRecipe() {
 
                         {!image && (
                             <div
-                                className={`${"add-image-button-dashed-border"} ${
-                                    incompleteFields.recipeImageError
-                                        ? "incomplete-field"
-                                        : ""
-                                }`}
+                                className="add-image-button-dashed-border"
                                 style={{ margin: 0 }}
                             >
                                 <input
@@ -429,7 +368,9 @@ export default function AddRecipe() {
                         <textarea
                             className="description-input"
                             value={description}
-                            onChange={handleDescriptionChange}
+                            onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                                setDescription(e.target.value)
+                            }
                         />
 
                         <div style={{ marginBottom: 6 }}>
@@ -455,10 +396,14 @@ export default function AddRecipe() {
                                     )
                                 }
                             >
+                                <option value="0" disabled hidden>
+                                    Select ingredient quantity
+                                </option>
                                 {quantityOptions.map((option) => (
                                     <option
                                         key={option.value}
                                         value={option.value}
+                                        disabled={option.value === 0}
                                     >
                                         {option.label}
                                     </option>
