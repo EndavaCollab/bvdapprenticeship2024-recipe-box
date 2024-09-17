@@ -48,8 +48,7 @@ export default function UserLogin() {
             sessionStorage.setItem("username", username);
             navigate("/recipes/list");
         } catch (error) {
-            console.log(error);
-            alert(error);
+            alert("An error occurred during login.");
         }
     };
 

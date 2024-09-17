@@ -18,7 +18,7 @@ interface RecipesGridProps {
     searchQuery?: string;
 }
 export default function RecipesGrid({
-    userId = 3,
+    userId = 1,
     privateRecipes = false,
     mealType,
     searchQuery = "",
