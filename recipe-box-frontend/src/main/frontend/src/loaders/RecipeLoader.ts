@@ -3,7 +3,9 @@ import { json, LoaderFunctionArgs } from 'react-router-dom';
 export async function recipeLoader({ params }: LoaderFunctionArgs) {
     try {
         const recipeId = params.recipeId;
-        const userId = 1;
+        const storedUserId = sessionStorage.getItem("userId");
+        const userId = storedUserId !== null ? parseInt(storedUserId, 10) : undefined;
+
         const baseUrl = process.env.REACT_APP_BACKEND_URL;
 
         if (!baseUrl) {

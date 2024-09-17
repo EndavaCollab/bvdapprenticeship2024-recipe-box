@@ -12,13 +12,11 @@ interface Recipe {
 }
 
 interface RecipesGridProps {
-    userId?: number,
     privateRecipes?: boolean;
     mealType?: string;
     searchQuery?: string;
 }
 export default function RecipesGrid({
-    userId = 1,
     privateRecipes = false,
     mealType,
     searchQuery = "",
@@ -28,6 +26,9 @@ export default function RecipesGrid({
     useEffect(() => {
         const controller = new AbortController();
         const signal = controller.signal;
+
+        const storedUserId = sessionStorage.getItem("userId");
+        const userId = storedUserId !== null ? parseInt(storedUserId, 10) : undefined;
 
         let url = `${backendUrl}/recipes/${mealType ? `?mealType=${mealType}` : ""}`;
         console.log(mealType);

@@ -44,7 +44,11 @@ export default function UserLogin() {
 
             const data = await response.json();
             console.log(data);
-            sessionStorage.setItem("userToken", data.token);
+            
+            const { id } = data;
+            const { role } = data;
+            sessionStorage.setItem("userId", id);
+            sessionStorage.setItem("role", role);
             sessionStorage.setItem("username", username);
             navigate("/recipes/list");
         } catch (error) {

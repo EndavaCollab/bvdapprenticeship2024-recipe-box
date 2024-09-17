@@ -4,14 +4,12 @@ import { Link } from 'react-router-dom';
 import { ReactComponent as Logo } from '../../assets/images/recipe_box_logo_light.svg';
 import { UserType } from '../../enums/User';
 
-interface HeaderProps {
-    userType?: UserType;
-}
-
-const Header: React.FC = ({
-    userType = UserType.CHEF,
-}: HeaderProps) => {
+const Header: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
+
+    const storedRole = sessionStorage.getItem("role");
+    const userType = storedRole ? (storedRole as UserType) : UserType.GUEST;
+
     return (
         <header className="header">
             <nav>
