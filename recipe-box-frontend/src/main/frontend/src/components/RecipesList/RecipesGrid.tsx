@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import RecipeCard from "./RecipeCard";
 import "./RecipesGrid.css";
 import { backendUrl } from "../../App";
+import { storedUserId } from "../../Utils/User";
 
 interface Recipe {
     id: number;
@@ -26,12 +27,9 @@ export default function RecipesGrid({
     useEffect(() => {
         const controller = new AbortController();
         const signal = controller.signal;
-
-        const storedUserId = sessionStorage.getItem("userId");
-        const userId = storedUserId !== null ? parseInt(storedUserId, 10) : undefined;
+        const userId = storedUserId();
 
         let url = `${backendUrl}/recipes/${mealType ? `?mealType=${mealType}` : ""}`;
-        console.log(mealType);
 
         fetch(
             privateRecipes ? `${backendUrl}/recipes/search/private?userId=${userId}` : 

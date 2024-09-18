@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import './Header.css';
 import { Link } from 'react-router-dom';
+import { ReactComponent as ChevronDown } from '../../assets/icons/chevron-down.svg';
 import { ReactComponent as Logo } from '../../assets/images/recipe_box_logo_light.svg';
 import { UserType } from '../../enums/User';
+import { storedUserType } from '../../Utils/User';
 
 const Header: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
-
-    const storedRole = sessionStorage.getItem("role");
-    const userType = storedRole ? (storedRole as UserType) : UserType.GUEST;
+    const userType = storedUserType();
 
     return (
         <header className="header">
@@ -27,8 +27,11 @@ const Header: React.FC = () => {
                                         className="nav-item" 
                                         onClick={() => setIsOpen(!isOpen)}
                                         >
-                                        Recipes &#x25BE;
+                                        Recipes
+                                        <ChevronDown className='chevron-item'></ChevronDown>
                                         </button>
+                                        
+                                        
                                         {isOpen && (
                                         <ul className="dropdown-menu" onClick={() => setIsOpen(!isOpen)}>
                                             <li><Link to="/recipes/list" className="dropdown-item">Public Recipes</Link></li>

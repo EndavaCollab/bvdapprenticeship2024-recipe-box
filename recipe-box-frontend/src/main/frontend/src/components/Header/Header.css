@@ -80,6 +80,10 @@
     font-weight: 400;
 }
 
+.chevron-item {
+    margin-left: 5px;
+}
+
 .nav-item:hover {
     color: #ddd;
 }
