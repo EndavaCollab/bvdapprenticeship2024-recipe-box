@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, useMemo, ChangeEvent } from "react";
 import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import { ReactComponent as CheckIcon } from "../../assets/icons/check.svg";
@@ -8,7 +8,37 @@ import { useNavigate } from "react-router-dom";
 
 import "./AddRecipe.css";
 
-import * as Utils from "./utils";
+import {
+    ingredientOptions,
+    quantityOptions,
+    preparationHoursValues,
+    preparationMinutesValues,
+    difficultyValues,
+    categoryValues,
+    servingsValues,
+} from "./utils";
+export interface RecipeAddRequest {
+    name: string;
+    description: string;
+    imageUrl: string | undefined;
+    mealType: string;
+    ingredients: IngredientRequest[];
+    cookingTime: number;
+    difficulty: string;
+    servings: number;
+}
+
+export interface IngredientRequest {
+    ingredientID: number;
+    ingredientName: string;
+    quantity: number;
+    unit: string;
+}
+
+export interface ImageFile {
+    fileName: string;
+    fileData: string;
+}
 
 export default function AddRecipe() {
     const navigate = useNavigate();
@@ -18,20 +48,24 @@ export default function AddRecipe() {
     const defaultIngredient = {
         ingredientID: 0,
         unit: "grams",
+        ingredientName: "",
+        quantity: 0,
     };
 
-    const [ingredients, setIngredients] = useState<
-        Utils.IngredientRequestDTO[]
-    >([{ ...defaultIngredient, ingredientName: "", quantity: 0 }]);
-    const [description, setDescription] = useState<string>("");
-    const [image, setImage] = useState<Utils.ImageFile | null>(null);
-
+    //Left column
     const [recipeName, setRecipeName] = useState<string>("");
     const [preparationHours, setPreparationHours] = useState<number>(0);
     const [preparationMinutes, setPreparationMinutes] = useState<number>(0);
     const [difficulty, setDifficulty] = useState<string>("");
     const [category, setCategory] = useState<string>("");
     const [servings, setServings] = useState<number>(0);
+
+    //Right column
+    const [ingredients, setIngredients] = useState<IngredientRequest[]>([
+        { ...defaultIngredient },
+    ]);
+    const [description, setDescription] = useState<string>("");
+    const [image, setImage] = useState<ImageFile | null>(null);
 
     const totalPreparationTime = preparationHours * 60 + preparationMinutes;
 
@@ -48,7 +82,7 @@ export default function AddRecipe() {
     };
 
     const handleIngredientChange = (index: number, value: string) => {
-        const selectedIngredient = Utils.ingredientOptions.find(
+        const selectedIngredient = ingredientOptions.find(
             (ingredient) => ingredient.name === value
         );
 
@@ -80,36 +114,34 @@ export default function AddRecipe() {
         }
     };
 
-    const handleRemoveImage = () => {
-        setImage(null);
-    };
-
-    const incompleteFields = {
-        recipeNameError: !recipeName,
-        preparationTimeError: !totalPreparationTime,
-        difficultyError: !difficulty,
-        categoryError: !category,
-        servingsError: !servings,
-        ingredientsError: ingredients.some(
-            (ingredient) => !ingredient.ingredientName || !ingredient.quantity
-        ),
-        recipeImageError: !image,
-    };
-
-    const submitIsDisabled =
-        incompleteFields.recipeNameError ||
-        incompleteFields.preparationTimeError ||
-        incompleteFields.difficultyError ||
-        incompleteFields.categoryError ||
-        incompleteFields.servingsError ||
-        incompleteFields.ingredientsError ||
-        incompleteFields.recipeImageError;
+    const submitIsDisabled = useMemo(
+        () =>
+            !recipeName ||
+            !totalPreparationTime ||
+            !difficulty ||
+            !category ||
+            !servings ||
+            ingredients.some(
+                (ingredient) =>
+                    !ingredient.ingredientName || !ingredient.quantity
+            ) ||
+            !image,
+        [
+            recipeName,
+            totalPreparationTime,
+            difficulty,
+            category,
+            servings,
+            ingredients,
+            image,
+        ]
+    );
 
     const handleSaveRecipe = async () => {
         // const imageUrl = image ? await uploadImage(image.fileData) : '';   // de decomentat daca o sa putem trimite o imagine
         const imageUrl = image?.fileName;
 
-        const recipeData: Utils.RecipeAddRequestDTO = {
+        const recipeData: RecipeAddRequest = {
             name: recipeName,
             description,
             difficulty,
@@ -168,9 +200,8 @@ export default function AddRecipe() {
                                 onChange={(e) =>
                                     setPreparationHours(Number(e.target.value))
                                 }
-                                options={Utils.preparationHoursValues}
+                                options={preparationHoursValues}
                                 placeholder="HH"
-                                hasError={incompleteFields.preparationTimeError}
                             />
 
                             <SelectInput
@@ -180,9 +211,8 @@ export default function AddRecipe() {
                                         Number(e.target.value)
                                     )
                                 }
-                                options={Utils.preparationMinutesValues}
+                                options={preparationMinutesValues}
                                 placeholder="MM"
-                                hasError={incompleteFields.preparationTimeError}
                             />
                         </div>
 
@@ -192,9 +222,8 @@ export default function AddRecipe() {
                             onChange={(e: ChangeEvent<HTMLSelectElement>) =>
                                 setDifficulty(e.target.value)
                             }
-                            options={Utils.difficultyValues}
+                            options={difficultyValues}
                             placeholder="Choose difficulty"
-                            hasError={incompleteFields.difficultyError}
                         />
 
                         <div>Category*</div>
@@ -205,9 +234,8 @@ export default function AddRecipe() {
                             onChange={(e: ChangeEvent<HTMLSelectElement>) =>
                                 setCategory(e.target.value)
                             }
-                            options={Utils.categoryValues}
+                            options={categoryValues}
                             placeholder="Select category"
-                            hasError={incompleteFields.categoryError}
                         />
 
                         <div>Servings*</div>
@@ -217,9 +245,8 @@ export default function AddRecipe() {
                             onChange={(e: ChangeEvent<HTMLSelectElement>) =>
                                 setServings(Number(e.target.value))
                             }
-                            options={Utils.servingsValues}
+                            options={servingsValues}
                             placeholder="Select servings"
-                            hasError={incompleteFields.servingsError}
                         />
 
                         <div>Ingredient name*</div>
@@ -235,7 +262,7 @@ export default function AddRecipe() {
                                             e.target.value
                                         )
                                     }
-                                    options={Utils.ingredientOptions.map(
+                                    options={ingredientOptions.map(
                                         (ingredient) => ({
                                             value: ingredient.id,
                                             label: ingredient.name,
@@ -301,7 +328,7 @@ export default function AddRecipe() {
                                     {image.fileName}
                                     <RemoveIcon
                                         className="remove-icon"
-                                        onClick={handleRemoveImage}
+                                        onClick={() => setImage(null)}
                                     />
                                 </div>
                             </div>
@@ -331,15 +358,12 @@ export default function AddRecipe() {
                                             Number(e.target.value)
                                         )
                                     }
-                                    options={Utils.quantityOptions.map(
-                                        (option) => ({
-                                            value: option.value,
-                                            label: option.label,
-                                        })
-                                    )}
+                                    options={quantityOptions.map((option) => ({
+                                        value: option.value,
+                                        label: option.label,
+                                    }))}
                                     placeholder="Select ingredient quantity"
                                     className="recipe-name-input-box"
-                                    hasError={incompleteFields.ingredientsError}
                                 />
                             </div>
                         ))}

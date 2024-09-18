@@ -1,25 +1,3 @@
-export interface RecipeAddRequestDTO {
-    name: string;
-    description: string;
-    imageUrl: string | undefined;
-    mealType: string;
-    ingredients: IngredientRequestDTO[];
-    cookingTime: number;
-    difficulty: string;
-    servings: number;
-}
-
-export interface IngredientRequestDTO {
-    ingredientID: number;
-    ingredientName: string;
-    quantity: number;
-    unit: string;
-}
-
-export interface ImageFile {
-    fileName: string;
-    fileData: string;
-}
 export const ingredientOptions = [
     { id: 1, name: 'Flour' },
     { id: 2, name: 'Sugar' },

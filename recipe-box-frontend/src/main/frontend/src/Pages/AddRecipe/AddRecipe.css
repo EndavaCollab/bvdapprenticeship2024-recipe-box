@@ -1,8 +1,8 @@
 .add-recipe-container .add-recipe-fields {
     display: flex;
+    margin: auto;
     width: 80%;
-    margin: 100px auto 0;
-    margin-bottom: 100px;
+    padding-bottom: 50px;
 }
 
 .add-recipe-container .recipe-name-input-box {
@@ -40,7 +40,8 @@
     height: 35px;
 }
 
-.prep-duration-select {
+.prep-duration-select,
+.prep-duration-selected {
     display: block;
     width: 100%;
     padding: 0px 10px;
@@ -51,12 +52,6 @@
 }
 
 .prep-duration-selected {
-    display: block;
-    width: 100%;
-    padding: 0px 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: white;
     color: black;
 }
 
@@ -64,8 +59,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    /* border: 2px solid lightgray; */
-    /* border-radius: 4px; */
+
     background-color: transparent;
     color: gray;
     font-size: 16px;
@@ -98,7 +92,8 @@
     border-radius: 4px;
 }
 
-.add-recipe-container .ingredient-select {
+.add-recipe-container .ingredient-select,
+.ingredient-selected {
     display: block;
     margin-bottom: 10px;
     width: 100%;
@@ -108,17 +103,6 @@
     background-color: white;
     color: lightgray;
 }
-.add-recipe-container .ingredient-selected {
-    display: block;
-    margin-bottom: 10px;
-    width: 100%;
-    padding: 0px 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: white;
-    color: black;
-}
-
 .add-recipe-container .ingredient-selected {
     color: black;
 }
@@ -170,7 +154,8 @@
     color: lightgray;
 }
 
-.add-image-button-dashed-border {
+.add-image-button-dashed-border,
+.added-image-dashed-border {
     border: 2px dashed lightgrey;
 
     display: flex;
@@ -186,18 +171,8 @@
 }
 
 .added-image-dashed-border {
-    border: 2px dashed lightgrey;
-
-    display: flex;
     align-items: end;
-    justify-content: center;
-    border-radius: 10px;
-    background-color: transparent;
-    color: #333;
-    width: 100%;
-    height: 217px;
-    box-sizing: border-box;
-    margin-top: 0px;
+    margin: 0;
 }
 
 .image-file-name {
@@ -206,13 +181,6 @@
     width: 100%;
     height: 25px;
     padding: 0 5px;
-}
-
-.added-image-dashed-border {
-    margin: 0;
-}
-
-.image-file-name {
     margin: 15px 10px;
     position: relative;
     display: flex;
@@ -231,10 +199,6 @@
     transform: translateY(-50%);
     cursor: pointer;
 }
-
-/* .incomplete-field {
-    border-color: red !important;
-} */
 
 .save-recipe-button:disabled {
     background-color: grey;
