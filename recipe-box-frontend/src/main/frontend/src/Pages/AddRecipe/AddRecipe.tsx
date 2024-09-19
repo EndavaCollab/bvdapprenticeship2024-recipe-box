@@ -64,7 +64,7 @@ export default function AddRecipe() {
 
     //Right column
     const [ingredients, setIngredients] = useState<IngredientRequest[]>([
-        { ...defaultIngredient },
+        { ingredientID: 0, unit: "", ingredientName: "", quantity: 0 },
     ]);
     const [description, setDescription] = useState<string>("");
     const [image, setImage] = useState<ImageFile | null>(null);
