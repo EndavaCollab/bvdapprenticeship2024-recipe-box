@@ -208,7 +208,7 @@ public class RecipeServiceImpl implements RecipeService {
             List<RecipeIngredient> updatedIngredients = recipeAddRequestDTO.getIngredients().stream()
                     .map(ingredientDTO -> {
                         Ingredient ingredient = ingredientRepository.findById(ingredientDTO.getIngredientId())
-                                .orElseThrow(() -> new EntityNotFoundException("No ingredient found in the DB."));
+                                .orElseThrow(() -> new EntityNotFoundException("The ingredient with the given ID "+ ingredientDTO.getIngredientId()+ " was not found in the database."));
 
                         RecipeIngredient recipeIngredient = new RecipeIngredient();
                         recipeIngredient.setRecipe(recipe);
