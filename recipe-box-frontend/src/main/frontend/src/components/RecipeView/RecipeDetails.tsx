@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { Ingredient } from './types';
 import "./RecipeDetails.css";
 import { ReactComponent as Check } from "../../assets/icons/check.svg";
@@ -20,27 +20,23 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({ recipeId, userId, name, d
     const [showDialog, setShowDialog] = useState(false);
     const navigate = useNavigate();
 
-    const handleDeleteClick = useCallback(() => {
-        setShowDialog(true);
-    }, []);
-
-    const handleDialogClose = useCallback(() => {
-        setShowDialog(false);
-    }, []);
-
     const deleteRecipe = async (recipeId: number, userId: number | undefined) => {
         const backendUrl = process.env.REACT_APP_BACKEND_URL;
+        let response;
         try {
-            const response = await fetch(`${backendUrl}/recipes/${recipeId}?userId=${userId}`, {
+            response = await fetch(`${backendUrl}/recipes/${recipeId}?userId=${userId ?? null}`, {
                 method: 'DELETE',
             });
-
             if (!response.ok) {
                 throw new Error('Failed to delete recipe');
             }
 
             const result = await response.text();
-            navigate('/recipes/list');
+            if (result === 'The recipe has been successfully deleted') {
+                navigate('/recipes/list');
+            } else {
+                throw new Error(result);
+            }
         } catch (error) {
             console.error('Error:', error);
             if (error instanceof Error) {
@@ -51,11 +47,6 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({ recipeId, userId, name, d
         }
     };
 
-    const handleDeleteConfirm = useCallback(() => {
-        deleteRecipe(recipeId, userId);
-        setShowDialog(false);
-    }, [deleteRecipe, recipeId, userId]);
-
     return (
         <div className="recipe-details">
             <h1 style={{ fontSize: '3rem' }}>{name}</h1>
@@ -63,7 +54,7 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({ recipeId, userId, name, d
                 userType === UserType.CHEF && (
                     <div className="grid-buttons">
                         <button className="edit-button">Edit</button>
-                        <button className="delete-button" onClick={handleDeleteClick}>Delete</button>
+                        <button className="delete-button" onClick={() => setShowDialog(true)}>Delete</button>
                     </div>
                 )
             }
@@ -80,16 +71,19 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({ recipeId, userId, name, d
 
             {showDialog && (
                 <>
-                    <div className="overlay" onClick={handleDialogClose}></div>
+                    <div className="overlay" onClick={() => setShowDialog(false)}></div>
                     <div className="dialog">
                         <CloseButton
                             className="dialog-close-button"
-                            onClick={handleDialogClose}
+                            onClick={() => setShowDialog(false)}
                         />
                         <p>Your recipe will be permanently deleted! <br /><br /> Are you sure?</p>
                         <div className="dialog-buttons">
-                            <button className="confirm-button" onClick={handleDeleteConfirm}>YES, DELETE</button>
-                            <button className="cancel-button" onClick={handleDialogClose}>NO, CANCEL</button>
+                            <button className="confirm-button" onClick={() => {
+                                deleteRecipe(recipeId, userId);
+                                setShowDialog(false);
+                            }}>YES, DELETE</button>
+                            <button className="cancel-button" onClick={() => setShowDialog(false)}>NO, CANCEL</button>
                         </div>
                     </div>
                 </>
