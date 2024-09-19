@@ -44,15 +44,17 @@ export default function UserLogin() {
 
             const data = await response.json();
             console.log(data);
-            
+
             const { id } = data;
             const { role } = data;
             sessionStorage.setItem("userId", id);
             sessionStorage.setItem("role", role);
             sessionStorage.setItem("username", username);
+            sessionStorage.setItem("role", role);
             navigate("/recipes/list");
         } catch (error) {
-            alert("An error occurred during login.");
+            alert("An error occurred during login!");
+            //localStorage.setItem("username", username); // FOR TESTING ONLY
         }
     };
 

@@ -37,7 +37,6 @@
     display: flex;
     flex-direction: column;
     margin-bottom: 50px;
-    caret-color: transparent;
 }
 
 .input-group.error input {
@@ -68,11 +67,12 @@
 }
 
 .input-group input[type="password"] {
-    font-size: 2.5rem;
+    font-size: large;
     background: white url(../../assets/icons/lock_icon.png) left no-repeat;
     background-size: 1.6rem 1.6rem;
     padding-left: 50px;
     background-position: 5px center;
+    font-family: monospace;
 }
 
 .login-button {
