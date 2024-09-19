@@ -3,7 +3,13 @@ import RecipesGrid from "./RecipesGrid";
 import Categories from "./Categories";
 import React, {useState} from "react";
 
-export default function RecipesList() {
+interface RecipesListProps {
+    privateRecipes?: boolean;
+}
+
+export default function RecipesList({
+    privateRecipes = false,
+}: RecipesListProps) {
     const [mealType, setMealType] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
     return (
@@ -12,7 +18,7 @@ export default function RecipesList() {
                 onChangeMealType={setMealType}
                 onChangeSearchQuery={setSearchQuery}
             />
-            <RecipesGrid mealType={mealType} searchQuery={searchQuery} />
+            <RecipesGrid privateRecipes={privateRecipes} mealType={mealType} searchQuery={searchQuery} />
         </div>
     );
 }

@@ -1,5 +1,7 @@
 package com.endava.recipebox.service.impl;
 
+import com.endava.recipebox.dto.UserDTO;
+import com.endava.recipebox.mapper.UserMapper;
 import com.endava.recipebox.model.Role;
 import com.endava.recipebox.model.User;
 import com.endava.recipebox.repository.UserRepository;
@@ -10,11 +12,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
     UserRepository userRepository;
+    UserMapper userMapper;
+
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
+    }
 
     @Override
-    public User findOrSaveUser(String username) {
+    public UserDTO findOrSaveUser(String username) {
         User user = findUserByUsername(username);
         if (user == null) {
             user = User.builder()
@@ -24,7 +32,8 @@ public class UserServiceImpl implements UserService {
 
             user = userRepository.save(user);
         }
-        return user;
+
+        return userMapper.mapUser(user);
     }
 
     public User findUserByUsername(String username) {
