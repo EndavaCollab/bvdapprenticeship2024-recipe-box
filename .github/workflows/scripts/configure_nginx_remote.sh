@@ -22,6 +22,7 @@ ssh rcb <<CONTENT
             
     # Modify nginx script so that the domain is replaced and move it into the corresponding folder
     sed -i "s/REPLACE_DOMAIN/$GITHUB_FE_SITE_DOMAIN/g" ~/deployconfigs/nginx.conf
+    sed -i "s/REPLACE_USER/$GITHUB_ADMIN_USERNAME/g" ~/deployconfigs/nginx.conf
     sudo mv ~/deployconfigs/nginx.conf /etc/nginx/sites-available/$GITHUB_FE_SITE_DOMAIN
 
     # Symlink site from available to enabled

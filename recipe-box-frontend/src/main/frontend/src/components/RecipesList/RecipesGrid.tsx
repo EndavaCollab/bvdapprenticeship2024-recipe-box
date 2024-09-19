@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import RecipeCard from "./RecipeCard";
 import "./RecipesGrid.css";
 import { backendUrl } from "../../App";
+import { storedUserId } from "../../Utils/User";
 
 interface Recipe {
     id: number;
@@ -12,10 +13,12 @@ interface Recipe {
 }
 
 interface RecipesGridProps {
+    privateRecipes?: boolean;
     mealType?: string;
     searchQuery?: string;
 }
 export default function RecipesGrid({
+    privateRecipes = false,
     mealType,
     searchQuery = "",
 }: RecipesGridProps) {
@@ -24,11 +27,12 @@ export default function RecipesGrid({
     useEffect(() => {
         const controller = new AbortController();
         const signal = controller.signal;
+        const userId = storedUserId();
 
         let url = `${backendUrl}/recipes/${mealType ? `?mealType=${mealType}` : ""}`;
-        console.log(mealType);
 
         fetch(
+            privateRecipes ? `${backendUrl}/recipes/search/private?userId=${userId}` : 
             searchQuery ? `${backendUrl}/recipes/search?recipeName=${searchQuery}${mealType ? `&mealType=${mealType}` : ""}` : url,
             {
                 signal,
@@ -54,7 +58,7 @@ export default function RecipesGrid({
         return () => {
             controller.abort();
         };
-    }, [mealType, searchQuery]);
+    }, [privateRecipes, mealType, searchQuery]);
 
 
     return (

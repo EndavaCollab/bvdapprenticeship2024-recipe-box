@@ -3,6 +3,8 @@ import { json, LoaderFunctionArgs } from 'react-router-dom';
 export async function recipeLoader({ params }: LoaderFunctionArgs) {
     try {
         const recipeId = params.recipeId;
+        const storedUserId = sessionStorage.getItem("userId");
+        const userId = storedUserId !== null ? parseInt(storedUserId, 10) : undefined;
 
         const baseUrl = process.env.REACT_APP_BACKEND_URL;
 
@@ -10,7 +12,7 @@ export async function recipeLoader({ params }: LoaderFunctionArgs) {
             throw new Error('Base URL is not defined');
         }
 
-        const url = `${baseUrl}/recipes/${recipeId}`;
+        const url = `${baseUrl}/recipes/${recipeId}?userId=${userId}`;
 
         const response = await fetch(url);
 
