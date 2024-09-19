@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import {useRouteError, useLoaderData} from 'react-router-dom';
+import React, {useState} from 'react';
+import {useLoaderData, useRouteError} from 'react-router-dom';
 import RecipeDetails from '../../components/RecipeView/RecipeDetails';
 import RecipeImageDetails from '../../components/RecipeView/RecipeImageDetails';
-import { Recipe } from '../../components/RecipeView/types';
+import {Recipe} from '../../components/RecipeView/types';
 import "./RecipeViewPage.css";
+import {UserType} from "../../enums/User";
 
 const RecipeViewPage: React.FC = () => {
     const recipeDetails = useLoaderData() as Recipe | {error: string};
@@ -17,6 +18,12 @@ const RecipeViewPage: React.FC = () => {
     if (error) {
         return <p>Error: {errorR.message}</p>;
     }
+    const storedUserId = sessionStorage.getItem("userId");
+    const UserId = storedUserId !== null ? parseInt(storedUserId, 10) : undefined;
+
+    const storedRole = sessionStorage.getItem("role");
+    const role = storedRole ? (storedRole as UserType) : undefined;
+
 
 
     return (
@@ -25,9 +32,12 @@ const RecipeViewPage: React.FC = () => {
                 {(
                     <>
                         <RecipeDetails
+                            userId={UserId}
+                            recipeId={recipeDetails.id}
                             name={recipeDetails.name}
                             description={recipeDetails.description}
                             ingredients={recipeDetails.recipeIngredients}
+                            userType={role}
                         />
                         <RecipeImageDetails
                             imageUrl={recipeDetails.imageUrl}

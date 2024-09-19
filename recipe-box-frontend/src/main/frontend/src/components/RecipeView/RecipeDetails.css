@@ -24,4 +24,148 @@
     border-style: solid;
     border-width: 1px;
 }
+.recipe-details h1 {
+    font-size: 3rem;
+}
 
+.recipe-details h3 {
+    font-size: 1.5rem;
+}
+
+.recipe-details .grid-buttons {
+    margin-top: -20px;
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: row;
+    width: 100px;
+}
+
+.recipe-details .grid-buttons .edit-button,
+.recipe-details .grid-buttons .delete-button {
+    margin-right: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.recipe-details .grid-buttons .edit-button {
+    color: #4CAF50;
+    border: solid;
+}
+
+.recipe-details .edit-button:hover {
+    background-color: #45a049;
+    color:white;
+}
+
+.recipe-details .grid-buttons .delete-button {
+    color: #f44336;
+    border: solid;
+}
+
+.recipe-details .delete-button:hover {
+    background-color: #d32f2f;
+    color:white;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.dialog {
+    width: 400px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 2rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1001;
+}
+
+.dialog-close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: transparent;
+    border-radius: 5px;
+    padding: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.dialog-close-button:hover {
+    background-color: lightgray;
+}
+
+
+.dialog p {
+    margin-top: 2rem;
+    margin-bottom: 5rem;
+    text-align: center;
+}
+
+.dialog .close-button {
+    margin-bottom: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #333;
+    transition: color 0.3s ease;
+}
+
+.dialog .close-button:hover {
+    color: #d32f2f;
+}
+
+.dialog-buttons {
+    align-content: center;
+    display: flex;
+    flex-direction: row;
+}
+
+.dialog .confirm-button,
+.dialog .cancel-button {
+    margin-right: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.dialog .confirm-button {
+    background-color: #4CAF50;
+    white-space: nowrap;
+    color: white;
+}
+
+.dialog .confirm-button:hover {
+    background-color: #45a049;
+    color: white;
+}
+
+.dialog .cancel-button {
+    background-color: white;
+    border: 1px solid #45a049;
+    white-space: nowrap;
+    color: #4CAF50;
+}
+
+.dialog .cancel-button:hover {
+    background-color: #d32f2f;
+    border: 1px solid #d32f2f;
+    color: white;
+}
