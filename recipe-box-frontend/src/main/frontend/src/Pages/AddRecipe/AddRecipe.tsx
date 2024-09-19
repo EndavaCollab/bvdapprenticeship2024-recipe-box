@@ -1,4 +1,4 @@
-import React, { useState, useMemo, ChangeEvent } from "react";
+import React, { useState, useMemo, ChangeEvent, useEffect } from "react";
 import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import { ReactComponent as CheckIcon } from "../../assets/icons/check.svg";
@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 import "./AddRecipe.css";
 
 import {
-    ingredientOptions,
     quantityOptions,
     preparationHoursValues,
     preparationMinutesValues,
@@ -17,6 +16,7 @@ import {
     categoryValues,
     servingsValues,
 } from "./utils";
+
 export interface RecipeAddRequest {
     name: string;
     description: string;
@@ -42,7 +42,6 @@ export interface ImageFile {
 
 export default function AddRecipe() {
     const navigate = useNavigate();
-
     const username = localStorage.getItem("username");
 
     const defaultIngredient = {
@@ -59,6 +58,9 @@ export default function AddRecipe() {
     const [difficulty, setDifficulty] = useState<string>("");
     const [category, setCategory] = useState<string>("");
     const [servings, setServings] = useState<number>(0);
+    const [availableIngredients, setAvailableIngredients] = useState<
+        { id: number; name: string; unit: string }[]
+    >([]);
 
     //Right column
     const [ingredients, setIngredients] = useState<IngredientRequest[]>([
@@ -66,6 +68,27 @@ export default function AddRecipe() {
     ]);
     const [description, setDescription] = useState<string>("");
     const [image, setImage] = useState<ImageFile | null>(null);
+
+    useEffect(() => {
+        const fetchIngredients = async () => {
+            try {
+                const response = await fetch("/ingredients");
+                if (!response.ok) {
+                    throw new Error("Error fetching ingredients");
+                }
+                const data = await response.json();
+                const options = data.map((ingredient: any) => ({
+                    id: ingredient.ingredientId,
+                    name: ingredient.ingredientName,
+                    unit: ingredient.unit,
+                }));
+                setAvailableIngredients(options);
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        };
+        fetchIngredients();
+    }, []);
 
     const totalPreparationTime = preparationHours * 60 + preparationMinutes;
 
@@ -75,25 +98,27 @@ export default function AddRecipe() {
             {
                 ...defaultIngredient,
                 ingredientID: ingredients.length,
-                ingredientName: "",
-                quantity: 0,
             },
         ]);
     };
 
     const handleIngredientChange = (index: number, value: string) => {
-        const selectedIngredient = ingredientOptions.find(
+        const selectedIngredient = availableIngredients.find(
             (ingredient) => ingredient.name === value
         );
 
         const newIngredients = [...ingredients];
-        newIngredients[index] = {
-            ...newIngredients[index],
-            ingredientName: value,
-            ingredientID: selectedIngredient ? selectedIngredient.id : 0,
-        };
+        if (selectedIngredient) {
+            newIngredients[index] = {
+                ...newIngredients[index],
+                ingredientName: selectedIngredient.name,
+                ingredientID: selectedIngredient.id,
+                unit: selectedIngredient.unit,
+            };
+        }
         setIngredients(newIngredients);
     };
+
     const handleIngredientQuantityChange = (index: number, value: number) => {
         const newIngredients = [...ingredients];
         newIngredients[index] = { ...newIngredients[index], quantity: value };
@@ -262,9 +287,9 @@ export default function AddRecipe() {
                                             e.target.value
                                         )
                                     }
-                                    options={ingredientOptions.map(
+                                    options={availableIngredients.map(
                                         (ingredient) => ({
-                                            value: ingredient.id,
+                                            value: ingredient.name,
                                             label: ingredient.name,
                                         })
                                     )}
@@ -360,7 +385,7 @@ export default function AddRecipe() {
                                     }
                                     options={quantityOptions.map((option) => ({
                                         value: option.value,
-                                        label: option.label,
+                                        label: `${option.label} ${ingredient.unit}`,
                                     }))}
                                     placeholder="Select ingredient quantity"
                                     className="recipe-name-input-box"

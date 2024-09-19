@@ -1,10 +1,3 @@
-export const ingredientOptions = [
-    { id: 1, name: 'Flour' },
-    { id: 2, name: 'Sugar' },
-    { id: 3, name: 'Butter' },
-    { id: 4, name: 'Eggs' },
-];
-
 export const quantityOptions = [
     { value: 1, label: '1' },
     { value: 2, label: '2' },
