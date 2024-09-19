@@ -49,7 +49,7 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({ recipeId, userId, name, d
 
     return (
         <div className="recipe-details">
-            <h1 style={{ fontSize: '3rem' }}>{name}</h1>
+            <h1>{name}</h1>
             {
                 userType === UserType.CHEF && (
                     <div className="grid-buttons">
@@ -58,9 +58,9 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({ recipeId, userId, name, d
                     </div>
                 )
             }
-            <h3 style={{ fontSize: '1.5rem' }}>Description:</h3>
+            <h3>Description:</h3>
             <p>{description}</p>
-            <h3 style={{ fontSize: '1.5rem' }}>Ingredients:</h3>
+            <h3>Ingredients:</h3>
             <ul className="ingredients-list">
                 {ingredients.map((ingredient) => (
                     <li key={ingredient.id}>
@@ -71,7 +71,7 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({ recipeId, userId, name, d
 
             {showDialog && (
                 <>
-                    <div className="overlay" onClick={() => setShowDialog(false)}></div>
+                    <div className="overlay" onClick={() => setShowDialog(false)} aria-hidden="true"/>
                     <div className="dialog">
                         <CloseButton
                             className="dialog-close-button"
