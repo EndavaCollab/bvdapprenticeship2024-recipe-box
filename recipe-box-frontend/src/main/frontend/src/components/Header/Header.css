@@ -38,6 +38,10 @@
     height: 25px;
 }
 
+.profile-logo-image {
+    height: 25px;
+}
+
 .right-items {
     display: flex;
     margin-right: 70px;
@@ -51,6 +55,8 @@
     border-radius: 6px;
     border: 2px solid #fff;
     font-size: 12px;
+    font-weight: bold;
+
 }
 
 .right .button:hover {
@@ -80,24 +86,9 @@
     font-weight: 400;
 }
 
-.chevron-item {
-    margin-left: 5px;
-}
-
 .nav-item:hover {
     color: #ddd;
-}
-
-.dropdown-menu {
-    flex-direction: column;
-    position: absolute;
-    background-color: white;
-    border: 1px solid #ddd;
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-.dropdown:hover .dropdown-menu {
-    display: block;
+    
 }
 
 .dropdown-item {
@@ -109,7 +100,7 @@
 }
 
 .dropdown-item:hover {
-    background-color: #f1f1f1;
+    font-weight: bold;
     color: black;
 }
 
