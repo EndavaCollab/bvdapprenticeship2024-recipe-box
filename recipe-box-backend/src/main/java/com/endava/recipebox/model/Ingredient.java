@@ -22,6 +22,9 @@ public class Ingredient {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
+    @Column(name = "kcal")
+    private int kcal;
+
     @Column(name = "carbs")
     private int carbs;
 

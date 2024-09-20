@@ -120,7 +120,17 @@ public class RecipeServiceImpl implements RecipeService {
                     return recipeIngredient;
                 })
                 .toList();
+        int totalCalories = recipeIngredients.stream()
+                        .mapToInt(recipeIngredient -> {
+                            int ingredientCaloriesPerUnit = recipeIngredient.getIngredient().getKcal();
+                            int ingredientQuantity = recipeIngredient.getQuantity();
+                            return ingredientCaloriesPerUnit * ingredientQuantity;
+                        })
+                        .sum();
 
+        savedRecipe.setKcalServing(totalCalories);
+        savedRecipe.setRecipeIngredients(recipeIngredients);
+        savedRecipe.setPreparationTime(Integer.parseInt(recipeAddRequestDTO.getCookingTime()));
         recipeIngredientRepository.saveAll(recipeIngredients);
 
         return "Recipe added successfully";
@@ -141,7 +151,16 @@ public class RecipeServiceImpl implements RecipeService {
         if (!isPublic(recipe)) {
             throw new UnauthorizedActionException("You do not have access to this private recipe.");
         }
-        return recipeMapper.mapDetailedRecipe(recipe);
+        RecipeDetailsDTO recipeDetailsDTO = recipeMapper.mapDetailedRecipe(recipe);
+        recipeDetailsDTO.setRecipeIngredients(recipe.getRecipeIngredients().stream()
+                .map(recipeIngredient -> RecipeIngredientDTO.builder()
+                        .ingredientId(recipeIngredient.getIngredient().getId())
+                        .name(recipeIngredient.getIngredient().getName())
+                        .quantity(recipeIngredient.getQuantity())
+                        .unit(recipeIngredient.getUnit()).build())
+                .toList());
+
+        return recipeDetailsDTO;
     }
 
     @Override
@@ -181,12 +200,39 @@ public class RecipeServiceImpl implements RecipeService {
             recipe.setDescription(updateRecipe.getDescription());
             recipe.setImageUrl(updateRecipe.getImageUrl());
             recipe.setMealType(updateRecipe.getMealType());
-            recipe.setRecipeIngredients(updateRecipe.getRecipeIngredients());
-            recipe.setPreparationTime(updateRecipe.getPreparationTime());
+            recipe.setPreparationTime(Integer.parseInt(recipeAddRequestDTO.getCookingTime()));
             recipe.setDifficulty(updateRecipe.getDifficulty());
             recipe.setRecipeStatus(updateRecipe.getRecipeStatus());
             recipe.setServings(updateRecipe.getServings());
 
+            List<RecipeIngredient> updatedIngredients = recipeAddRequestDTO.getIngredients().stream()
+                    .map(ingredientDTO -> {
+                        Ingredient ingredient = ingredientRepository.findById(ingredientDTO.getIngredientId())
+                                .orElseThrow(() -> new EntityNotFoundException("The ingredient with the given ID "+ ingredientDTO.getIngredientId()+ " was not found in the database."));
+
+                        RecipeIngredient recipeIngredient = new RecipeIngredient();
+                        recipeIngredient.setRecipe(recipe);
+                        recipeIngredient.setIngredient(ingredient);
+                        recipeIngredient.setQuantity(ingredientDTO.getQuantity());
+                        recipeIngredient.setUnit(ingredientDTO.getUnit());
+
+                        RecipeIngredient existingIngredient = recipe.getRecipeIngredients().stream()
+                                .filter(ri -> ri.getIngredient().getId().equals(ingredientDTO.getIngredientId()))
+                                .findFirst()
+                                .orElse(null);
+
+                        if (existingIngredient != null) {
+                            // Dacă ingredientul există, actualizează cantitatea și unitatea
+                            existingIngredient.setQuantity(ingredientDTO.getQuantity());
+                            existingIngredient.setUnit(ingredientDTO.getUnit());
+                            return existingIngredient;
+                        } else {
+                            return recipeIngredient;
+                        }
+                    })
+                    .toList();
+
+            recipe.setRecipeIngredients(updatedIngredients);
             recipeRepository.save(recipe);
         }
         else

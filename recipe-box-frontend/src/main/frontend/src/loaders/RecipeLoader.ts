@@ -4,7 +4,6 @@ export async function recipeLoader({ params }: LoaderFunctionArgs) {
     try {
         const recipeId = params.recipeId;
         const storedUserId = sessionStorage.getItem("userId");
-        const userId = storedUserId !== null ? parseInt(storedUserId, 10) : undefined;
 
         const baseUrl = process.env.REACT_APP_BACKEND_URL;
 
@@ -12,7 +11,8 @@ export async function recipeLoader({ params }: LoaderFunctionArgs) {
             throw new Error('Base URL is not defined');
         }
 
-        const url = `${baseUrl}/recipes/${recipeId}?userId=${userId}`;
+        const getRecipeUrl = `${baseUrl}/recipes/${recipeId}`;
+        const url = storedUserId === null ? getRecipeUrl : `${getRecipeUrl}?userId=${parseInt(storedUserId, 10)}`;
 
         const response = await fetch(url);
 
