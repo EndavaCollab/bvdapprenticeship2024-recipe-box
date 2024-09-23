@@ -1,6 +1,7 @@
 package com.endava.recipebox.service.impl;
 
 import com.endava.recipebox.dto.UserDTO;
+import com.endava.recipebox.exception.BadRequestException;
 import com.endava.recipebox.mapper.UserMapper;
 import com.endava.recipebox.model.Role;
 import com.endava.recipebox.model.User;
@@ -8,6 +9,8 @@ import com.endava.recipebox.repository.UserRepository;
 import com.endava.recipebox.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -34,6 +37,15 @@ public class UserServiceImpl implements UserService {
         }
 
         return userMapper.mapUser(user);
+    }
+
+    @Override
+    public User getUserById(Long userId) {
+        Optional<User> UserOptional = userRepository.findById(userId);
+        if (UserOptional.isEmpty()) {
+            throw new BadRequestException("User with ID " + userId + " not found.");
+        }
+        return UserOptional.get();
     }
 
     public User findUserByUsername(String username) {
