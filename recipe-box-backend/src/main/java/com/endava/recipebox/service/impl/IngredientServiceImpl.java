@@ -7,7 +7,6 @@ import com.endava.recipebox.mapper.IngredientMapper;
 import com.endava.recipebox.model.*;
 import com.endava.recipebox.repository.IngredientRepository;
 import com.endava.recipebox.repository.UserIngredientRepository;
-import com.endava.recipebox.repository.UserRepository;
 import com.endava.recipebox.service.IngredientService;
 import com.endava.recipebox.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class IngredientServiceImpl implements IngredientService {
@@ -26,11 +24,20 @@ public class IngredientServiceImpl implements IngredientService {
     private final IngredientMapper ingredientMapper;
 
     @Autowired
-    public IngredientServiceImpl(IngredientRepository ingredientRepository, UserIngredientRepository userIngredientRepository, UserRepository userRepository, UserService userService, IngredientMapper ingredientMapper) {
+    public IngredientServiceImpl(IngredientRepository ingredientRepository, UserIngredientRepository userIngredientRepository, UserService userService, IngredientMapper ingredientMapper) {
         this.ingredientRepository = ingredientRepository;
         this.userIngredientRepository = userIngredientRepository;
         this.userService = userService;
         this.ingredientMapper = ingredientMapper;
+    }
+
+    @Override
+    public Ingredient getIngredientById(Long ingredientId) {
+        Optional<Ingredient> ingredientOptional = ingredientRepository.findById(ingredientId);
+        if (ingredientOptional.isEmpty()) {
+            throw new BadRequestException("Ingredient with ID " + ingredientId + " not found.");
+        }
+        return ingredientOptional.get();
     }
 
     @Override
