@@ -9,6 +9,7 @@ import com.endava.recipebox.repository.IngredientRepository;
 import com.endava.recipebox.repository.UserIngredientRepository;
 import com.endava.recipebox.repository.UserRepository;
 import com.endava.recipebox.service.IngredientService;
+import com.endava.recipebox.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,14 +22,14 @@ public class IngredientServiceImpl implements IngredientService {
 
     private final IngredientRepository ingredientRepository;
     private final UserIngredientRepository userIngredientRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final IngredientMapper ingredientMapper;
 
     @Autowired
-    public IngredientServiceImpl(IngredientRepository ingredientRepository, UserIngredientRepository userIngredientRepository, UserRepository userRepository, IngredientMapper ingredientMapper) {
+    public IngredientServiceImpl(IngredientRepository ingredientRepository, UserIngredientRepository userIngredientRepository, UserRepository userRepository, UserService userService, IngredientMapper ingredientMapper) {
         this.ingredientRepository = ingredientRepository;
         this.userIngredientRepository = userIngredientRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
         this.ingredientMapper = ingredientMapper;
     }
 
@@ -37,14 +38,6 @@ public class IngredientServiceImpl implements IngredientService {
         return ingredientMapper.toIngredientsAllRequestDTOList(ingredientRepository.findAll());
     }
 
-    @Override
-    public User getUserById(Long userId) {
-        Optional<User> UserOptional = userRepository.findById(userId);
-        if (UserOptional.isEmpty()) {
-            throw new BadRequestException("User with ID " + userId + " not found.");
-        }
-        return UserOptional.get();
-    }
 
     @Override
     public List<UserIngredientDTO> toUserIngredientsDTO(List<UserIngredient> userIngredients) {
@@ -59,7 +52,7 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public List<UserIngredientDTO> getUserIngredients(Long userId) {
-        User user = getUserById(userId);
+        User user = userService.getUserById(userId);
         if (user.getRole().equals(Role.Guest)) {
             throw new BadRequestException("The user must have either a Chef or Admin role to access this type of data.");
         }

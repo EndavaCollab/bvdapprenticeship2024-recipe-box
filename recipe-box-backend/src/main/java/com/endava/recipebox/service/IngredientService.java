@@ -9,7 +9,6 @@ import java.util.List;
 
 public interface IngredientService {
     List<IngredientsAllRequestDTO> getAllIngredients();
-    User getUserById(Long userId);
     List<UserIngredientDTO> toUserIngredientsDTO(List<UserIngredient> userIngredients);
     List<UserIngredientDTO> getUserIngredients(Long userId);
 }
