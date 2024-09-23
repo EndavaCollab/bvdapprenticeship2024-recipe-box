@@ -2,9 +2,8 @@
      display: flex;
      align-items: center;
      width: fit-content;
-     padding: 9px 28px;
+     padding: 8px;
      background-color: #000000;
-     border-radius: 8px;
      cursor: pointer;
 }
 

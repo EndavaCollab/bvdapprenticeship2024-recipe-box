@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import DropdownButton from './DropdownButton/DropdownButton';
 import DropdownContent from './DropdownContent/DropdownContent';
-import "./Dropdown.css";
+
 
 type DropdownProps = {
     buttonText: string;
@@ -22,7 +22,7 @@ const Dropdown: React.FC<DropdownProps> = ({buttonText,content}) => {
     window.addEventListener("click",handleClickOutsideDropdown);
 
     return (
-           <div className="dropdown" ref={dropdownRef}>
+           <div style={{position: 'relative'}} ref={dropdownRef}>
               <DropdownButton onClick={() => setOpen(!open)} open={open}>
                   {buttonText}
               </DropdownButton>

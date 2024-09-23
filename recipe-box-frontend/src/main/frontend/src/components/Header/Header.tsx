@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './Header.css';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ReactComponent as Logo } from '../../assets/images/recipe_box_logo_light.svg';
 import { ReactComponent as ProfileLogo } from '../../assets/images/Group_1672.svg';
 import { UserType } from '../../enums/User';
@@ -9,6 +9,7 @@ import Dropdown from '../Dropdown/Dropdown';
 
 const Header: React.FC = () => {
     const userType = storedUserType();
+    const navigate = useNavigate();
 
     return (
         <header className="header">
@@ -23,26 +24,26 @@ const Header: React.FC = () => {
                                 <li >
                                 {userType === UserType.CHEF && (
                                     <>
-                                    <li className='left'>
+                                    <ul className='left'>
                                     <Dropdown buttonText="Recipes" content={
                                         <>
-                                            <Link to="/recipes/list" className="dropdown-item">Public recipes</Link>
-                                            <Link to="/recipes/myRecipes" className="dropdown-item">My recipes</Link>
-                                            <Link to="/recipes/ingredients" className="dropdown-item">Recipes with my ingredients</Link>
+                                            <button className="dropdown-item" onClick={() => navigate("/recipes/list")}>Public recipes</button>
+                                            <button className="dropdown-item" onClick={() => navigate("/recipes/myRecipes")}>My recipes</button>
+                                            <button className="dropdown-item" onClick={() => navigate("/recipes/ingredients")}>Recipes with my ingredients</button>
                                         </>
                                     }/>
-                                    </li>
+                                    </ul>
                                 </>
                                 )}
 
                                 {userType === UserType.ADMIN && (
-                                    <Link to="/recipes/list" className='nav-item'>Recipes</Link>
+                                    <button className='nav-item' onClick={() => navigate("/recipes/list")}>Recipes</button>
                                 )}
                                 </li>
-                                <li><Link to="/ingredients" className="nav-item">Ingredients</Link></li>
+                                <li><button className="nav-item" onClick={() => navigate("/ingredients")}>Ingredients</button></li>
                                 
                                 {userType === UserType.CHEF && (
-                                    <li><Link to="/meal-plans" className="nav-item">Meal Plans</Link></li>
+                                    <li><button className="nav-item" onClick={() => navigate("/meal-plans")}>Meal Plans</button></li>
                                 )}
                             </>
                         )}
@@ -50,16 +51,16 @@ const Header: React.FC = () => {
                     <div className="right-items">
                         {userType === UserType.GUEST &&
                         <li className="right">
-                            <Link to="/userlogin" className="button">LOGIN</Link>
+                            <button className="button" onClick={() => navigate("/userlogin")}>LOGIN</button>
                         </li>
                         }
                         {userType !== UserType.GUEST &&
                         <>
                         <li className="right">
-                            <Link to="" className="button">ADD NEW RECIPE</Link>
+                            <button className="button" onClick={() => navigate("/addrecipe")}>ADD NEW RECIPE</button>
                         </li>
                         <li className='logo'>
-                            <ProfileLogo className='profile-logo-image' />
+                             <ProfileLogo className='profile-logo-image' /> 
                         </li>
                         </>
                         }
