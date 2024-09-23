@@ -6,7 +6,7 @@ import { ReactComponent as RemoveIcon } from "../../assets/icons/close copy.svg"
 import SelectInput from "../SelectInput/SelectInput";
 import { useNavigate, useLoaderData } from "react-router-dom";
 
-import "./AddRecipe.css";
+import "./RecipeForm.css";
 import { backendUrl } from "../../App";
 
 import {
