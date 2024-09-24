@@ -44,5 +44,6 @@ public class Ingredient {
     @OneToMany(mappedBy = "ingredient")
     private List<RecipeIngredient> recipeIngredients;
 
-
+    @OneToMany(mappedBy = "ingredient")
+    private List<UserIngredient> userIngredients;
 }
