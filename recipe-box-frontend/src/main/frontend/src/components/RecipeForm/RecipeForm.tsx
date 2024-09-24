@@ -209,17 +209,13 @@ export default function RecipeForm({
         };
 
         try {
-            const response = await fetch(
-                isPrivateMode ? `/recipes?userId=${userId}` : "",
-                {
-                    //DE MODIFICAT
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(recipeData),
-                }
-            );
+            const response = await fetch(`/recipes?userId=${userId}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(recipeData),
+            });
 
             if (!response.ok) {
                 throw new Error("Error in submitting recipe");
