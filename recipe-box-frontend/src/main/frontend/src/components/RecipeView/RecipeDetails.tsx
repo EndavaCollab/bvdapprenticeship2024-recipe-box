@@ -5,10 +5,12 @@ import { ReactComponent as Check } from "../../assets/icons/check.svg";
 import { ReactComponent as CloseButton } from "../../assets/icons/close.svg";
 import { UserType } from "../../enums/User";
 import { useNavigate } from "react-router-dom";
+import { storedUserId } from "../../Utils/User";
 
 interface RecipeDetailsProps {
     recipeId: number;
     userId?: number;
+    ownerId: number;
     name: string;
     description: string;
     ingredients: Ingredient[];
@@ -18,6 +20,7 @@ interface RecipeDetailsProps {
 const RecipeDetails: React.FC<RecipeDetailsProps> = ({
     recipeId,
     userId,
+    ownerId,
     name,
     description,
     ingredients,
@@ -62,7 +65,7 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({
     return (
         <div className="recipe-details">
             <h1>{name}</h1>
-            {userType === UserType.CHEF && (
+            {(userType === UserType.ADMIN || ownerId === storedUserId()) && (
                 <div className="grid-buttons">
                     <button
                         className="edit-button"

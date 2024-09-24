@@ -33,11 +33,6 @@ function App() {
                         path="myRecipes"
                         element={<RecipesList privateRecipes={true} />}
                     />
-                    <Route
-                        path="view/:recipeId"
-                        element={<RecipeViewPage />}
-                        loader={recipeLoader}
-                    />
 
                     <Route
                         path="editRecipe/:recipeId"

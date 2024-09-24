@@ -17,6 +17,7 @@ import java.util.List;
 public class RecipeDetailsDTO {
 
     private Long id;
+    private Long ownerId;
     private String name;
     private String description;
     private String imageUrl;
