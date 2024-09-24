@@ -1,6 +1,6 @@
 import React from 'react';
 import './Header.css';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ReactComponent as Logo } from '../../assets/images/recipe_box_logo_light.svg';
 import { ReactComponent as ProfileLogo } from '../../assets/images/Group_1672.svg';
 import { UserType } from '../../enums/User';
@@ -9,7 +9,6 @@ import Dropdown from '../Dropdown/Dropdown';
 
 const Header: React.FC = () => {
     const userType = storedUserType();
-    const navigate = useNavigate();
 
     return (
         <header className="header">
@@ -27,9 +26,9 @@ const Header: React.FC = () => {
                                     <ul className='left'>
                                     <Dropdown buttonText="Recipes" content={
                                         <>
-                                            <button className="dropdown-item" onClick={() => navigate("/recipes/list")}>Public recipes</button>
-                                            <button className="dropdown-item" onClick={() => navigate("/recipes/myRecipes")}>My recipes</button>
-                                            <button className="dropdown-item" onClick={() => navigate("/recipes/ingredients")}>Recipes with my ingredients</button>
+                                            <Link to="/recipes/list" className="dropdown-item">Public recipes</Link>
+                                            <Link to="/recipes/myRecipes" className="dropdown-item">My recipes</Link>
+                                            <Link to="/recipes/ingredients" className="dropdown-item">Recipes with my ingredients</Link>
                                         </>
                                     }/>
                                     </ul>
@@ -37,33 +36,32 @@ const Header: React.FC = () => {
                                 )}
 
                                 {userType === UserType.ADMIN && (
-                                    <button className='nav-item' onClick={() => navigate("/recipes/list")}>Recipes</button>
+                                    <Link to="/recipes/list" className='nav-item'>Recipes</Link>
                                 )}
                                 </li>
-                                <li><button className="nav-item" onClick={() => navigate("/ingredients")}>Ingredients</button></li>
+                                <li><Link to="/ingredients" className="nav-item">Ingredients</Link></li>
                                 
                                 {userType === UserType.CHEF && (
-                                    <li><button className="nav-item" onClick={() => navigate("/meal-plans")}>Meal Plans</button></li>
+                                    <li><Link to="/meal-plans" className="nav-item">Meal Plans</Link></li>
                                 )}
                             </>
                         )}
                     </div>
                     <div className="right-items">
-                        {userType === UserType.GUEST &&
-                        <li className="right">
-                            <button className="button" onClick={() => navigate("/userlogin")}>LOGIN</button>
-                        </li>
+                        {userType === UserType.GUEST 
+                        ?   <li className="right">
+                                <Link to="/userlogin" className="button">LOGIN</Link>
+                            </li>
+                        :   <>
+                            <li className="right">
+                                <Link to="" className="button">ADD NEW RECIPE</Link>
+                            </li>
+                            <li className='logo'>
+                                <ProfileLogo className='profile-logo-image' /> 
+                            </li>
+                            </>
                         }
-                        {userType !== UserType.GUEST &&
-                        <>
-                        <li className="right">
-                            <button className="button" onClick={() => navigate("/addrecipe")}>ADD NEW RECIPE</button>
-                        </li>
-                        <li className='logo'>
-                             <ProfileLogo className='profile-logo-image' /> 
-                        </li>
-                        </>
-                        }
+                        
                     </div>
                 </ul>
             </nav>
