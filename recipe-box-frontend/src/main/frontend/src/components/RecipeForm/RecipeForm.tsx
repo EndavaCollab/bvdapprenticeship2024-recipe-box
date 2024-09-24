@@ -19,7 +19,7 @@ import {
 } from "./utils";
 
 export interface RecipeFormProps {
-    isEditMode: boolean;
+    isEditMode?: boolean;
     initialRecipe?: RecipeAddRequest;
 }
 
@@ -51,7 +51,7 @@ export default function RecipeForm({ isEditMode = false }: RecipeFormProps) {
     const initialRecipe = useLoaderData() as any;
 
     const navigate = useNavigate();
-    const userid = sessionStorage.getItem("userId");
+    const userId = sessionStorage.getItem("userId");
 
     const defaultIngredient = {
         ingredientID: 0,
@@ -198,7 +198,7 @@ export default function RecipeForm({ isEditMode = false }: RecipeFormProps) {
         };
 
         try {
-            const response = await fetch(`/recipes?userId=${userid}`, {
+            const response = await fetch(`/recipes?userId=${userId}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -236,7 +236,7 @@ export default function RecipeForm({ isEditMode = false }: RecipeFormProps) {
 
         try {
             const response = await fetch(
-                `${backendUrl}/recipes/${initialRecipe?.id}?userId=${userid}`,
+                `${backendUrl}/recipes/${initialRecipe?.id}?userId=${userId}`,
                 {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },

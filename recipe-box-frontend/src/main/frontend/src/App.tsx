@@ -26,15 +26,7 @@ function App() {
                         element={<RecipeViewPage />}
                         loader={recipeLoader}
                     />
-                    <Route
-                        path="addrecipe"
-                        element={
-                            <RecipeForm
-                                isEditMode={false}
-                                initialRecipe={undefined}
-                            />
-                        }
-                    />
+                    <Route path="addrecipe" element={<RecipeForm />} />
 
                     <Route
                         index
