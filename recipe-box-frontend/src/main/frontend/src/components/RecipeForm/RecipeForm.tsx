@@ -21,6 +21,7 @@ import {
 export interface RecipeFormProps {
     isEditMode?: boolean;
     initialRecipe?: RecipeAddRequest;
+    isPrivateMode?: boolean;
 }
 
 export interface RecipeAddRequest {
@@ -33,6 +34,8 @@ export interface RecipeAddRequest {
     cookingTime: number;
     difficulty: string;
     servings: number;
+    kcal_serving: number;
+    recipe_status: string;
 }
 
 export interface IngredientRequest {
@@ -47,7 +50,10 @@ export interface ImageFile {
     fileData: string;
 }
 
-export default function RecipeForm({ isEditMode = false }: RecipeFormProps) {
+export default function RecipeForm({
+    isEditMode = false,
+    isPrivateMode = false,
+}: RecipeFormProps) {
     const initialRecipe = useLoaderData() as any;
 
     const navigate = useNavigate();
@@ -88,6 +94,9 @@ export default function RecipeForm({ isEditMode = false }: RecipeFormProps) {
         initialRecipe?.description || ""
     );
     const [image, setImage] = useState<ImageFile | null>(null);
+
+    const recipe_status = isPrivateMode ? "private" : "public";
+    const kcal_serving = 1234; // FOR TESTING ONLY
 
     useEffect(() => {
         const fetchIngredients = async () => {
@@ -195,16 +204,22 @@ export default function RecipeForm({ isEditMode = false }: RecipeFormProps) {
             imageUrl,
             ingredients,
             cookingTime: totalPreparationTime,
+            kcal_serving,
+            recipe_status,
         };
 
         try {
-            const response = await fetch(`/recipes?userId=${userId}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(recipeData),
-            });
+            const response = await fetch(
+                isPrivateMode ? `/recipes?userId=${userId}` : "",
+                {
+                    //DE MODIFICAT
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(recipeData),
+                }
+            );
 
             if (!response.ok) {
                 throw new Error("Error in submitting recipe");
