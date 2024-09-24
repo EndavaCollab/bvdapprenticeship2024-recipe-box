@@ -1,12 +1,13 @@
 import React, { useState, useMemo, ChangeEvent, useEffect } from "react";
-import Footer from "../../components/Footer/Footer";
-import Header from "../../components/Header/Header";
+import Footer from "../Footer/Footer";
+import Header from "../Header/Header";
 import { ReactComponent as CheckIcon } from "../../assets/icons/check.svg";
 import { ReactComponent as RemoveIcon } from "../../assets/icons/close copy.svg";
-import SelectInput from "../../components/SelectInput/SelectInput";
-import { useNavigate } from "react-router-dom";
+import SelectInput from "../SelectInput/SelectInput";
+import { useNavigate, useLoaderData } from "react-router-dom";
 
-import "./AddRecipe.css";
+import "./RecipeForm.css";
+import { backendUrl } from "../../App";
 
 import {
     quantityOptions,
@@ -17,7 +18,13 @@ import {
     servingsValues,
 } from "./utils";
 
+export interface RecipeFormProps {
+    isEditMode?: boolean;
+    initialRecipe?: RecipeAddRequest;
+}
+
 export interface RecipeAddRequest {
+    id?: number;
     name: string;
     description: string;
     imageUrl: string | undefined;
@@ -40,9 +47,11 @@ export interface ImageFile {
     fileData: string;
 }
 
-export default function AddRecipe() {
+export default function RecipeForm({ isEditMode = false }: RecipeFormProps) {
+    const initialRecipe = useLoaderData() as any;
+
     const navigate = useNavigate();
-    const username = localStorage.getItem("username");
+    const userId = sessionStorage.getItem("userId");
 
     const defaultIngredient = {
         ingredientID: 0,
@@ -51,28 +60,39 @@ export default function AddRecipe() {
         quantity: 0,
     };
 
-    //Left column
-    const [recipeName, setRecipeName] = useState<string>("");
-    const [preparationHours, setPreparationHours] = useState<number>(0);
-    const [preparationMinutes, setPreparationMinutes] = useState<number>(0);
-    const [difficulty, setDifficulty] = useState<string>("");
-    const [category, setCategory] = useState<string>("");
-    const [servings, setServings] = useState<number>(0);
+    const [recipeName, setRecipeName] = useState<string>(
+        initialRecipe?.name || ""
+    );
+    const [preparationHours, setPreparationHours] = useState<number>(
+        Math.floor((initialRecipe?.preparationTime || 0) / 60)
+    );
+    const [preparationMinutes, setPreparationMinutes] = useState<number>(
+        (initialRecipe?.preparationTime || 0) % 60
+    );
+    const [difficulty, setDifficulty] = useState<string>(
+        initialRecipe?.difficulty || ""
+    );
+    const [category, setCategory] = useState<string>(
+        initialRecipe?.mealType || ""
+    );
+    const [servings, setServings] = useState<number>(
+        initialRecipe?.servings || 0
+    );
     const [availableIngredients, setAvailableIngredients] = useState<
         { id: number; name: string; unit: string }[]
     >([]);
-
-    //Right column
-    const [ingredients, setIngredients] = useState<IngredientRequest[]>([
-        { ingredientID: 0, unit: "", ingredientName: "", quantity: 0 },
-    ]);
-    const [description, setDescription] = useState<string>("");
+    const [ingredients, setIngredients] = useState<IngredientRequest[]>(
+        initialRecipe?.ingredients || [defaultIngredient]
+    );
+    const [description, setDescription] = useState<string>(
+        initialRecipe?.description || ""
+    );
     const [image, setImage] = useState<ImageFile | null>(null);
 
     useEffect(() => {
         const fetchIngredients = async () => {
             try {
-                const response = await fetch("/ingredients");
+                const response = await fetch(`${backendUrl}/ingredients/`);
                 if (!response.ok) {
                     throw new Error("Error fetching ingredients");
                 }
@@ -178,7 +198,7 @@ export default function AddRecipe() {
         };
 
         try {
-            const response = await fetch(`/recipes?userId=${username}`, {
+            const response = await fetch(`/recipes?userId=${userId}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -198,6 +218,39 @@ export default function AddRecipe() {
             console.error("Error:", error);
             alert("An error occurred! The recipe has not been added.");
             // navigate("/recipes/list"); //TESTING
+        }
+    };
+
+    const handleEditRecipe = async () => {
+        const imageUrl = image?.fileName;
+        const recipeData = {
+            name: recipeName,
+            description,
+            difficulty,
+            mealType: category,
+            servings,
+            imageUrl,
+            ingredients,
+            cookingTime: totalPreparationTime,
+        };
+
+        try {
+            const response = await fetch(
+                `${backendUrl}/recipes/${initialRecipe?.id}?userId=${userId}`,
+                {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(recipeData),
+                }
+            );
+
+            if (!response.ok) throw new Error("Error in updating recipe");
+
+            alert("Recipe successfully updated.");
+            navigate("/recipes/list");
+        } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred! The recipe has not been updated.");
         }
     };
 
@@ -277,9 +330,11 @@ export default function AddRecipe() {
                         <div>Ingredient name*</div>
 
                         {ingredients.map((ingredient, index) => (
-                            <div style={{ margin: "0 0 10px 0" }}>
+                            <div
+                                key={ingredient.ingredientID}
+                                style={{ margin: "0 0 10px 0" }}
+                            >
                                 <SelectInput
-                                    key={index}
                                     value={ingredient.ingredientName}
                                     onChange={(e) =>
                                         handleIngredientChange(
@@ -309,9 +364,11 @@ export default function AddRecipe() {
                         <button
                             disabled={submitIsDisabled}
                             className="save-recipe-button"
-                            onClick={handleSaveRecipe}
+                            onClick={
+                                isEditMode ? handleEditRecipe : handleSaveRecipe
+                            }
                         >
-                            SAVE RECIPE
+                            {isEditMode ? "EDIT RECIPE" : "SAVE RECIPE"}
                         </button>
                     </div>
 
@@ -373,9 +430,11 @@ export default function AddRecipe() {
                         </div>
 
                         {ingredients.map((ingredient, index) => (
-                            <div style={{ margin: "0 0 10px 0" }}>
+                            <div
+                                key={ingredient.ingredientID}
+                                style={{ margin: "0 0 10px 0" }}
+                            >
                                 <SelectInput
-                                    key={index}
                                     value={ingredient.quantity}
                                     onChange={(e) =>
                                         handleIngredientQuantityChange(
