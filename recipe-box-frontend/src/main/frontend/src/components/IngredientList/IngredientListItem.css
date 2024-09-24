@@ -1,0 +1,52 @@
+.ingredient-quantity{
+    display: flex;
+    align-items: center;
+}
+
+.ingredient-quantity-text{
+    color: black;
+    align-items: center;
+}
+
+.ingredient-quantity .circle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 5px;
+
+}
+
+.ingredient-quantity.high .circle {
+    background-color: green;
+}
+
+.ingredient-quantity.medium .circle {
+    background-color: orange;
+}
+
+.ingredient-quantity.low .circle {
+    background-color: red;
+}
+
+.ingredient-button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    font-size: 14px;
+    margin: 5px 0;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.ingredient-button:hover {
+    background-color: #45a049;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: row;
+}

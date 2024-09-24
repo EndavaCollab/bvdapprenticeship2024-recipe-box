@@ -40,7 +40,7 @@ const Header: React.FC = () => {
                                 )}
                                 </li>
                                 <li><Link to="/ingredients" className="nav-item">Ingredients</Link></li>
-                                
+
                                 {userType === UserType.CHEF && (
                                     <li><Link to="/meal-plans" className="nav-item">Meal Plans</Link></li>
                                 )}
@@ -48,7 +48,7 @@ const Header: React.FC = () => {
                         )}
                     </div>
                     <div className="right-items">
-                        {userType === UserType.GUEST 
+                        {userType === UserType.GUEST
                         ?   <li className="right">
                                 <Link to="/userlogin" className="button">LOGIN</Link>
                             </li>
@@ -57,11 +57,11 @@ const Header: React.FC = () => {
                                 <Link to="/recipes/addrecipe" className="button">ADD NEW RECIPE</Link>
                             </li>
                             <li className='logo'>
-                                <ProfileLogo className='profile-logo-image' /> 
+                                <ProfileLogo className='profile-logo-image' />
                             </li>
                             </>
                         }
-                        
+
                     </div>
                 </ul>
             </nav>

@@ -5,3 +5,19 @@
     flex-wrap: wrap;
     padding: 60px;
 }
+
+.ingredient-list-page h1 {
+    font-size: 2rem;
+}
+
+.ingredient-list-page {
+    position: relative;
+    padding: 30px;
+}
+
+.pagination {
+    position: absolute;
+    bottom: -10px;
+    right: 20px;
+}
+
