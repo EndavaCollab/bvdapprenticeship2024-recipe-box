@@ -6,12 +6,11 @@ import com.endava.recipebox.exception.BadRequestException;
 import com.endava.recipebox.exception.UnauthorizedActionException;
 import com.endava.recipebox.mapper.RecipeMapper;
 import com.endava.recipebox.model.*;
-import com.endava.recipebox.repository.IngredientRepository;
 import com.endava.recipebox.repository.RecipeIngredientRepository;
 import com.endava.recipebox.repository.RecipeRepository;
-import com.endava.recipebox.repository.UserRepository;
+import com.endava.recipebox.service.IngredientService;
 import com.endava.recipebox.service.RecipeService;
-import jakarta.persistence.EntityNotFoundException;
+import com.endava.recipebox.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,20 +25,20 @@ import java.util.Optional;
 public class RecipeServiceImpl implements RecipeService {
 
     private final RecipeRepository recipeRepository;
-    private final UserRepository userRepository;
-    private final IngredientRepository ingredientRepository;
+    private final UserService userService;
+    private final IngredientService ingredientService;
     private final RecipeIngredientRepository recipeIngredientRepository;
     private final RecipeMapper recipeMapper;
 
 
     @Autowired
-    public RecipeServiceImpl(RecipeRepository recipeRepository, RecipeMapper recipeMapper, UserRepository userRepository,
-                             RecipeIngredientRepository recipeIngredientRepository, IngredientRepository ingredientRepository) {
+    public RecipeServiceImpl(RecipeRepository recipeRepository, RecipeMapper recipeMapper, UserService userService,
+                             RecipeIngredientRepository recipeIngredientRepository, IngredientService ingredientService) {
         this.recipeRepository = recipeRepository;
         this.recipeMapper = recipeMapper;
-        this.userRepository = userRepository;
+        this.userService = userService;
         this.recipeIngredientRepository = recipeIngredientRepository;
-        this.ingredientRepository = ingredientRepository;
+        this.ingredientService = ingredientService;
     }
 
     public static boolean isPublic(Recipe recipe) {
@@ -94,9 +93,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Transactional
     public String createRecipe(RecipeAddRequestDTO recipeAddRequestDTO, Long userId) {
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BadRequestException("User not found."));
-
+        User user = userService.getUserById(userId);
         Recipe recipe = recipeMapper.toEntity(recipeAddRequestDTO);
         if (user.getRole() != Role.Admin && isPublic(recipe))
             throw new UnauthorizedActionException("Only admins can create public recipes");
@@ -110,8 +107,7 @@ public class RecipeServiceImpl implements RecipeService {
                     RecipeIngredient recipeIngredient = new RecipeIngredient();
                     recipeIngredient.setRecipe(savedRecipe);
 
-                    Ingredient ingredient = ingredientRepository.findById(ingredientDTO.getIngredientId())
-                            .orElseThrow(() -> new EntityNotFoundException("No ingredient found in the DB."));
+                    Ingredient ingredient = ingredientService.getIngredientById(ingredientDTO.getIngredientId());
 
                     recipeIngredient.setId(new RecipeIngredientId(recipe.getId(), ingredient.getId()));
                     recipeIngredient.setIngredient(ingredient);
@@ -187,8 +183,7 @@ public class RecipeServiceImpl implements RecipeService {
         Recipe recipe = recipeRepository.findById(recipeAddRequestDTO.getId())
                 .orElseThrow(() -> new BadRequestException("Recipe not found."));
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BadRequestException("User not found."));
+        User user = userService.getUserById(userId);
 
         boolean isAdmin = user.getRole().equals(Role.Admin);
         boolean isOwner = recipe.getUser().getId().equals(userId);
@@ -207,9 +202,7 @@ public class RecipeServiceImpl implements RecipeService {
 
             List<RecipeIngredient> updatedIngredients = recipeAddRequestDTO.getIngredients().stream()
                     .map(ingredientDTO -> {
-                        Ingredient ingredient = ingredientRepository.findById(ingredientDTO.getIngredientId())
-                                .orElseThrow(() -> new EntityNotFoundException("The ingredient with the given ID "+ ingredientDTO.getIngredientId()+ " was not found in the database."));
-
+                        Ingredient ingredient = ingredientService.getIngredientById(ingredientDTO.getIngredientId());
                         RecipeIngredient recipeIngredient = new RecipeIngredient();
                         recipeIngredient.setRecipe(recipe);
                         recipeIngredient.setIngredient(ingredient);
@@ -246,9 +239,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public String deleteRecipe(Long recipeId, Long userId) {
         Recipe recipe = getRecipeById(recipeId);
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BadRequestException("User not found."));
-
+        User user = userService.getUserById(userId);
 
         Role userRole = user.getRole();
         if (userRole.equals(Role.Admin) && !isPublic(recipe) || userRole.equals(Role.Chef) && !recipe.getUser().getId().equals(userId))
