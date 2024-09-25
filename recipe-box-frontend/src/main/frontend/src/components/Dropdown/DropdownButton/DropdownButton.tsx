@@ -14,7 +14,7 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({children, open, onClick}
            <div onClick={onClick} className={`dropdown-btn ${open ? "button-open" : ""}`}>
              {children}
              <span className="toggle-icon">
-                 {open ? <ChevronUp /> : <ChevronDown />}
+                 {open ? <ChevronUp fill={'white'}/> : <ChevronDown fill={'white'}/>}
              </span>
            </div>
         );

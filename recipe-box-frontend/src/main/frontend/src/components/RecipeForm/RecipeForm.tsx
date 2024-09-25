@@ -25,7 +25,6 @@ export interface RecipeFormProps {
 }
 
 export interface RecipeFields {
-    //de redenumit pentru edit recipeformreq
     id?: number;
     name: string;
     description: string;
@@ -33,7 +32,7 @@ export interface RecipeFields {
     fileName: string | undefined;
     mealType: string;
     ingredients: Ingredient[];
-    cookingTime: String;
+    cookingTime: string;
     difficulty: string;
     servings: number;
     recipeStatus: string;
@@ -47,7 +46,7 @@ export default function RecipeForm({
 
     const navigate = useNavigate();
     const userId = sessionStorage.getItem("userId");
-    const recipeId = initialRecipe.id;
+    const recipeId = initialRecipe?.id;
 
     const defaultIngredient = {
         ingredientId: 0,
@@ -77,21 +76,17 @@ export default function RecipeForm({
     const [availableIngredients, setAvailableIngredients] = useState<
         { id: number; name: string; unit: string }[]
     >([]);
-    // TODO:  de reparat ingredientele
     const [ingredients, setIngredients] = useState<Ingredient[]>(
         (initialRecipe?.recipeIngredients as Ingredient[]) || [
             defaultIngredient,
         ]
     );
 
-    console.log(initialRecipe);
 
-    console.log(ingredients);
     const [description, setDescription] = useState<string>(
         initialRecipe?.description || ""
     );
 
-    // const [image, setImage] = useState<ImageFile | null>(null);
     const [imageFileName, setImageFileName] = useState(
         initialRecipe?.fileName || ""
     );
@@ -194,7 +189,6 @@ export default function RecipeForm({
     );
 
     const handleSaveRecipe = async () => {
-        // const imageUrl = image ? await uploadImage(image.fileData) : '';   // de decomentat daca o sa putem trimite o imagine
 
         const recipeData: RecipeFields = {
             name: recipeName,
@@ -225,14 +219,11 @@ export default function RecipeForm({
                 throw new Error("Error in submitting recipe");
             }
 
-            // const data = await response.json();
-            console.log("Recipe successfully added:");
             alert("Recipe successfully added.");
             navigate("/recipes/list");
         } catch (error) {
             console.error("Error:", error);
-            // alert("An error occurred! The recipe has not been added.");
-            // navigate("/recipes/list"); //TESTING
+            alert("An error occurred! The recipe has not been added.");
         }
     };
 
@@ -271,11 +262,6 @@ export default function RecipeForm({
             alert("An error occurred! The recipe has not been updated.");
         }
     };
-    useEffect(() => {
-        // console.log(image);
-        console.log(ingredients);
-    }, [ingredients]);
-
     return (
         <>
             <Header />

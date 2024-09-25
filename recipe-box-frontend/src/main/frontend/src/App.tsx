@@ -13,6 +13,8 @@ import UserLogin from "./Pages/LoginPage/UserLogin";
 import RecipeForm from "./components/RecipeForm/RecipeForm";
 import { storedUserType } from "./Utils/User";
 import { UserType } from "./enums/User";
+import IngredientListPage from "./Pages/IngredientListPage/IngredientListPage";
+import {ingredientsLoader} from "./loaders/IngredientLoader";
 
 export const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
@@ -41,6 +43,13 @@ function App() {
                         path="editRecipe/:recipeId"
                         element={<RecipeForm isEditMode={true} />}
                         loader={recipeLoader}
+                    />
+                </Route>
+                <Route path="ingredients" element={<LayoutWithHeaderMainFooter />}>
+                    <Route
+                        path="list"
+                        element={<IngredientListPage />}
+                        loader={ingredientsLoader}
                     />
                 </Route>
 

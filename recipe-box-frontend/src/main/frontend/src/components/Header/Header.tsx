@@ -22,25 +22,23 @@ const Header: React.FC = () => {
                             <>
                                 <li >
                                 {userType === UserType.CHEF && (
-                                    <>
                                     <ul className='left'>
-                                    <Dropdown buttonText="Recipes" content={
-                                        <>
-                                            <Link to="/recipes/list" className="dropdown-item">Public recipes</Link>
-                                            <Link to="/recipes/myRecipes" className="dropdown-item">My recipes</Link>
-                                            <Link to="/recipes/ingredients" className="dropdown-item">Recipes with my ingredients</Link>
-                                        </>
-                                    }/>
+                                        <Dropdown buttonText="Recipes" content={
+                                            <>
+                                                <Link to="/recipes/list" className="dropdown-item">Public recipes</Link>
+                                                <Link to="/recipes/myRecipes" className="dropdown-item">My
+                                                    recipes</Link>
+                                                <Link to="/recipes/ingredients" className="dropdown-item">Recipes with
+                                                    my ingredients</Link>
+                                            </>
+                                        }/>
                                     </ul>
-                                </>
                                 )}
-
                                 {userType === UserType.ADMIN && (
                                     <Link to="/recipes/list" className='nav-item'>Recipes</Link>
                                 )}
                                 </li>
-                                <li><Link to="/ingredients" className="nav-item">Ingredients</Link></li>
-                                
+                                <li><Link to="/ingredients/list" className="nav-item">Ingredients</Link></li>
                                 {userType === UserType.CHEF && (
                                     <li><Link to="/meal-plans" className="nav-item">Meal Plans</Link></li>
                                 )}
@@ -48,7 +46,7 @@ const Header: React.FC = () => {
                         )}
                     </div>
                     <div className="right-items">
-                        {userType === UserType.GUEST 
+                        {userType === UserType.GUEST
                         ?   <li className="right">
                                 <Link to="/userlogin" className="button">LOGIN</Link>
                             </li>
@@ -57,11 +55,10 @@ const Header: React.FC = () => {
                                 <Link to="/recipes/addrecipe" className="button">ADD NEW RECIPE</Link>
                             </li>
                             <li className='logo'>
-                                <ProfileLogo className='profile-logo-image' /> 
+                                <ProfileLogo className='profile-logo-image' />
                             </li>
                             </>
                         }
-                        
                     </div>
                 </ul>
             </nav>
