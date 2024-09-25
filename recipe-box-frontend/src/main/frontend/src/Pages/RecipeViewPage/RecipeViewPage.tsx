@@ -38,6 +38,7 @@ const RecipeViewPage: React.FC = () => {
                             description={recipeDetails.description}
                             ingredients={recipeDetails.recipeIngredients}
                             userType={role}
+                            ownerId={recipeDetails.ownerId}
                         />
                         <RecipeImageDetails
                             imageUrl={recipeDetails.imageUrl}

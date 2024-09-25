@@ -166,12 +166,14 @@ public class RecipeServiceImpl implements RecipeService {
             throw new UnauthorizedActionException("You do not have access to this private recipe.");
         }
         RecipeDetailsDTO recipeDetailsDTO = recipeMapper.mapDetailedRecipe(recipe);
+        recipeDetailsDTO.setOwnerId(recipe.getUser().getId());
         recipeDetailsDTO.setRecipeIngredients(recipe.getRecipeIngredients().stream()
                 .map(recipeIngredient -> RecipeIngredientDTO.builder()
                         .ingredientId(recipeIngredient.getIngredient().getId())
                         .name(recipeIngredient.getIngredient().getName())
                         .quantity(recipeIngredient.getQuantity())
-                        .unit(recipeIngredient.getUnit()).build())
+                        .unit(recipeIngredient.getUnit())
+                        .build())
                 .toList());
 
         return recipeDetailsDTO;
@@ -249,6 +251,6 @@ public class RecipeServiceImpl implements RecipeService {
 
         recipe.getRecipeIngredients().forEach(recipeIngredientRepository::delete);
         recipeRepository.delete(recipe);
-        return "The recipe was successfully deleted.";
+        return "The recipe has been successfully deleted";
     }
 }
