@@ -10,7 +10,7 @@ import {
     Route,
 } from "react-router-dom";
 import UserLogin from "./Pages/LoginPage/UserLogin";
-import AddRecipe from "./Pages/AddRecipe/AddRecipe";
+import RecipeForm from "./components/RecipeForm/RecipeForm";
 
 export const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
@@ -26,16 +26,17 @@ function App() {
                         element={<RecipeViewPage />}
                         loader={recipeLoader}
                     />
-                    <Route path="addrecipe" element={<AddRecipe />} />
+                    <Route path="addrecipe" element={<RecipeForm />} />
 
                     <Route
                         index
                         path="myRecipes"
                         element={<RecipesList privateRecipes={true} />}
                     />
+
                     <Route
-                        path="view/:recipeId"
-                        element={<RecipeViewPage />}
+                        path="editRecipe/:recipeId"
+                        element={<RecipeForm isEditMode={true} />}
                         loader={recipeLoader}
                     />
                 </Route>

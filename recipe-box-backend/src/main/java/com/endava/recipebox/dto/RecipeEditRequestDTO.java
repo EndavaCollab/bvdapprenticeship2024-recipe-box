@@ -23,14 +23,16 @@ public class RecipeEditRequestDTO {
     @Size(max = 255, message = "Name must not exceed 255 characters")
     private String name;
 
-    @NotNull(message = "Description cannot be null")
-    @NotBlank(message = "Description cannot be blank")
     @Size(max = 1000, message = "Description must not exceed 1000 characters")
     private String description;
 
     @NotNull(message = "Description cannot be null")
     @NotBlank(message = "Description cannot be blank")
     private String imageUrl;
+
+    @NotNull(message = "File name cannot be null")
+    @NotBlank(message = "File name cannot be blank")
+    private String fileName;
 
     @NotNull(message = "Type cannot be null")
     @NotBlank(message = "Type cannot be blank")
