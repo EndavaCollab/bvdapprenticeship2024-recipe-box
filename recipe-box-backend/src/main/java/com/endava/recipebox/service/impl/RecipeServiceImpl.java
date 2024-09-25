@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -101,9 +102,11 @@ public class RecipeServiceImpl implements RecipeService {
         recipe.setUser(user);
 
         Recipe savedRecipe = recipeRepository.save(recipe);
+       
 
         List<RecipeIngredient> recipeIngredients = recipeAddRequestDTO.getIngredients().stream()
                 .map(ingredientDTO -> {
+                    System.out.println(ingredientDTO.getIngredientId());
                     RecipeIngredient recipeIngredient = new RecipeIngredient();
                     recipeIngredient.setRecipe(savedRecipe);
 
@@ -194,6 +197,7 @@ public class RecipeServiceImpl implements RecipeService {
             recipe.setName(updateRecipe.getName());
             recipe.setDescription(updateRecipe.getDescription());
             recipe.setImageUrl(updateRecipe.getImageUrl());
+            recipe.setFileName(updateRecipe.getFileName());
             recipe.setMealType(updateRecipe.getMealType());
             recipe.setPreparationTime(Integer.parseInt(recipeAddRequestDTO.getCookingTime()));
             recipe.setDifficulty(updateRecipe.getDifficulty());
@@ -225,7 +229,7 @@ public class RecipeServiceImpl implements RecipeService {
                     })
                     .toList();
 
-            recipe.setRecipeIngredients(updatedIngredients);
+                    recipe.setRecipeIngredients(new ArrayList<>(updatedIngredients));
             recipeRepository.save(recipe);
         }
         else

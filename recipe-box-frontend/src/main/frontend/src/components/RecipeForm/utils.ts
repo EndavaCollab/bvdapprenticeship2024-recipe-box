@@ -16,22 +16,23 @@ export const preparationHoursValues = [
 
 export const preparationMinutesValues = [
     { value: 15, label: '15 min' },
+    { value: 10, label: '10 min' },
     { value: 30, label: '30 min' },
     { value: 45, label: '45 min' },
 ];
 
 export const difficultyValues = [
-    { value: 'easy', label: 'Easy' },
-    { value: 'medium', label: 'Medium' },
-    { value: 'hard', label: 'Hard' },
+    { value: 'Easy', label: 'Easy' },
+    { value: 'Medium', label: 'Medium' },
+    { value: 'Hard', label: 'Hard' },
 ];
 
 export const categoryValues = [
-    { value: 'breakfast', label: 'Breakfast' },
-    { value: 'lunch', label: 'Lunch' },
-    { value: 'dinner', label: 'Dinner' },
-    { value: 'dessert', label: 'Dessert' },
-    { value: 'snack', label: 'Snack' },
+    { value: 'Breakfast', label: 'Breakfast' },
+    { value: 'Lunch', label: 'Lunch' },
+    { value: 'Dinner', label: 'Dinner' },
+    { value: 'Dessert', label: 'Dessert' },
+    { value: 'Snack', label: 'Snack' },
 ];
 
 export const servingsValues = [

@@ -1,10 +1,17 @@
 export interface Ingredient {
-    id: number,
+    ingredientId: number;
     name: string;
     quantity: number;
     unit: string;
 }
 
+enum MealType {
+    BREAKFAST = "Breakfast",
+    LUNCH = "Lunch",
+    DINNER = "Dinner",
+    DESSERT = "Dessert",
+    SNACK = "Snack",
+}
 export interface Recipe {
     id: number;
     name: string;
@@ -15,4 +22,7 @@ export interface Recipe {
     difficulty: string;
     servings: number;
     kcalServing: number;
+    fileName: string;
+    mealType: MealType;
+    recipeStatus: "PUBLIC" | "PRIVATE";
 }

@@ -43,8 +43,12 @@ public class Recipe {
     @Column(name = "preparation_time", nullable = false)
     private int preparationTime;
 
-    @Column(name = "imageUrl", nullable = false)
+    @Lob
+    @Column(name = "imageUrl", nullable = false, length = 1000000)
     private String imageUrl;
+
+    @Column(name = "fileName", nullable = false)
+    private String fileName;
 
     @Column(name = "mealType")
     @Enumerated(EnumType.STRING)

@@ -17,51 +17,41 @@ import {
     categoryValues,
     servingsValues,
 } from "./utils";
+import { Ingredient, Recipe } from "../RecipeView/types";
 
 export interface RecipeFormProps {
     isEditMode?: boolean;
-    initialRecipe?: RecipeAddRequest;
     isPrivateMode?: boolean;
 }
 
-export interface RecipeAddRequest {
+export interface RecipeFields {
+    //de redenumit pentru edit recipeformreq
     id?: number;
     name: string;
     description: string;
     imageUrl: string | undefined;
+    fileName: string | undefined;
     mealType: string;
-    ingredients: IngredientRequest[];
-    cookingTime: number;
+    ingredients: Ingredient[];
+    cookingTime: String;
     difficulty: string;
     servings: number;
-    kcal_serving: number;
-    recipe_status: string;
-}
-
-export interface IngredientRequest {
-    ingredientID: number;
-    ingredientName: string;
-    quantity: number;
-    unit: string;
-}
-
-export interface ImageFile {
-    fileName: string;
-    fileData: string;
+    recipeStatus: string;
 }
 
 export default function RecipeForm({
     isEditMode = false,
     isPrivateMode = false,
 }: RecipeFormProps) {
-    const initialRecipe = useLoaderData() as any;
+    const initialRecipe = useLoaderData() as Recipe;
 
     const navigate = useNavigate();
     const userId = sessionStorage.getItem("userId");
+    const recipeId = initialRecipe.id;
 
     const defaultIngredient = {
-        ingredientID: 0,
-        unit: "grams",
+        ingredientId: 0,
+        unit: "",
         ingredientName: "",
         quantity: 0,
     };
@@ -87,16 +77,27 @@ export default function RecipeForm({
     const [availableIngredients, setAvailableIngredients] = useState<
         { id: number; name: string; unit: string }[]
     >([]);
-    const [ingredients, setIngredients] = useState<IngredientRequest[]>(
-        initialRecipe?.ingredients || [defaultIngredient]
+    // TODO:  de reparat ingredientele
+    const [ingredients, setIngredients] = useState<Ingredient[]>(
+        (initialRecipe?.recipeIngredients as Ingredient[]) || [
+            defaultIngredient,
+        ]
     );
+
+    console.log(initialRecipe);
+
+    console.log(ingredients);
     const [description, setDescription] = useState<string>(
         initialRecipe?.description || ""
     );
-    const [image, setImage] = useState<ImageFile | null>(null);
 
-    const recipe_status = isPrivateMode ? "private" : "public";
-    const kcal_serving = 1234; // FOR TESTING ONLY
+    // const [image, setImage] = useState<ImageFile | null>(null);
+    const [imageFileName, setImageFileName] = useState(
+        initialRecipe?.fileName || ""
+    );
+    const [imageUrl, setImageUrl] = useState(initialRecipe?.imageUrl || "");
+
+    const recipe_status = isPrivateMode ? "PRIVATE" : "PUBLIC";
 
     useEffect(() => {
         const fetchIngredients = async () => {
@@ -120,13 +121,15 @@ export default function RecipeForm({
     }, []);
 
     const totalPreparationTime = preparationHours * 60 + preparationMinutes;
-
     const handleAddIngredient = () => {
         setIngredients([
             ...ingredients,
             {
-                ...defaultIngredient,
-                ingredientID: ingredients.length,
+                unit: "Grams",
+                name: "",
+                quantity: 0,
+
+                ingredientId: ingredients.length,
             },
         ]);
     };
@@ -140,8 +143,8 @@ export default function RecipeForm({
         if (selectedIngredient) {
             newIngredients[index] = {
                 ...newIngredients[index],
-                ingredientName: selectedIngredient.name,
-                ingredientID: selectedIngredient.id,
+                name: selectedIngredient.name,
+                ingredientId: selectedIngredient.id,
                 unit: selectedIngredient.unit,
             };
         }
@@ -159,10 +162,8 @@ export default function RecipeForm({
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                setImage({
-                    fileName: file.name,
-                    fileData: reader.result as string,
-                });
+                setImageFileName(file.name);
+                setImageUrl(reader.result as string);
             };
             reader.readAsDataURL(file);
         }
@@ -176,10 +177,10 @@ export default function RecipeForm({
             !category ||
             !servings ||
             ingredients.some(
-                (ingredient) =>
-                    !ingredient.ingredientName || !ingredient.quantity
+                (ingredient) => !ingredient.name || !ingredient.quantity
             ) ||
-            !image,
+            !imageFileName ||
+            !imageUrl,
         [
             recipeName,
             totalPreparationTime,
@@ -187,67 +188,73 @@ export default function RecipeForm({
             category,
             servings,
             ingredients,
-            image,
+            imageUrl,
+            imageFileName,
         ]
     );
 
     const handleSaveRecipe = async () => {
         // const imageUrl = image ? await uploadImage(image.fileData) : '';   // de decomentat daca o sa putem trimite o imagine
-        const imageUrl = image?.fileName;
 
-        const recipeData: RecipeAddRequest = {
+        const recipeData: RecipeFields = {
             name: recipeName,
             description,
             difficulty,
             mealType: category,
             servings,
             imageUrl,
+            fileName: imageFileName,
             ingredients,
-            cookingTime: totalPreparationTime,
-            kcal_serving,
-            recipe_status,
+            cookingTime: String(totalPreparationTime),
+            recipeStatus: recipe_status,
         };
 
         try {
-            const response = await fetch(`/recipes?userId=${userId}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(recipeData),
-            });
+            const response = await fetch(
+                `${backendUrl}/recipes?userId=${userId}`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(recipeData),
+                }
+            );
 
             if (!response.ok) {
                 throw new Error("Error in submitting recipe");
             }
 
-            const data = await response.json();
-            console.log("Recipe successfully added:", data);
+            // const data = await response.json();
+            console.log("Recipe successfully added:");
             alert("Recipe successfully added.");
             navigate("/recipes/list");
         } catch (error) {
             console.error("Error:", error);
-            alert("An error occurred! The recipe has not been added.");
+            // alert("An error occurred! The recipe has not been added.");
             // navigate("/recipes/list"); //TESTING
         }
     };
 
     const handleEditRecipe = async () => {
-        const imageUrl = image?.fileName;
         const recipeData = {
+            //de scos asta afara
+            id: recipeId,
             name: recipeName,
             description,
             difficulty,
             mealType: category,
             servings,
             imageUrl,
+            fileName: imageFileName,
             ingredients,
-            cookingTime: totalPreparationTime,
+            cookingTime: String(totalPreparationTime),
+            recipeStatus: recipe_status,
         };
 
         try {
             const response = await fetch(
-                `${backendUrl}/recipes/${initialRecipe?.id}?userId=${userId}`,
+                `${backendUrl}/recipes?userId=${userId}`,
                 {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
@@ -264,6 +271,10 @@ export default function RecipeForm({
             alert("An error occurred! The recipe has not been updated.");
         }
     };
+    useEffect(() => {
+        // console.log(image);
+        console.log(ingredients);
+    }, [ingredients]);
 
     return (
         <>
@@ -282,7 +293,7 @@ export default function RecipeForm({
                             }
                         />
 
-                        <div>Preparation time*</div>
+                        <div>Preparation Time*</div>
                         <div className="preparation-time-container">
                             <SelectInput
                                 value={preparationHours}
@@ -338,15 +349,15 @@ export default function RecipeForm({
                             placeholder="Select servings"
                         />
 
-                        <div>Ingredient name*</div>
+                        <div>Ingredient Name*</div>
 
                         {ingredients.map((ingredient, index) => (
                             <div
-                                key={ingredient.ingredientID}
+                                key={ingredient.ingredientId}
                                 style={{ margin: "0 0 10px 0" }}
                             >
                                 <SelectInput
-                                    value={ingredient.ingredientName}
+                                    value={ingredient.ingredientId}
                                     onChange={(e) =>
                                         handleIngredientChange(
                                             index,
@@ -355,7 +366,7 @@ export default function RecipeForm({
                                     }
                                     options={availableIngredients.map(
                                         (ingredient) => ({
-                                            value: ingredient.name,
+                                            value: ingredient.id,
                                             label: ingredient.name,
                                         })
                                     )}
@@ -386,7 +397,7 @@ export default function RecipeForm({
                     <div className="right-column">
                         <div>Recipe Image*</div>
 
-                        {!image && (
+                        {!imageUrl && !imageFileName && (
                             <div
                                 className="add-image-button-dashed-border"
                                 style={{ margin: 0 }}
@@ -406,7 +417,7 @@ export default function RecipeForm({
                                 </label>
                             </div>
                         )}
-                        {image && (
+                        {imageUrl && imageFileName && (
                             <div
                                 className="added-image-dashed-border"
                                 style={{ margin: 0 }}
@@ -418,10 +429,13 @@ export default function RecipeForm({
                                     }}
                                 >
                                     <CheckIcon className="check-icon" />
-                                    {image.fileName}
+                                    {imageFileName}
                                     <RemoveIcon
                                         className="remove-icon"
-                                        onClick={() => setImage(null)}
+                                        onClick={() => {
+                                            setImageFileName("");
+                                            setImageUrl("");
+                                        }}
                                     />
                                 </div>
                             </div>
@@ -442,7 +456,7 @@ export default function RecipeForm({
 
                         {ingredients.map((ingredient, index) => (
                             <div
-                                key={ingredient.ingredientID}
+                                key={ingredient.ingredientId}
                                 style={{ margin: "0 0 10px 0" }}
                             >
                                 <SelectInput

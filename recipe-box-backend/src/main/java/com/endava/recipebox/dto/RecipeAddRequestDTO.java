@@ -26,6 +26,10 @@ public class RecipeAddRequestDTO {
     @NotBlank(message = "Image URL cannot be blank")
     private String imageUrl;
 
+    @NotNull(message = "File name cannot be null")
+    @NotBlank(message = "File name cannot be blank")
+    private String fileName;
+
     @NotNull(message = "Type cannot be null")
     @NotBlank(message = "Type cannot be blank")
     @Pattern(
