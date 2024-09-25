@@ -1,0 +1,19 @@
+.ingredient-list-page{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 30px;
+    position: relative;
+}
+
+.ingredient-list-page h1 {
+    font-size: 2rem;
+}
+
+.pagination {
+    position: absolute;
+    bottom: -5px;
+    right: 20px;
+}
+
