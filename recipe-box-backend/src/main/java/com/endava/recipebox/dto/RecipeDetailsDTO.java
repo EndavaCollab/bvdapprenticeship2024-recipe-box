@@ -21,6 +21,7 @@ public class RecipeDetailsDTO {
     private String name;
     private String description;
     private String imageUrl;
+    private String fileName;
     private int servings;
     private int kcalServing;
     private Difficulty difficulty;
