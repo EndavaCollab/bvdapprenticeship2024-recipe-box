@@ -14,6 +14,7 @@ enum MealType {
 }
 export interface Recipe {
     id: number;
+    ownerId: number;
     name: string;
     description: string;
     recipeIngredients: Ingredient[];
