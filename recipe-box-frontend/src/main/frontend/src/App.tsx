@@ -11,10 +11,13 @@ import {
 } from "react-router-dom";
 import UserLogin from "./Pages/LoginPage/UserLogin";
 import RecipeForm from "./components/RecipeForm/RecipeForm";
+import { storedUserType } from "./Utils/User";
+import { UserType } from "./enums/User";
 
 export const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 function App() {
+    const userType = storedUserType();
     const router = createBrowserRouter(
         createRoutesFromElements(
             <>
@@ -26,7 +29,7 @@ function App() {
                         element={<RecipeViewPage />}
                         loader={recipeLoader}
                     />
-                    <Route path="addrecipe" element={<RecipeForm />} />
+                    <Route path="addrecipe" element={<RecipeForm isPrivateMode={userType === UserType.CHEF}/>} />
 
                     <Route
                         index
