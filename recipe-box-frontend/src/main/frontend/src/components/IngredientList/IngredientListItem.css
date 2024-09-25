@@ -28,25 +28,18 @@
     background-color: red;
 }
 
-.ingredient-button {
-    background-color: #4CAF50;
-    border: none;
-    color: white;
-    padding: 5px 10px;
-    text-align: center;
-    text-decoration: none;
-    display: block;
-    font-size: 14px;
-    margin: 5px 0;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-.ingredient-button:hover {
-    background-color: #45a049;
-}
-
 .button-container {
     display: flex;
     flex-direction: row;
+}
+
+.svg-button {
+    width: 24px;
+    height: 24px;
+}
+
+.button-content{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
 }

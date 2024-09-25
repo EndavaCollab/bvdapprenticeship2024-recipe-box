@@ -22,17 +22,17 @@ const Header: React.FC = () => {
                             <>
                                 <li >
                                 {userType === UserType.CHEF && (
-                                    <>
                                     <ul className='left'>
-                                    <Dropdown buttonText="Recipes" content={
-                                        <>
-                                            <Link to="/recipes/list" className="dropdown-item">Public recipes</Link>
-                                            <Link to="/recipes/myRecipes" className="dropdown-item">My recipes</Link>
-                                            <Link to="/recipes/ingredients" className="dropdown-item">Recipes with my ingredients</Link>
-                                        </>
-                                    }/>
+                                        <Dropdown buttonText="Recipes" content={
+                                            <>
+                                                <Link to="/recipes/list" className="dropdown-item">Public recipes</Link>
+                                                <Link to="/recipes/myRecipes" className="dropdown-item">My
+                                                    recipes</Link>
+                                                <Link to="/recipes/ingredients" className="dropdown-item">Recipes with
+                                                    my ingredients</Link>
+                                            </>
+                                        }/>
                                     </ul>
-                                </>
                                 )}
 
                                 {userType === UserType.ADMIN && (

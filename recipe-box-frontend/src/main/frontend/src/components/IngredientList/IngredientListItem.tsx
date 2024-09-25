@@ -1,5 +1,7 @@
 import React from 'react';
 import './IngredientListItem.css';
+import {ReactComponent as Delete} from "../../assets/icons/delete-filled.svg";
+import {ReactComponent as Edit} from "../../assets/icons/edit.svg";
 
 interface Ingredient {
     id: number;
@@ -44,8 +46,18 @@ const IngredientItem: React.FC<IngredientItemProps> = ({ ingredient }) => {
             </td>
             <td>
                 <div className="button-container">
-                    <button className="ingredient-button">Edit</button>
-                    <button className="ingredient-button">Delete</button>
+                     <button className="ingredient-button">
+                        <div className="button-content">
+                            <Edit className="svg-button"/>
+                            Edit
+                        </div>
+                     </button>
+                     <button className="ingredient-button">
+                         <div className="button-content">
+                             <Delete className="svg-button"/>
+                             Delete
+                         </div>
+                     </button>
                 </div>
             </td>
         </tr>

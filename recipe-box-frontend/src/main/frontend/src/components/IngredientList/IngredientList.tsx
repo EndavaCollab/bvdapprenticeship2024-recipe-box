@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import IngredientItem from "./IngredientListItem";
 import "./IngredientList.css";
+import {ReactComponent as Chevrons} from "../../assets/icons/chevrons.svg";
+import {ReactComponent as ChevronUp} from "../../assets/icons/chevron-up.svg";
+import {ReactComponent as ChevronDown} from "../../assets/icons/chevron-down.svg";
 
 interface Ingredient {
     id: number;
@@ -55,9 +58,9 @@ const IngredientList: React.FC<IngredientListProps> = ({ ingredients, searchTerm
 
     const renderSortIndicator = (key: keyof Ingredient) => {
         if (sortConfig.key === key) {
-            return sortConfig.direction === 'ascending' ? '↑' : '↓';
+            return sortConfig.direction === 'ascending' ? <ChevronUp  fill={'lightgrey'}/> : <ChevronDown fill={'lightgrey'}/>;
         }
-        return '↕';
+        return <Chevrons className="chevrons-icon" fill={'lightgrey'}/>;
     };
 
     const normalizeString = (str: string) => {

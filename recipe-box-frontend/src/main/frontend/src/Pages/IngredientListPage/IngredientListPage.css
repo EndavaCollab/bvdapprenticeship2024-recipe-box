@@ -3,21 +3,17 @@
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    padding: 60px;
+    padding: 30px;
+    position: relative;
 }
 
 .ingredient-list-page h1 {
     font-size: 2rem;
 }
 
-.ingredient-list-page {
-    position: relative;
-    padding: 30px;
-}
-
 .pagination {
     position: absolute;
-    bottom: -10px;
+    bottom: -5px;
     right: 20px;
 }
 

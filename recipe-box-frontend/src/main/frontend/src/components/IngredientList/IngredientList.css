@@ -32,31 +32,23 @@
 
 
 .ingredient-table .ingredient-button {
-    background-color: #4CAF50;
+    background-color: transparent;
     border: none;
-    color: white;
+    color: #02AF3B;
     padding: 5px 10px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 12px;
-    margin: 2px 2px;
     cursor: pointer;
     border-radius: 4px;
 }
 
 .ingredient-table .ingredient-button:hover {
-    background-color: #45a049;
+    background-color: #efeeee;
 }
 
-.ingredient-table .ingredient-quantity.high {
-    color: green;
-}
-
-.ingredient-table .ingredient-quantity.medium {
-    color: orange;
-}
-
-.ingredient-table .ingredient-quantity.low {
-    color: red;
+.chevrons-icon{
+    width: 20px;
+    height: 15px;
 }
