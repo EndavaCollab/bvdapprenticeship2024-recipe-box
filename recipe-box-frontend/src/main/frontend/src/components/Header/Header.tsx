@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './Header.css';
 import { Link } from 'react-router-dom';
-import { ReactComponent as ChevronDown } from '../../assets/icons/chevron-down.svg';
 import { ReactComponent as Logo } from '../../assets/images/recipe_box_logo_light.svg';
+import { ReactComponent as ProfileLogo } from '../../assets/images/Group_1672.svg';
 import { UserType } from '../../enums/User';
 import { storedUserType } from '../../Utils/User';
+import Dropdown from '../Dropdown/Dropdown';
 
 const Header: React.FC = () => {
-    const [isOpen, setIsOpen] = useState(false);
     const userType = storedUserType();
 
     return (
@@ -23,23 +23,16 @@ const Header: React.FC = () => {
                                 <li >
                                 {userType === UserType.CHEF && (
                                     <>
-                                        <button 
-                                        className="nav-item" 
-                                        onClick={() => setIsOpen(!isOpen)}
-                                        >
-                                        Recipes
-                                        <ChevronDown className='chevron-item'></ChevronDown>
-                                        </button>
-                                        
-                                        
-                                        {isOpen && (
-                                        <ul className="dropdown-menu" onClick={() => setIsOpen(!isOpen)}>
-                                            <li><Link to="/recipes/list" className="dropdown-item">Public Recipes</Link></li>
-                                            <li><Link to="/recipes/myRecipes" className="dropdown-item">My Recipes</Link></li>
-                                            <li><Link to="/recipes/ingredients" className="dropdown-item">Recipes with My Ingredients</Link></li>
-                                        </ul>
-                                        )}
-                                    </>
+                                    <ul className='left'>
+                                    <Dropdown buttonText="Recipes" content={
+                                        <>
+                                            <Link to="/recipes/list" className="dropdown-item">Public recipes</Link>
+                                            <Link to="/recipes/myRecipes" className="dropdown-item">My recipes</Link>
+                                            <Link to="/recipes/ingredients" className="dropdown-item">Recipes with my ingredients</Link>
+                                        </>
+                                    }/>
+                                    </ul>
+                                </>
                                 )}
 
                                 {userType === UserType.ADMIN && (
@@ -55,9 +48,20 @@ const Header: React.FC = () => {
                         )}
                     </div>
                     <div className="right-items">
-                        <li className="right">
-                            <Link to="/userlogin" className="button">LOGIN</Link>
-                        </li>
+                        {userType === UserType.GUEST 
+                        ?   <li className="right">
+                                <Link to="/userlogin" className="button">LOGIN</Link>
+                            </li>
+                        :   <>
+                            <li className="right">
+                                <Link to="" className="button">ADD NEW RECIPE</Link>
+                            </li>
+                            <li className='logo'>
+                                <ProfileLogo className='profile-logo-image' /> 
+                            </li>
+                            </>
+                        }
+                        
                     </div>
                 </ul>
             </nav>

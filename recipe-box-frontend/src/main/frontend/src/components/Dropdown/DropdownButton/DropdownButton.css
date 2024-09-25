@@ -1,0 +1,22 @@
+.dropdown-btn {
+     display: flex;
+     align-items: center;
+     width: fit-content;
+     padding: 8px;
+     background-color: #000000;
+     cursor: pointer;
+}
+
+.dropdown-btn:hover {
+     color: #ddd;
+ }
+
+.toggle-icon {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     margin-left: 8px;
+
+}
+
+
