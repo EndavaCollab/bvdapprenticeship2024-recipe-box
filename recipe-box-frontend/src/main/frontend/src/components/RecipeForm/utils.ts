@@ -15,8 +15,8 @@ export const preparationHoursValues = [
 ];
 
 export const preparationMinutesValues = [
-    { value: 15, label: '15 min' },
     { value: 10, label: '10 min' },
+    { value: 15, label: '15 min' },
     { value: 30, label: '30 min' },
     { value: 45, label: '45 min' },
 ];

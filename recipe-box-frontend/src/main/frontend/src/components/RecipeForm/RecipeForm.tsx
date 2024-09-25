@@ -18,10 +18,11 @@ import {
     servingsValues,
 } from "./utils";
 import { Ingredient, Recipe } from "../RecipeView/types";
+import { storedUserType } from "../../Utils/User";
+import { UserType } from "../../enums/User";
 
 export interface RecipeFormProps {
     isEditMode?: boolean;
-    isPrivateMode?: boolean;
 }
 
 export interface RecipeFields {
@@ -41,13 +42,12 @@ export interface RecipeFields {
 
 export default function RecipeForm({
     isEditMode = false,
-    isPrivateMode = false,
 }: RecipeFormProps) {
     const initialRecipe = useLoaderData() as Recipe;
 
     const navigate = useNavigate();
     const userId = sessionStorage.getItem("userId");
-    const recipeId = initialRecipe.id;
+    const recipeId = initialRecipe?.id;
 
     const defaultIngredient = {
         ingredientId: 0,
@@ -77,7 +77,7 @@ export default function RecipeForm({
     const [availableIngredients, setAvailableIngredients] = useState<
         { id: number; name: string; unit: string }[]
     >([]);
-    // TODO:  de reparat ingredientele
+
     const [ingredients, setIngredients] = useState<Ingredient[]>(
         (initialRecipe?.recipeIngredients as Ingredient[]) || [
             defaultIngredient,
@@ -96,8 +96,6 @@ export default function RecipeForm({
         initialRecipe?.fileName || ""
     );
     const [imageUrl, setImageUrl] = useState(initialRecipe?.imageUrl || "");
-
-    const recipe_status = isPrivateMode ? "PRIVATE" : "PUBLIC";
 
     useEffect(() => {
         const fetchIngredients = async () => {
@@ -134,9 +132,9 @@ export default function RecipeForm({
         ]);
     };
 
-    const handleIngredientChange = (index: number, value: string) => {
+    const handleIngredientChange = (index: number, value: number) => {
         const selectedIngredient = availableIngredients.find(
-            (ingredient) => ingredient.name === value
+            (ingredient) => ingredient.id === value
         );
 
         const newIngredients = [...ingredients];
@@ -206,7 +204,7 @@ export default function RecipeForm({
             fileName: imageFileName,
             ingredients,
             cookingTime: String(totalPreparationTime),
-            recipeStatus: recipe_status,
+            recipeStatus: storedUserType() === UserType.CHEF ? "PRIVATE" : "PUBLIC",
         };
 
         try {
@@ -249,7 +247,7 @@ export default function RecipeForm({
             fileName: imageFileName,
             ingredients,
             cookingTime: String(totalPreparationTime),
-            recipeStatus: recipe_status,
+            recipeStatus: initialRecipe.recipeStatus,
         };
 
         try {
@@ -361,7 +359,7 @@ export default function RecipeForm({
                                     onChange={(e) =>
                                         handleIngredientChange(
                                             index,
-                                            e.target.value
+                                            Number(e.target.value)
                                         )
                                     }
                                     options={availableIngredients.map(
