@@ -49,9 +49,9 @@ public class RecipeAddRequestDTO {
     private String cookingTime;
 
     @Pattern(
-            regexp = "easy|medium|advanced",
+            regexp = "easy|medium|hard",
             flags = Pattern.Flag.CASE_INSENSITIVE,
-            message = "Difficulty must be one of the following: easy, medium, advanced"
+            message = "Difficulty must be one of the following: easy, medium, hard"
     )
     private String difficulty = "easy";
 

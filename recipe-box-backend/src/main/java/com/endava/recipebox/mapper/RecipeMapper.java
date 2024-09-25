@@ -15,6 +15,6 @@ public interface RecipeMapper {
     List<RecipeDTO> map(List<Recipe> recipe);
     RecipeDTO mapRecipe(Recipe recipe);
     RecipeDetailsDTO mapDetailedRecipe(Recipe recipe);
-    Recipe toEntity(RecipeAddRequestDTO dto);
-    Recipe toEntity(RecipeEditRequestDTO dto);
+    Recipe toAddEntity(RecipeAddRequestDTO dto);
+    Recipe toEditEntity(RecipeEditRequestDTO dto);
 }

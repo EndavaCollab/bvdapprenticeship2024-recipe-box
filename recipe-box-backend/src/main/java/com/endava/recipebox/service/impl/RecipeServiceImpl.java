@@ -95,7 +95,7 @@ public class RecipeServiceImpl implements RecipeService {
     public String createRecipe(RecipeAddRequestDTO recipeAddRequestDTO, Long userId) {
 
         User user = userService.getUserById(userId);
-        Recipe recipe = recipeMapper.toEntity(recipeAddRequestDTO);
+        Recipe recipe = recipeMapper.toAddEntity(recipeAddRequestDTO);
         if (user.getRole() != Role.Admin && isPublic(recipe))
             throw new UnauthorizedActionException("Only admins can create public recipes");
 
@@ -194,7 +194,7 @@ public class RecipeServiceImpl implements RecipeService {
         boolean isOwner = recipe.getUser().getId().equals(userId);
 
         if (isAdmin || isOwner) {
-            Recipe updateRecipe = recipeMapper.toEntity(recipeAddRequestDTO);
+            Recipe updateRecipe = recipeMapper.toEditEntity(recipeAddRequestDTO);
 
             recipe.setName(updateRecipe.getName());
             recipe.setDescription(updateRecipe.getDescription());
@@ -226,6 +226,8 @@ public class RecipeServiceImpl implements RecipeService {
                             existingIngredient.setUnit(ingredientDTO.getUnit());
                             return existingIngredient;
                         } else {
+                            recipeIngredient.setId(new RecipeIngredientId(recipe.getId(), ingredient.getId()));
+                            recipeIngredientRepository.save(recipeIngredient);
                             return recipeIngredient;
                         }
                     })

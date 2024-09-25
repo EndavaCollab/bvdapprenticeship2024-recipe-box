@@ -55,11 +55,11 @@ public class RecipeEditRequestDTO {
     @NotNull(message = "Difficulty cannot be null")
     @NotBlank(message = "Difficulty cannot be blank")
     @Pattern(
-            regexp = "easy|medium|advanced",
+            regexp = "easy|medium|hard",
             flags = Pattern.Flag.CASE_INSENSITIVE,
-            message = "Difficulty must be one of the following: easy, medium, advanced"
+            message = "Difficulty must be one of the following: easy, medium, hard"
     )
-    private String difficulty;
+    private String difficulty = "easy";
 
     @NotNull(message = "Recipe status cannot be null")
     @NotBlank(message = "Recipe status cannot be blank")
