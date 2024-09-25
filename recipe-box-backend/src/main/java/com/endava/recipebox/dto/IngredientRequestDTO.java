@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class IngredientRequestDTO {
     private Long ingredientId;
-    private String ingredientName;
+    private String name;
     private int quantity;
     private String unit;
 }

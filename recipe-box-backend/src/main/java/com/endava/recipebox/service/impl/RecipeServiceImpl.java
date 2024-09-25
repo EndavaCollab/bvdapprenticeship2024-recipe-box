@@ -226,6 +226,8 @@ public class RecipeServiceImpl implements RecipeService {
                             existingIngredient.setUnit(ingredientDTO.getUnit());
                             return existingIngredient;
                         } else {
+                            recipeIngredient.setId(new RecipeIngredientId(recipe.getId(), ingredient.getId()));
+                            recipeIngredientRepository.save(recipeIngredient);
                             return recipeIngredient;
                         }
                     })
