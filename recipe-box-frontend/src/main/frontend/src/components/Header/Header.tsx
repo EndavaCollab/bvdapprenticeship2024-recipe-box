@@ -34,13 +34,11 @@ const Header: React.FC = () => {
                                         }/>
                                     </ul>
                                 )}
-
                                 {userType === UserType.ADMIN && (
                                     <Link to="/recipes/list" className='nav-item'>Recipes</Link>
                                 )}
                                 </li>
                                 <li><Link to="/ingredients/list" className="nav-item">Ingredients</Link></li>
-
                                 {userType === UserType.CHEF && (
                                     <li><Link to="/meal-plans" className="nav-item">Meal Plans</Link></li>
                                 )}
@@ -61,7 +59,6 @@ const Header: React.FC = () => {
                             </li>
                             </>
                         }
-
                     </div>
                 </ul>
             </nav>
