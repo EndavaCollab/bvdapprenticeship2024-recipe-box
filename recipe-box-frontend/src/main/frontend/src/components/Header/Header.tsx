@@ -54,7 +54,7 @@ const Header: React.FC = () => {
                             </li>
                         :   <>
                             <li className="right">
-                                <Link to="" className="button">ADD NEW RECIPE</Link>
+                                <Link to="/recipes/addrecipe" className="button">ADD NEW RECIPE</Link>
                             </li>
                             <li className='logo'>
                                 <ProfileLogo className='profile-logo-image' /> 
