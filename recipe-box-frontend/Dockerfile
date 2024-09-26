@@ -1,11 +1,9 @@
-FROM oven/bun:alpine
+FROM oven/bun:alpine as build
 
-# Install dependencies
+# Install nodejs
 RUN apk add --no-cache nodejs
-RUN bun i -g serve
 
-# Create app folder and move local files
-RUN mkdir -p /recipe-box
+# Move local files
 WORKDIR /recipe-box
 COPY src/main/frontend/package.json /recipe-box/
 COPY src/main/frontend/src/ /recipe-box/src/
@@ -13,10 +11,18 @@ COPY src/main/frontend/.env /recipe-box/
 COPY src/main/frontend/public/ /recipe-box/public/
 COPY src/main/frontend/tsconfig.json /recipe-box/
 
-# Install project dependencies and build production bundle
+# Install project dependencies
 RUN bun i
 
-# Port to be exposed when deploying the container + env variable to use on build
-EXPOSE 80
+# Set env variable to bundle backend link into build
 ENV REACT_APP_BACKEND_URL=http://localhost:8080
-CMD [ "bun", "run", "build", "&&", "serve", "-s", "../../../target", "-l", "80" ]
+RUN bun run build
+
+FROM oven/bun:alpine as deploy
+
+RUN apk add --no-cache nodejs
+RUN bun i -g serve
+
+COPY --from=build /target/ /recipe-box
+EXPOSE 80
+CMD [ "serve", "-s", "/recipe-box/", "-l", "80" ]
