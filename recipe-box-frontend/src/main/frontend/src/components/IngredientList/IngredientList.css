@@ -4,7 +4,8 @@
     border-collapse: collapse;
 }
 
-.ingredient-table th, .ingredient-table td {
+.ingredient-table th,
+.ingredient-table td {
     padding: 8px;
     text-align: start;
     border-bottom: 1px solid #ddd;
@@ -17,7 +18,7 @@
 }
 
 .ingredient-table th::after {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     right: 0;
@@ -30,11 +31,10 @@
     display: none;
 }
 
-
 .ingredient-table .ingredient-button {
     background-color: transparent;
     border: none;
-    color: #02AF3B;
+    color: #02af3b;
     padding: 5px 10px;
     text-align: center;
     text-decoration: none;
@@ -48,7 +48,7 @@
     background-color: #efeeee;
 }
 
-.chevrons-icon{
+.chevrons-icon {
     width: 20px;
     height: 15px;
 }
