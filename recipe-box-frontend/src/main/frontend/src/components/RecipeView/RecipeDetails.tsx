@@ -6,6 +6,7 @@ import { ReactComponent as CloseButton } from "../../assets/icons/close.svg";
 import { UserType } from "../../enums/User";
 import { useNavigate } from "react-router-dom";
 import { storedUserId } from "../../Utils/User";
+import Checkbox from "../Checkbox";
 
 interface RecipeDetailsProps {
     recipeId: number;
@@ -15,6 +16,12 @@ interface RecipeDetailsProps {
     description: string;
     ingredients: Ingredient[];
     userType?: UserType;
+    userIngredients: {
+        id: number;
+        name: string;
+        unit: string;
+        quantity: number;
+    }[];
 }
 
 const RecipeDetails: React.FC<RecipeDetailsProps> = ({
@@ -23,11 +30,23 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({
     ownerId,
     name,
     description,
-    ingredients,
+    ingredients = [],
     userType,
+    userIngredients,
 }) => {
     const [showDialog, setShowDialog] = useState(false);
     const navigate = useNavigate();
+    const availableIngredients = ingredients.filter((ingredient) =>
+        userIngredients.find(
+            (userIngredient) =>
+                ingredient.ingredientId === userIngredient.id &&
+                ingredient.quantity <= userIngredient.quantity
+        )
+    );
+
+    const unavailableIngredients = ingredients.filter(
+        (ingredient) => !availableIngredients.includes(ingredient)
+    );
 
     const deleteRecipe = async (
         recipeId: number,
@@ -85,18 +104,49 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({
             )}
             <h3>Description:</h3>
             <p>{description}</p>
-            <h3>Ingredients:</h3>
-            <ul className="ingredients-list">
-                {ingredients.map((ingredient) => (
-                    <li key={ingredient.ingredientId}>
-                        <Check className="check-icon" />{" "}
-                        <span className="ingredient-name">
-                            {ingredient.name}
-                        </span>{" "}
-                        {ingredient.quantity} {ingredient.unit}
-                    </li>
-                ))}
-            </ul>
+            {userType === UserType.CHEF ? (
+                <div className="available-and-unavailable-ingredients">
+                    <div>
+                        <h3>Available ingredients:</h3>
+                        {availableIngredients.map((ingredient) => (
+                            <Checkbox
+                                key={`${ingredient.ingredientId}`}
+                                isAvailable={true}
+                                ingredientName={ingredient.name}
+                                quantity={ingredient.quantity}
+                                unit={ingredient.unit}
+                            />
+                        ))}
+                    </div>
+                    <div>
+                        <h3>Unavailable ingredients:</h3>
+                        {unavailableIngredients.map((ingredient) => (
+                            <Checkbox
+                                key={`${ingredient.ingredientId}`}
+                                isAvailable={false}
+                                ingredientName={ingredient.name}
+                                quantity={ingredient.quantity}
+                                unit={ingredient.unit}
+                            />
+                        ))}
+                    </div>
+                </div>
+            ) : (
+                <>
+                    <h3>Ingredients:</h3>
+                    <ul className="ingredients-list">
+                        {ingredients.map((ingredient) => (
+                            <li key={ingredient.ingredientId}>
+                                <Check className="check-icon" />{" "}
+                                <span className="ingredient-name">
+                                    {ingredient.name}
+                                </span>{" "}
+                                {ingredient.quantity} {ingredient.unit}
+                            </li>
+                        ))}
+                    </ul>
+                </>
+            )}
 
             {showDialog && (
                 <>
