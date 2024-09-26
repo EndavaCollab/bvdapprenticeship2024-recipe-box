@@ -1,5 +1,6 @@
 package com.endava.recipebox.service;
 
+import com.endava.recipebox.dto.IngredientUpdateDTO;
 import com.endava.recipebox.dto.IngredientsAllRequestDTO;
 import com.endava.recipebox.dto.UserIngredientDTO;
 import com.endava.recipebox.model.Ingredient;
@@ -13,4 +14,5 @@ public interface IngredientService {
     List<IngredientsAllRequestDTO> getAllIngredients();
     List<UserIngredientDTO> toUserIngredientsDTO(List<UserIngredient> userIngredients);
     List<UserIngredientDTO> getUserIngredients(Long userId);
+    String updateUserIngredient(Long userId, IngredientUpdateDTO ingredient);
 }
