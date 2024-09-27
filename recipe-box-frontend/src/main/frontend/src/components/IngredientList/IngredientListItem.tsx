@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./IngredientListItem.css";
 import { ReactComponent as Delete } from "../../assets/icons/delete-filled.svg";
 import { ReactComponent as Edit } from "../../assets/icons/edit.svg";
@@ -34,6 +34,8 @@ const IngredientItem: React.FC<IngredientItemProps> = ({ ingredient }) => {
 
     const revalidator = useRevalidator();
     const callback = () => revalidator.revalidate();
+
+    useEffect(() => setPopUpIngredientQuantity(quantity), [quantity]);
 
     const getQuantityClass = (quantity: number) => {
         if (quantity < 10) return "low";
@@ -104,19 +106,18 @@ const IngredientItem: React.FC<IngredientItemProps> = ({ ingredient }) => {
                                 Delete
                             </div>
                         </button>
+                        {updatePopUpOpen && (
+                            <UpdateIngredientQuantityPopup
+                                value={popUpIngredientQuantity}
+                                setValue={setPopUpIngredientQuantity}
+                                setPopUpOpen={setUpdatePopUpOpen}
+                                ingredient={ingredient}
+                                onUpdate={updateIngredient}
+                            />
+                        )}
                     </div>
                 </td>
             </tr>
-
-            {updatePopUpOpen && (
-                <UpdateIngredientQuantityPopup
-                    value={popUpIngredientQuantity}
-                    setValue={setPopUpIngredientQuantity}
-                    setPopUpOpen={setUpdatePopUpOpen}
-                    ingredient={ingredient}
-                    onUpdate={updateIngredient}
-                />
-            )}
         </>
     );
 };

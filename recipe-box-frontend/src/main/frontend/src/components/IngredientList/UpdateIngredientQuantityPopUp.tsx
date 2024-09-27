@@ -19,7 +19,6 @@ export function UpdateIngredientQuantityPopup({
 }: UpdateIngredientQuantityPopUpProps) {
     const closePopup = () => {
         setPopUpOpen(false);
-        setValue(0);
     };
 
     return (
