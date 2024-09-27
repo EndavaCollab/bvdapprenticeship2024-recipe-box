@@ -92,38 +92,36 @@ const IngredientList: React.FC<IngredientListProps> = ({
     );
 
     return (
-        <>
-            <table className="ingredient-table">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th onClick={() => sortData("name")}>
-                            Ingredient {renderSortIndicator("name")}
-                        </th>
-                        <th onClick={() => sortData("category")}>
-                            Category {renderSortIndicator("category")}
-                        </th>
-                        <th>Unit</th>
-                        <th>Kcal</th>
-                        <th>Carbs</th>
-                        <th>Fat</th>
-                        <th>Protein</th>
-                        <th onClick={() => sortData("quantity")}>
-                            Quantity {renderSortIndicator("quantity")}
-                        </th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {currentIngredients.map((ingredient: Ingredient) => (
-                        <IngredientItem
-                            key={ingredient.id}
-                            ingredient={ingredient}
-                        />
-                    ))}
-                </tbody>
-            </table>
-        </>
+        <table className="ingredient-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th onClick={() => sortData("name")}>
+                        Ingredient {renderSortIndicator("name")}
+                    </th>
+                    <th onClick={() => sortData("category")}>
+                        Category {renderSortIndicator("category")}
+                    </th>
+                    <th>Unit</th>
+                    <th>Kcal</th>
+                    <th>Carbs</th>
+                    <th>Fat</th>
+                    <th>Protein</th>
+                    <th onClick={() => sortData("quantity")}>
+                        Quantity {renderSortIndicator("quantity")}
+                    </th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {currentIngredients.map((ingredient: Ingredient) => (
+                    <IngredientItem
+                        key={ingredient.id}
+                        ingredient={ingredient}
+                    />
+                ))}
+            </tbody>
+        </table>
     );
 };
 

@@ -1,62 +1,89 @@
 import { ChangeEvent } from "react";
 import { ReactComponent as CloseButton } from "../../assets/icons/close.svg";
 import "./UpdateIngredientQuantityPopUp.css";
+import { backendUrl } from "../../App";
+import { useRevalidator } from "react-router-dom";
 interface UpdateIngredientQuantityPopUpProps {
-    setPopUpIngredientQuantity: React.Dispatch<React.SetStateAction<number>>;
-    popUpIngredientQuantity: number;
-    setAddPopUpToggled: React.Dispatch<React.SetStateAction<boolean>>;
-    ingredient: { id: number; unit: string };
+    setValue: React.Dispatch<React.SetStateAction<number>>;
+    value: number;
+    setPopUpOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    ingredient: { id: number; unit: string; quantity: number; name: string };
 }
 
 export function UpdateIngredientQuantityPopup({
-    setPopUpIngredientQuantity,
-    popUpIngredientQuantity,
-    setAddPopUpToggled,
+    value,
+    setValue,
+    setPopUpOpen,
     ingredient,
 }: UpdateIngredientQuantityPopUpProps) {
+    function closePopup() {
+        setPopUpOpen(false);
+        setValue(0);
+    }
+    const userId = sessionStorage.getItem("userId");
+    const revalidator = useRevalidator();
+    const callback = () => revalidator.revalidate();
+
+    const updateIngredient = async () => {
+        const response = await fetch(
+            `${backendUrl}/ingredients/user/update?userId=${userId}`,
+            {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    ingredientId: ingredient.id,
+                    quantity: value,
+                }),
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Failed to update ingredient");
+        }
+
+        callback();
+        return;
+    };
     return (
         <div className="add-ingredient-popup-overlay">
             <div className="add-ingredient-popup">
                 <CloseButton
                     className="close-button"
                     onClick={() => {
-                        setAddPopUpToggled(false);
-                        setPopUpIngredientQuantity(0);
+                        closePopup();
                     }}
                 />
                 <div className="add-ingredient-popup-title">
-                    Type the quantity that you want to update for ingredient{" "}
-                    {ingredient.id} ({ingredient.unit})
+                    Type the quantity that you want to update for{" "}
+                    {ingredient.name} ({ingredient.unit})
                 </div>
                 <input
-                    value={
-                        popUpIngredientQuantity
-                            ? Number(popUpIngredientQuantity)
-                            : ""
-                    }
-                    type="text"
+                    value={value}
+                    type="number"
+                    min="0"
                     className="add-ingredient-popup-input"
                     placeholder="Add quantity"
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                        setPopUpIngredientQuantity(Number(e.target.value))
+                        setValue(Number(e.target.value))
                     }
                 />
                 <div className="add-ingredient-popup-buttons">
                     <button
                         className="add-ingredient-popup-add-btn"
-                        disabled={!popUpIngredientQuantity}
+                        disabled={!value}
                         onClick={() => {
-                            setAddPopUpToggled(false);
-                            setPopUpIngredientQuantity(0);
+                            updateIngredient();
+                            closePopup();
                         }}
                     >
-                        ADD
+                        UPDATE
                     </button>
                     <button
                         className="add-ingredient-popup-cancel-btn"
                         onClick={() => {
-                            setAddPopUpToggled(false);
-                            setPopUpIngredientQuantity(0);
+                            closePopup();
                         }}
                     >
                         CANCEL

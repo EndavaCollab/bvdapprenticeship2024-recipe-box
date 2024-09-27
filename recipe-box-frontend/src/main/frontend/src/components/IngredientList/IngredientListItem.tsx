@@ -21,9 +21,8 @@ interface IngredientItemProps {
 }
 
 const IngredientItem: React.FC<IngredientItemProps> = ({ ingredient }) => {
-    const [addPopUpToggled, setAddPopUpToggled] = useState(false);
-    const [popUpIngredientQuantity, setPopUpIngredientQuantity] =
-        useState<number>(0); // Use the primitive type `number`
+    const [updatePopUpOpen, setUpdatePopUpOpen] = useState(false);
+    const [popUpIngredientQuantity, setPopUpIngredientQuantity] = useState(0);
 
     const { name, category, unit, kcal, carbs, fat, protein, quantity } =
         ingredient;
@@ -62,7 +61,7 @@ const IngredientItem: React.FC<IngredientItemProps> = ({ ingredient }) => {
                         <button className="ingredient-button">
                             <div
                                 className="button-content"
-                                onClick={() => setAddPopUpToggled(true)}
+                                onClick={() => setUpdatePopUpOpen(true)}
                             >
                                 <Edit className="svg-button" />
                                 Edit
@@ -78,11 +77,11 @@ const IngredientItem: React.FC<IngredientItemProps> = ({ ingredient }) => {
                 </td>
             </tr>
 
-            {addPopUpToggled && (
+            {updatePopUpOpen && (
                 <UpdateIngredientQuantityPopup
-                    setPopUpIngredientQuantity={setPopUpIngredientQuantity}
-                    popUpIngredientQuantity={popUpIngredientQuantity}
-                    setAddPopUpToggled={setAddPopUpToggled}
+                    value={popUpIngredientQuantity}
+                    setValue={setPopUpIngredientQuantity}
+                    setPopUpOpen={setUpdatePopUpOpen}
                     ingredient={ingredient}
                 />
             )}
