@@ -1,8 +1,8 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { useState } from "react";
 import "./IngredientListItem.css";
 import { ReactComponent as Delete } from "../../assets/icons/delete-filled.svg";
 import { ReactComponent as Edit } from "../../assets/icons/edit.svg";
-import { ReactComponent as CloseButton } from "../../assets/icons/close.svg";
+import { UpdateIngredientQuantityPopup } from "./UpdateIngredientQuantityPopUp";
 
 interface Ingredient {
     id: number;
@@ -21,9 +21,9 @@ interface IngredientItemProps {
 }
 
 const IngredientItem: React.FC<IngredientItemProps> = ({ ingredient }) => {
-    const [addPopupToggled, setAddPopupToggled] = useState(false);
-    const [popupIngredientQuantity, setPopupIngredientQuantity] =
-        useState<Number>(0);
+    const [addPopUpToggled, setAddPopUpToggled] = useState(false);
+    const [popUpIngredientQuantity, setPopUpIngredientQuantity] =
+        useState<number>(0); // Use the primitive type `number`
 
     const { name, category, unit, kcal, carbs, fat, protein, quantity } =
         ingredient;
@@ -62,7 +62,7 @@ const IngredientItem: React.FC<IngredientItemProps> = ({ ingredient }) => {
                         <button className="ingredient-button">
                             <div
                                 className="button-content"
-                                onClick={() => setAddPopupToggled(true)}
+                                onClick={() => setAddPopUpToggled(true)}
                             >
                                 <Edit className="svg-button" />
                                 Edit
@@ -78,58 +78,13 @@ const IngredientItem: React.FC<IngredientItemProps> = ({ ingredient }) => {
                 </td>
             </tr>
 
-            {addPopupToggled && (
-                <div className="add-ingredient-popup-overlay">
-                    <div className="add-ingredient-popup">
-                        <CloseButton
-                            className="close-button"
-                            onClick={() => {
-                                setAddPopupToggled(false);
-                                setPopupIngredientQuantity(0);
-                            }}
-                        />
-                        <div className="add-ingredient-popup-title">
-                            Type the quantity that you want to add for
-                            ingredient {ingredient.id} ({ingredient.unit})
-                        </div>
-                        <input
-                            value={
-                                popupIngredientQuantity
-                                    ? Number(popupIngredientQuantity)
-                                    : ""
-                            }
-                            type="text"
-                            className="add-ingredient-popup-input"
-                            placeholder="Add quantity"
-                            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                                setPopupIngredientQuantity(
-                                    Number(e.target.value)
-                                )
-                            }
-                        ></input>
-                        <div className="add-ingredient-popup-buttons">
-                            <button
-                                className="add-ingredient-popup-add-btn"
-                                disabled={!popupIngredientQuantity}
-                                onClick={() => {
-                                    setAddPopupToggled(false);
-                                    setPopupIngredientQuantity(0);
-                                }}
-                            >
-                                ADD
-                            </button>
-                            <button
-                                className="add-ingredient-popup-cancel-btn"
-                                onClick={() => {
-                                    setAddPopupToggled(false);
-                                    setPopupIngredientQuantity(0);
-                                }}
-                            >
-                                CANCEL
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            {addPopUpToggled && (
+                <UpdateIngredientQuantityPopup
+                    setPopUpIngredientQuantity={setPopUpIngredientQuantity}
+                    popUpIngredientQuantity={popUpIngredientQuantity}
+                    setAddPopUpToggled={setAddPopUpToggled}
+                    ingredient={ingredient}
+                />
             )}
         </>
     );
