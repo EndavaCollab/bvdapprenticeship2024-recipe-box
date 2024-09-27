@@ -3,6 +3,8 @@ import "./IngredientListItem.css";
 import { ReactComponent as Delete } from "../../assets/icons/delete-filled.svg";
 import { ReactComponent as Edit } from "../../assets/icons/edit.svg";
 import { UpdateIngredientQuantityPopup } from "./UpdateIngredientQuantityPopUp";
+import { useRevalidator } from "react-router-dom";
+import { backendUrl } from "../../App";
 
 interface Ingredient {
     id: number;
@@ -21,16 +23,45 @@ interface IngredientItemProps {
 }
 
 const IngredientItem: React.FC<IngredientItemProps> = ({ ingredient }) => {
-    const [updatePopUpOpen, setUpdatePopUpOpen] = useState(false);
-    const [popUpIngredientQuantity, setPopUpIngredientQuantity] = useState(0);
+    const userId = sessionStorage.getItem("userId");
 
     const { name, category, unit, kcal, carbs, fat, protein, quantity } =
         ingredient;
+
+    const [updatePopUpOpen, setUpdatePopUpOpen] = useState(false);
+    const [popUpIngredientQuantity, setPopUpIngredientQuantity] =
+        useState(quantity);
+
+    const revalidator = useRevalidator();
+    const callback = () => revalidator.revalidate();
 
     const getQuantityClass = (quantity: number) => {
         if (quantity < 10) return "low";
         if (quantity < 100) return "medium";
         return "high";
+    };
+
+    const updateIngredient = async () => {
+        const response = await fetch(
+            `${backendUrl}/ingredients/user/update?userId=${userId}`,
+            {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    ingredientId: ingredient.id,
+                    quantity: popUpIngredientQuantity,
+                }),
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Failed to update ingredient");
+        }
+
+        callback();
+        return;
     };
 
     return (
@@ -83,6 +114,7 @@ const IngredientItem: React.FC<IngredientItemProps> = ({ ingredient }) => {
                     setValue={setPopUpIngredientQuantity}
                     setPopUpOpen={setUpdatePopUpOpen}
                     ingredient={ingredient}
+                    onUpdate={updateIngredient}
                 />
             )}
         </>
