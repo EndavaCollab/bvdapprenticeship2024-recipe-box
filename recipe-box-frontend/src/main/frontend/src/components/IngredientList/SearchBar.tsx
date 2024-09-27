@@ -1,5 +1,4 @@
-import React from 'react';
-import './SearchBar.css';
+import "./SearchBar.css";
 
 interface SearchBarProps {
     setSearchTerm: (searchTerm: string) => void;
@@ -7,16 +6,18 @@ interface SearchBarProps {
 
 const SearchBar: React.FC<SearchBarProps> = ({ setSearchTerm }) => {
     return (
-        <div className="search-bar">
-            <input
-                className="search-input"
-                type="text"
-                placeholder="Search..."
-                onChange={(event) => setSearchTerm(event.target.value)}
-            />
-            <button className="search-button">Add</button>
-        </div>
+        <>
+            <div className="search-bar">
+                <input
+                    className="search-input"
+                    type="text"
+                    placeholder="Search..."
+                    onChange={(event) => setSearchTerm(event.target.value)}
+                />
+                <button className="search-button">Add</button>
+            </div>
+        </>
     );
-}
+};
 
 export default SearchBar;
