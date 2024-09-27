@@ -3,7 +3,7 @@ import { json, LoaderFunctionArgs } from 'react-router-dom';
 export async function recipeLoader({ params }: LoaderFunctionArgs) {
     try {
         const recipeId = params.recipeId;
-        const storedUserId = sessionStorage.getItem("userId");
+        const storedUserId = sessionStorage.getItem('userId');
 
         const baseUrl = process.env.REACT_APP_BACKEND_URL;
 
@@ -12,7 +12,10 @@ export async function recipeLoader({ params }: LoaderFunctionArgs) {
         }
 
         const getRecipeUrl = `${baseUrl}/recipes/${recipeId}`;
-        const url = storedUserId === null ? getRecipeUrl : `${getRecipeUrl}?userId=${parseInt(storedUserId, 10)}`;
+        const url =
+            storedUserId === null
+                ? getRecipeUrl
+                : `${getRecipeUrl}?userId=${parseInt(storedUserId, 10)}`;
 
         const response = await fetch(url);
 
@@ -21,7 +24,18 @@ export async function recipeLoader({ params }: LoaderFunctionArgs) {
         }
 
         const data = await response.json();
-        return json(data);
+
+        const responseIngredients = await fetch(
+            `${baseUrl}/ingredients/user?userId=${storedUserId}`
+        );
+
+        if (!response.ok) {
+            return { ...json(data), userIngredients: [] };
+        }
+
+        const dataIngredients = await responseIngredients.json();
+    
+        return { ...data, userIngredients: dataIngredients };
     } catch (error) {
         console.error('Error loading recipe:', error);
         return json({ error: (error as Error).message }, { status: 500 });

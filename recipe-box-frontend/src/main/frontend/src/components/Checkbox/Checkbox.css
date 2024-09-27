@@ -1,0 +1,37 @@
+.unavailable-ingredients-box {
+    border: 2px solid #dbdbdb;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    
+}
+
+.check-icon {
+    min-width: 16px;
+    min-height: 16px;
+    fill: green;
+    padding: 2px;
+    margin-right: 10px;
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+}
+
+.checkbox {
+    display: flex;   
+}
+
+.checkbox-items {
+    display: flex;
+    justify-content: space-between;
+    width: 200px;
+    margin-bottom: 15px;
+}
+
+.checkbox-unavailable-items {
+    display: flex;
+    justify-content: space-between;
+    width: 200px;
+    margin-bottom: 15px;
+    color: #dbdbdb;
+}

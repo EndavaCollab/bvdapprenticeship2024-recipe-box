@@ -168,3 +168,11 @@
     border: 1px solid #d32f2f;
     color: white;
 }
+
+.available-and-unavailable-ingredients {
+    display: flex;
+    flex-direction: row;
+    white-space: nowrap;
+    gap: 30px;
+    
+}
