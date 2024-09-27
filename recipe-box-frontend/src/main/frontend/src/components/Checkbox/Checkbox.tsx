@@ -1,4 +1,4 @@
-import { ReactComponent as Check } from "../assets/icons/check.svg";
+import { ReactComponent as Check } from "../../assets/icons/check.svg";
 import "./Checkbox.css";
 
 type CheckboxProps = {

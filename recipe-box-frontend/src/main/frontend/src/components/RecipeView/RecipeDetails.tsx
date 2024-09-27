@@ -6,7 +6,7 @@ import { ReactComponent as CloseButton } from "../../assets/icons/close.svg";
 import { UserType } from "../../enums/User";
 import { useNavigate } from "react-router-dom";
 import { storedUserId } from "../../Utils/User";
-import Checkbox from "../Checkbox";
+import Checkbox from "../Checkbox/Checkbox";
 
 interface RecipeDetailsProps {
     recipeId: number;
