@@ -1,15 +1,25 @@
-import React from 'react';
+import React from "react";
 import "./DropdownContent.css";
 
 type DropdownContentProps = {
-  children?: React.ReactNode;
-  open: boolean;
+    children?: React.ReactNode;
+    open: boolean;
+    onClick(): void;
 };
 
-const DropdownContent: React.FC<DropdownContentProps> = ({children, open}) => {
-    return <div className={`dropdown-content ${open ? "content-open" : "" }`}>
-              {children}
-           </div>;
-    };
+const DropdownContent: React.FC<DropdownContentProps> = ({
+    children,
+    open,
+    onClick,
+}) => {
+    return (
+        <div
+            className={`dropdown-content ${open ? "content-open" : ""}`}
+            onClick={onClick}
+        >
+            {children}
+        </div>
+    );
+};
 
 export default DropdownContent;
