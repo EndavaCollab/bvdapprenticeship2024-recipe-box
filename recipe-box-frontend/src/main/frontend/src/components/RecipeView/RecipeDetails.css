@@ -11,7 +11,7 @@
 }
 
 .ingredient-name {
-    margin-right: 80px;
+    width: 150px;
 }
 
 .check-icon {
@@ -174,5 +174,4 @@
     flex-direction: row;
     white-space: nowrap;
     gap: 30px;
-    
 }

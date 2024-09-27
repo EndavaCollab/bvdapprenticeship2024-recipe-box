@@ -35,6 +35,9 @@
 .recipe-card-content p {
     font-size: 16px;
     color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .view-recipe-button {
@@ -55,4 +58,3 @@
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-
