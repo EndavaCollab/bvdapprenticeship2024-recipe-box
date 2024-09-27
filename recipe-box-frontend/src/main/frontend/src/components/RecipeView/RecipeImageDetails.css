@@ -12,8 +12,9 @@
 
 .recipe-image {
     border-radius: 10px;
-    max-width: 100%;
-    height: auto;
+    width: 600px;
+    height: 400px;
+    object-fit: contain;
 }
 
 .recipe-meta {
@@ -36,4 +37,3 @@
     height: 20px;
     fill: green;
 }
-

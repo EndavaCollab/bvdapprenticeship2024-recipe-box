@@ -1,6 +1,6 @@
-.parent-grid{
+.parent-grid {
     display: flex;
-    width: 90%;
+    justify-content: center;
 }
 .recipe-view-grid {
     padding-left: 50px;
@@ -9,5 +9,3 @@
     gap: 50px;
     align-items: start;
 }
-
-

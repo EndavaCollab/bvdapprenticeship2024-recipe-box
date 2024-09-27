@@ -36,13 +36,15 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({
 }) => {
     const [showDialog, setShowDialog] = useState(false);
     const navigate = useNavigate();
-    const availableIngredients = ingredients.filter((ingredient) =>
-        userIngredients.find(
-            (userIngredient) =>
-                ingredient.ingredientId === userIngredient.id &&
-                ingredient.quantity <= userIngredient.quantity
-        )
-    );
+    const availableIngredients = Array.isArray(userIngredients)
+        ? ingredients.filter((ingredient) =>
+              userIngredients.find(
+                  (userIngredient) =>
+                      ingredient.ingredientId === userIngredient.id &&
+                      ingredient.quantity <= userIngredient.quantity
+              )
+          )
+        : [];
 
     const unavailableIngredients = ingredients.filter(
         (ingredient) => !availableIngredients.includes(ingredient)
