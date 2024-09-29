@@ -20,11 +20,13 @@
 .add-recipe-container .left-column {
     flex: 1;
     margin-right: 20px;
+    animation: fadeIn 0.5s ease forwards;
 }
 
 .add-recipe-container .right-column {
     flex: 1;
     margin-left: 20px;
+    animation: fadeIn 0.5s ease forwards;
 }
 
 .add-recipe-container .preparation-time-container {
@@ -118,6 +120,7 @@
     padding: 5px;
     font-size: small;
     font-weight: bold;
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
 }
 
 .add-recipe-container div {
@@ -144,6 +147,7 @@
     width: 40%;
     padding: 10px 0;
     font-size: small;
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
 }
 
 .add-recipe-container input::placeholder {
@@ -203,4 +207,11 @@
 .save-recipe-button:disabled {
     background-color: grey;
     opacity: 0.7;
+}
+
+.add-ingredient-button:hover,
+.save-recipe-button:enabled:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
 }

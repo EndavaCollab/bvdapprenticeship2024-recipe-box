@@ -262,7 +262,7 @@ export default function RecipeForm({ isEditMode = false }: RecipeFormProps) {
             <Header />
             <div className="add-recipe-container">
                 <div className="add-recipe-fields">
-                    <div className="left-column">
+                    <div className="left-column fade-in">
                         <div>Recipe Name*</div>
                         <input
                             type="text"
@@ -388,7 +388,7 @@ export default function RecipeForm({ isEditMode = false }: RecipeFormProps) {
                         </button>
                     </div>
 
-                    <div className="right-column">
+                    <div className="right-column fade-in">
                         <div>Recipe Image*</div>
 
                         {!imageUrl && !imageFileName && (
