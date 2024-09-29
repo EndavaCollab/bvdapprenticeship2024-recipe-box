@@ -75,7 +75,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public List<RecipeDTO> getAllPrivateRecipesByUserId(Long userId) {
+    public List<RecipeDTO> getAllPrivateRecipesByUserId(Long userId, MealType mealType) {
         Logger log = LoggerFactory.getLogger(RecipeServiceImpl.class);
 
         List<Recipe> recipes = recipeRepository.findAll().stream()
@@ -87,7 +87,20 @@ public class RecipeServiceImpl implements RecipeService {
             log.info("No private recipes found for userId: {}", userId);
         }
 
+        if (mealType != null) {
+            recipes = recipes.stream()
+                    .filter(recipe -> recipe.getMealType() == mealType)
+                    .toList();
+        }
+
         return recipeMapper.map(recipes);
+    }
+
+    @Override
+    public List<RecipeDTO> getAllPrivateRecipesByUserIdAndName(Long userId, String recipeName, MealType mealType) {
+        return getAllPrivateRecipesByUserId(userId, mealType).stream()
+                .filter(r -> r.getName().toLowerCase().contains(recipeName.toLowerCase()))
+                .toList();
     }
 
     @Override

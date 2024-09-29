@@ -32,8 +32,12 @@ export default function RecipesGrid({
         let url = `${backendUrl}/recipes/${mealType ? `?mealType=${mealType}` : ""}`;
 
         fetch(
-            privateRecipes ? `${backendUrl}/recipes/search/private?userId=${userId}` : 
-            searchQuery ? `${backendUrl}/recipes/search?recipeName=${searchQuery}${mealType ? `&mealType=${mealType}` : ""}` : url,
+            privateRecipes ? 
+                searchQuery ? 
+                `${backendUrl}/recipes/search/private?userId=${userId}&recipeName=${searchQuery}${mealType ? `&mealType=${mealType}` : ""}`
+                :`${backendUrl}/recipes/private?userId=${userId}${mealType ? `&mealType=${mealType}` : ""}` 
+                
+            :searchQuery ? `${backendUrl}/recipes/search?recipeName=${searchQuery}${mealType ? `&mealType=${mealType}` : ""}` : url,
             {
                 signal,
             }
