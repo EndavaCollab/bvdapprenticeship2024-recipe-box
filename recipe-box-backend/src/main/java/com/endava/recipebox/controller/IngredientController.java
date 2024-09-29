@@ -1,15 +1,13 @@
 package com.endava.recipebox.controller;
 
 
+import com.endava.recipebox.dto.IngredientUpdateDTO;
 import com.endava.recipebox.dto.IngredientsAllRequestDTO;
 import com.endava.recipebox.dto.UserIngredientDTO;
 import com.endava.recipebox.service.IngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,5 +31,10 @@ public class IngredientController {
     @GetMapping("/user")
     public ResponseEntity<List<UserIngredientDTO>> getUsersIngredients(@RequestParam Long userId) {
         return ResponseEntity.ok(ingredientService.getUserIngredients(userId));
+    }
+
+    @PatchMapping("/user/update")
+    public ResponseEntity<String> updateUserIngredient(@RequestParam Long userId, @RequestBody IngredientUpdateDTO ingredient) {
+        return ResponseEntity.ok(ingredientService.updateUserIngredient(userId, ingredient));
     }
 }

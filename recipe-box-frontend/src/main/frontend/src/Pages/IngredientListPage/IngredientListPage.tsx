@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useLoaderData } from 'react-router-dom';
-import './IngredientListPage.css';
+import { useLoaderData } from "react-router-dom";
+import "./IngredientListPage.css";
 import SearchBar from "../../components/IngredientList/SearchBar";
 import IngredientList from "../../components/IngredientList/IngredientList";
 import Pagination from "../../components/IngredientList/Pagination";
@@ -41,6 +41,6 @@ const IngredientListPage: React.FC = () => {
             />
         </div>
     );
-}
+};
 
 export default IngredientListPage;

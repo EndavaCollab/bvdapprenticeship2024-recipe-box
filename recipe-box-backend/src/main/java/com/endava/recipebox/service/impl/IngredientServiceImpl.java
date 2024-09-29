@@ -1,5 +1,6 @@
 package com.endava.recipebox.service.impl;
 
+import com.endava.recipebox.dto.IngredientUpdateDTO;
 import com.endava.recipebox.dto.IngredientsAllRequestDTO;
 import com.endava.recipebox.dto.UserIngredientDTO;
 import com.endava.recipebox.exception.BadRequestException;
@@ -59,10 +60,7 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public List<UserIngredientDTO> getUserIngredients(Long userId) {
-        User user = userService.getUserById(userId);
-        if (user.getRole().equals(Role.Guest)) {
-            throw new BadRequestException("The user must have either a Chef or Admin role to access this type of data.");
-        }
+        User user = checkIfUserIsGuest(userId);
 
         if (user.getUserIngredients().isEmpty()) {
             final int defaultQuantity = 0;
@@ -78,7 +76,31 @@ public class IngredientServiceImpl implements IngredientService {
             userIngredientRepository.saveAll(userIngredients);
             return toUserIngredientsDTO(userIngredients);
         }
-        
+
         return toUserIngredientsDTO(user.getUserIngredients());
+    }
+
+    private User checkIfUserIsGuest(Long userId) {
+        User user = userService.getUserById(userId);
+        if (user.getRole().equals(Role.Guest)) {
+            throw new BadRequestException("The user must have either a Chef or Admin role to access this type of data.");
+        }
+        return user;
+    }
+
+    @Override
+    public String updateUserIngredient(Long userId, IngredientUpdateDTO ingredient) {
+        checkIfUserIsGuest(userId);
+
+        Optional<UserIngredient> optionalUserIngredient = userIngredientRepository.findById(new UserIngredientId(userId, ingredient.getIngredientId()));
+        if (optionalUserIngredient.isEmpty())
+        {
+            throw new BadRequestException("The ingredient Id is wrong.");
+        }
+
+        UserIngredient userIngredient = optionalUserIngredient.get();
+        userIngredient.setQuantity(ingredient.getQuantity());
+        userIngredientRepository.save(userIngredient);
+        return "The quantity of the ingredient has been successfully updated.";
     }
 }
