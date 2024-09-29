@@ -29,19 +29,25 @@ export default function RecipesGrid({
         const signal = controller.signal;
         const userId = storedUserId();
 
-        const mealtypeUrlParam = (linkChar: string) => mealType ? `${linkChar}mealType=${mealType}` : "";
-        const url = `${backendUrl}/recipes/${mealtypeUrlParam('?')}`;
-        const publicRecipesUrl = searchQuery ? `${backendUrl}/recipes/search?recipeName=${searchQuery}${mealtypeUrlParam('&')}` : url;
-        const privateRecipesUrl = searchQuery ? 
-            `${backendUrl}/recipes/search/private?userId=${userId}&recipeName=${searchQuery}${mealtypeUrlParam('&')}`
-            :`${backendUrl}/recipes/private?userId=${userId}${mealtypeUrlParam('&')}`;
-            
-        fetch(
-            privateRecipes ? privateRecipesUrl : publicRecipesUrl,
-            {
-                signal,
-            }
-        )
+        const mealtypeUrlParam = (linkChar: string) =>
+            mealType ? `${linkChar}mealType=${mealType}` : "";
+        const url = `${backendUrl}/recipes/${mealtypeUrlParam("?")}`;
+        const publicRecipesUrl = searchQuery
+            ? `${backendUrl}/recipes/search?recipeName=${searchQuery}${mealtypeUrlParam(
+                  "&"
+              )}`
+            : url;
+        const privateRecipesUrl = searchQuery
+            ? `${backendUrl}/recipes/search/private?userId=${userId}&recipeName=${searchQuery}${mealtypeUrlParam(
+                  "&"
+              )}`
+            : `${backendUrl}/recipes/private?userId=${userId}${mealtypeUrlParam(
+                  "&"
+              )}`;
+
+        fetch(privateRecipes ? privateRecipesUrl : publicRecipesUrl, {
+            signal,
+        })
             .then((response) => {
                 if (!response.ok) {
                     throw new Error(`Bad response: ${response.status}`);
@@ -64,16 +70,18 @@ export default function RecipesGrid({
         };
     }, [privateRecipes, mealType, searchQuery]);
 
-
     return (
         <div className="recipes-grid">
-            {recipes.map((recipe) => (
+            {recipes.map((recipe, index) => (
                 <RecipeCard
                     id={recipe.id}
                     key={recipe.id}
                     title={recipe.name}
                     description={recipe.description}
                     imageUrl={recipe.imageUrl}
+                    style={{
+                        animationDelay: `${index * 0.2}s`, // Add delay between each card
+                    }}
                 />
             ))}
         </div>

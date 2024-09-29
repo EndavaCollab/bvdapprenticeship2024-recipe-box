@@ -61,6 +61,7 @@ export default function UserLogin() {
             <CloseButton
                 className="close-button"
                 onClick={() => navigate("/recipes/list")}
+                style={{ position: "absolute" }}
             />
             <Logo className="login-logo" />
             <div
