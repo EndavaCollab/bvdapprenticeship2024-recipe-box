@@ -39,9 +39,7 @@ export interface RecipeFields {
     recipeStatus: string;
 }
 
-export default function RecipeForm({
-    isEditMode = false,
-}: RecipeFormProps) {
+export default function RecipeForm({ isEditMode = false }: RecipeFormProps) {
     const initialRecipe = useLoaderData() as Recipe;
 
     const navigate = useNavigate();
@@ -88,6 +86,8 @@ export default function RecipeForm({
         initialRecipe?.fileName || ""
     );
     const [imageUrl, setImageUrl] = useState(initialRecipe?.imageUrl || "");
+    const [alreadySelectedIngredients, setAlreadySelectedIngredients] =
+        useState<{ id: number; name: string; unit: string }[]>([]);
 
     useEffect(() => {
         const fetchIngredients = async () => {
@@ -115,11 +115,11 @@ export default function RecipeForm({
         setIngredients([
             ...ingredients,
             {
-                unit: "Grams",
+                unit: "",
                 name: "",
                 quantity: 0,
 
-                ingredientId: ingredients.length,
+                ingredientId: 0,
             },
         ]);
     };
@@ -184,7 +184,6 @@ export default function RecipeForm({
     );
 
     const handleSaveRecipe = async () => {
-
         const recipeData: RecipeFields = {
             name: recipeName,
             description,
@@ -195,7 +194,8 @@ export default function RecipeForm({
             fileName: imageFileName,
             ingredients,
             cookingTime: String(totalPreparationTime),
-            recipeStatus: storedUserType() === UserType.CHEF ? "PRIVATE" : "PUBLIC",
+            recipeStatus:
+                storedUserType() === UserType.CHEF ? "PRIVATE" : "PUBLIC",
         };
 
         try {
@@ -332,30 +332,43 @@ export default function RecipeForm({
 
                         <div>Ingredient Name*</div>
 
-                        {ingredients.map((ingredient, index) => (
-                            <div
-                                key={ingredient.ingredientId}
-                                style={{ margin: "0 0 10px 0" }}
-                            >
-                                <SelectInput
-                                    value={ingredient.ingredientId}
-                                    onChange={(e) =>
-                                        handleIngredientChange(
-                                            index,
-                                            Number(e.target.value)
-                                        )
-                                    }
-                                    options={availableIngredients.map(
-                                        (ingredient) => ({
-                                            value: ingredient.id,
-                                            label: ingredient.name,
-                                        })
-                                    )}
-                                    placeholder="Select ingredient"
-                                    className="recipe-name-input-box"
-                                />
-                            </div>
-                        ))}
+                        {ingredients.map((ingredient, index) => {
+                            const filteredOptions = availableIngredients.filter(
+                                (availableIngredient) =>
+                                    availableIngredient.id ===
+                                        ingredient.ingredientId ||
+                                    !ingredients.some(
+                                        (selectedIngredient) =>
+                                            selectedIngredient.ingredientId ===
+                                            availableIngredient.id
+                                    )
+                            );
+
+                            return (
+                                <div
+                                    key={ingredient.ingredientId}
+                                    style={{ margin: "0 0 10px 0" }}
+                                >
+                                    <SelectInput
+                                        value={ingredient.ingredientId}
+                                        onChange={(e) =>
+                                            handleIngredientChange(
+                                                index,
+                                                Number(e.target.value)
+                                            )
+                                        }
+                                        options={filteredOptions.map(
+                                            (option) => ({
+                                                value: option.id,
+                                                label: option.name,
+                                            })
+                                        )}
+                                        placeholder="Select ingredient"
+                                        className="recipe-name-input-box"
+                                    />
+                                </div>
+                            );
+                        })}
 
                         <button
                             className="add-ingredient-button"
