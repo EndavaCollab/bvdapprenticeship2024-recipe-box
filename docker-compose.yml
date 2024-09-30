@@ -1,0 +1,35 @@
+services:
+  frontend:
+    container_name: RecipeBox_frontend
+    build: ./recipe-box-frontend/
+    ports:
+      - '80:80'
+    environment:
+      - REACT_APP_BACKEND_URL=http://localhost:8080
+  database:
+    container_name: RecipeBox_database
+    image: 'mysql:lts'
+    environment:
+      - MYSQL_ROOT_PASSWORD=replacePassword
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=replacePassword
+      - MYSQL_DATABASE=rcb-db
+    ports:
+      - '3306:3306'
+    healthcheck:
+      test: ["CMD-SHELL", 'mysqladmin ping']
+      interval: 5s
+      timeout: 2s
+      retries: 100
+  backend:
+    container_name: RecipeBox_backend
+    build: ./recipe-box-backend
+    depends_on:
+      database:
+        condition: service_healthy
+    ports:
+      - '8080:8080'
+    environment:
+      - DB_URL=jdbc:mysql://database:3306/rcb-db
+      - DB_USERNAME=user
+      - DB_PASSWORD=replacePassword
