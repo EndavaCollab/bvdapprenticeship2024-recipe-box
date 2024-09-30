@@ -29,11 +29,15 @@ export default function RecipesGrid({
         const signal = controller.signal;
         const userId = storedUserId();
 
-        let url = `${backendUrl}/recipes/${mealType ? `?mealType=${mealType}` : ""}`;
-
+        const mealtypeUrlParam = mealType ? `&mealType=${mealType}` : "";
+        const url = `${backendUrl}/recipes/${mealtypeUrlParam}`;
+        const publicRecipesUrl = searchQuery ? `${backendUrl}/recipes/search?recipeName=${searchQuery}${mealtypeUrlParam}` : url;
+        const privateRecipesUrl = searchQuery ? 
+            `${backendUrl}/recipes/search/private?userId=${userId}&recipeName=${searchQuery}${mealtypeUrlParam}`
+            :`${backendUrl}/recipes/private?userId=${userId}${mealtypeUrlParam}`;
+            
         fetch(
-            privateRecipes ? `${backendUrl}/recipes/search/private?userId=${userId}` : 
-            searchQuery ? `${backendUrl}/recipes/search?recipeName=${searchQuery}${mealType ? `&mealType=${mealType}` : ""}` : url,
+            privateRecipes ? privateRecipesUrl : publicRecipesUrl,
             {
                 signal,
             }
