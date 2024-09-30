@@ -29,12 +29,12 @@ export default function RecipesGrid({
         const signal = controller.signal;
         const userId = storedUserId();
 
-        const mealtypeUrlParam = mealType ? `&mealType=${mealType}` : "";
-        const url = `${backendUrl}/recipes/${mealtypeUrlParam}`;
-        const publicRecipesUrl = searchQuery ? `${backendUrl}/recipes/search?recipeName=${searchQuery}${mealtypeUrlParam}` : url;
+        const mealtypeUrlParam = (linkChar: string) => mealType ? `${linkChar}mealType=${mealType}` : "";
+        const url = `${backendUrl}/recipes/${mealtypeUrlParam('?')}`;
+        const publicRecipesUrl = searchQuery ? `${backendUrl}/recipes/search?recipeName=${searchQuery}${mealtypeUrlParam('&')}` : url;
         const privateRecipesUrl = searchQuery ? 
-            `${backendUrl}/recipes/search/private?userId=${userId}&recipeName=${searchQuery}${mealtypeUrlParam}`
-            :`${backendUrl}/recipes/private?userId=${userId}${mealtypeUrlParam}`;
+            `${backendUrl}/recipes/search/private?userId=${userId}&recipeName=${searchQuery}${mealtypeUrlParam('&')}`
+            :`${backendUrl}/recipes/private?userId=${userId}${mealtypeUrlParam('&')}`;
             
         fetch(
             privateRecipes ? privateRecipesUrl : publicRecipesUrl,
