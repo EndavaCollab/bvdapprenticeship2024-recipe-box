@@ -209,9 +209,14 @@
     opacity: 0.7;
 }
 
-.add-ingredient-button:hover,
+.add-ingredient-button:hover:enabled,
 .save-recipe-button:enabled:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     cursor: pointer;
+}
+
+.add-ingredient-button:disabled {
+    color: lightgray;
+    border: 2px solid lightgray;
 }

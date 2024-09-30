@@ -86,8 +86,6 @@ export default function RecipeForm({ isEditMode = false }: RecipeFormProps) {
         initialRecipe?.fileName || ""
     );
     const [imageUrl, setImageUrl] = useState(initialRecipe?.imageUrl || "");
-    const [alreadySelectedIngredients, setAlreadySelectedIngredients] =
-        useState<{ id: number; name: string; unit: string }[]>([]);
 
     useEffect(() => {
         const fetchIngredients = async () => {
@@ -373,6 +371,11 @@ export default function RecipeForm({ isEditMode = false }: RecipeFormProps) {
                         <button
                             className="add-ingredient-button"
                             onClick={handleAddIngredient}
+                            disabled={ingredients.some(
+                                (ingredient) =>
+                                    ingredient.ingredientId ===
+                                    defaultIngredient.ingredientId
+                            )}
                         >
                             + ADD INGREDIENT
                         </button>
