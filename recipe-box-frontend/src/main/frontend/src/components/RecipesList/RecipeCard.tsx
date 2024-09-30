@@ -7,14 +7,16 @@ interface RecipeCardProps {
     title: string;
     description: string;
     imageUrl: string;
+    style?: React.CSSProperties;
 }
 
 export default function RecipeCard({
-                                       id,
-                                       title,
-                                       description,
-                                       imageUrl,
-                                   }: RecipeCardProps) {
+    id,
+    title,
+    description,
+    imageUrl,
+    style,
+}: RecipeCardProps) {
     const imageRef = useRef<HTMLImageElement>(null);
 
     const handleMouseMove = (
@@ -43,7 +45,7 @@ export default function RecipeCard({
     };
 
     return (
-        <div className="recipe-card">
+        <div className="recipe-card" style={style}>
             <img
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
